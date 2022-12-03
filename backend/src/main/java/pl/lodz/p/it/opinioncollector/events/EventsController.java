@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 public class EventsController {
-    EventManager eventManager;
+    IEventManager eventManager;
 
     @Autowired
     public  EventsController(EventManager eventManager) {

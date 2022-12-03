@@ -75,6 +75,15 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
 
     @Override
     public List<Event> getEvents(Predicate<Event> Predicate) {
-        return null;
+        List<Event> eventList = this.getEvents();
+        List<Event> result = new ArrayList<Event>();
+
+        for (Event event : eventList) {
+            if (Predicate.test(event)) {
+                result.add(event);
+            }
+        }
+
+        return result;
     }
 }
