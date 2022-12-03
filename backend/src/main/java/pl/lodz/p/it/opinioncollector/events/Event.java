@@ -36,4 +36,13 @@ public class Event {
         return description;
     }
 
+    @Override
+    public String toString() {
+        return "Event{" +
+                "eventID=" + eventID +
+                ", userID=" + userID +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

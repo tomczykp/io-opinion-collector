@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface IEventManager {
     Event getEvent(UUID ID);
-    void modifyEvent(UUID ID, Event event);
+    Event modifyEvent(Event event);
 }
