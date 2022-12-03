@@ -1,76 +1,85 @@
-package pl.lodz.p.it.opinioncollector.events;
+package pl.lodz.p.it.opinioncollector.eventHandling;
 
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pl.lodz.p.it.opinioncollector.eventHandling.events.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-@Component
+@Service
 public class EventManager implements IOpinionEventManager, IProductEventManager, IQuestionEventManager {
-    @Override
-    public Event getEvent(UUID ID) {
-        //TODO create implementation
-        return new QuestionNotifyEvent(ID, UUID.randomUUID(), "Test Question Notify Event", UUID.randomUUID());
+    private EventsRepository eventsRepository;
+
+    @Autowired
+    public EventManager(EventsRepository eventsRepository) {
+        this.eventsRepository = eventsRepository;
     }
 
     @Override
-    public Event modifyEvent(Event event) {
-        //TODO create implementation
-        return event;
+    public Optional<Event> getEvent(UUID ID) {
+        var foundEvent = eventsRepository.findById(ID);
+        return foundEvent;
+    }
+
+    @Override
+    public Optional<Event> modifyEvent(Event event) {
+        var foundEvent = eventsRepository.findById(event.getEventID());
+        if (foundEvent.isPresent())
+        {
+            eventsRepository.save(event);
+        }
+        return foundEvent;
     }
 
     @Override
     public OpinionReportEvent createOpinionReportEvent(UUID userID, String description, UUID opinionID) {
-        //TODO create implementation
         OpinionReportEvent newEvent = new OpinionReportEvent(UUID.randomUUID(), userID, description, opinionID);
+        eventsRepository.save(newEvent);
         return newEvent;
     }
 
     @Override
     public ProductReportEvent createProductReportEvent(UUID userID, String description, UUID productID) {
-        //TODO: Create implementation
         ProductReportEvent newEvent = new ProductReportEvent(UUID.randomUUID(), userID, description, productID);
+        eventsRepository.save(newEvent);
         return newEvent;
     }
 
     @Override
     public QuestionNotifyEvent createQuestionNotifyEvent(UUID userID, String description, UUID questionID) {
-        //TODO: Create implementation
         QuestionNotifyEvent newEvent = new QuestionNotifyEvent(UUID.randomUUID(), userID, description, questionID);
+        eventsRepository.save(newEvent);
         return newEvent;
     }
 
     @Override
     public QuestionReportEvent createQuestionReportEvent(UUID userID, String description, UUID questionID) {
-        //TODO: Create implementation
         QuestionReportEvent newEvent = new QuestionReportEvent(UUID.randomUUID(), userID, description, questionID);
+        eventsRepository.save(newEvent);
         return null;
     }
 
     @Override
     public AnswerReportEvent createAnswerReportEvent(UUID userID, String description, UUID questionID) {
-        //TODO: Create implementation
         AnswerReportEvent newEvent = new AnswerReportEvent(UUID.randomUUID(), userID, description, questionID);
-        return null;
+        eventsRepository.save(newEvent);
+        return newEvent;
     }
 
     @Override
     public List<Event> getEvents() {
-        //TODO: Create implementation
-        List<Event> Result = new ArrayList<Event>();
-        Result.add(new OpinionReportEvent(UUID.randomUUID(), UUID.randomUUID(), "Test Opinion Report Event", UUID.randomUUID()));
-        Result.add(new ProductReportEvent(UUID.randomUUID(), UUID.randomUUID(), "Test Product Report Event", UUID.randomUUID()));
-        Result.add(new QuestionNotifyEvent(UUID.randomUUID(), UUID.randomUUID(), "Test Question Notify Event", UUID.randomUUID()));
-
-        return Result;
+        return eventsRepository.findAll();
     }
 
     @Override
-    public void answerEvent(UUID event) {
-        //TODO: Create implementation
-        return;
+    public void answerEvent(UUID eventID) {
+        Event foundEvent = eventsRepository.getReferenceById(eventID);
+        foundEvent.changeStatus(EventStatus.Closed);
+        eventsRepository.save(foundEvent);
     }
 
     @Override

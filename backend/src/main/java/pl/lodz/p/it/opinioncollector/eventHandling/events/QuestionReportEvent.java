@@ -1,7 +1,13 @@
-package pl.lodz.p.it.opinioncollector.events;
+package pl.lodz.p.it.opinioncollector.eventHandling.events;
+
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.UUID;
 
+@Entity
+@Getter
+@ToString
 public class QuestionReportEvent extends Event {
     private UUID questionID;
 
@@ -10,7 +16,7 @@ public class QuestionReportEvent extends Event {
         this.questionID = questionID;
     }
 
-    public UUID getQuestionID() {
-        return questionID;
+    public QuestionReportEvent() {
+        super();
     }
 }

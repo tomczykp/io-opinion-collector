@@ -1,4 +1,6 @@
-package pl.lodz.p.it.opinioncollector.events;
+package pl.lodz.p.it.opinioncollector.eventHandling;
+
+import pl.lodz.p.it.opinioncollector.eventHandling.events.ProductReportEvent;
 
 import java.util.UUID;
 

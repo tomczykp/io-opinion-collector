@@ -1,13 +1,16 @@
-package pl.lodz.p.it.opinioncollector.events;
+package pl.lodz.p.it.opinioncollector.eventHandling;
+
+import pl.lodz.p.it.opinioncollector.eventHandling.events.Event;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
 public interface IEventManager {
-    Event getEvent(UUID ID);
+    Optional<Event> getEvent(UUID ID);
 
-    Event modifyEvent(Event event);
+    Optional<Event> modifyEvent(Event event);
 
     List<Event> getEvents();
 

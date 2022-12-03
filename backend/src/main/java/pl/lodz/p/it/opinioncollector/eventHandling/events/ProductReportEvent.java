@@ -1,7 +1,13 @@
-package pl.lodz.p.it.opinioncollector.events;
+package pl.lodz.p.it.opinioncollector.eventHandling.events;
+
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.UUID;
 
+@Entity
+@Getter
+@ToString
 public class ProductReportEvent extends Event {
     private UUID productID;
 
@@ -10,7 +16,7 @@ public class ProductReportEvent extends Event {
         this.productID = productID;
     }
 
-    public UUID getProductID() {
-        return productID;
+    public ProductReportEvent() {
+        super();
     }
 }
