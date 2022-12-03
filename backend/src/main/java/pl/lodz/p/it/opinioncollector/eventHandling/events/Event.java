@@ -10,7 +10,7 @@ import java.util.UUID;
 @ToString
 public abstract class Event {
     @Id
-    @Column(name = "id")
+    @Column(name = "eventID")
     private UUID eventID;
     private UUID userID;
     private String description;

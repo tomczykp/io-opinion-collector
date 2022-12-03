@@ -1,4 +1,4 @@
-INSERT INTO iodb.public.event (dtype, id, description, status, userid, opinionid)
+INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, opinionid)
 VALUES ('OpinionReportEvent', 'e8a5b357-db44-4a9a-8118-a35448145e2c', 'TEST', 0, '220ab2f4-dc64-4dde-9b4c-a951b4a752a2',
         '863a3c69-dedf-4d82-88fd-457b4a142f3b'),
        ('OpinionReportEvent', '032d9455-952a-404f-8006-873a6b242696', 'TEST', 0, '37509fa8-cf95-4cf3-815e-38f926440caf',
