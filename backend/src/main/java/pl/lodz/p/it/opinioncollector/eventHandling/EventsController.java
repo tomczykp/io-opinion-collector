@@ -24,8 +24,8 @@ public class EventsController {
         return eventManager.getEvents();
     }
 
-    @GetMapping("/event/{eventID}")
-    public ResponseEntity<Event> GetEvent(@PathVariable("eventID") String eventID) {
+    @GetMapping("/event/{id}")
+    public ResponseEntity<Event> GetEvent(@PathVariable("id") String eventID) {
         var foundEvent = eventManager.getEvent(UUID.fromString(eventID));
 
         if (foundEvent.isPresent())
