@@ -5,13 +5,14 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @Component
-public class EventManager implements IOpinionEventManager, IProductEventManager, IQuestionEventManager  {
+public class EventManager implements IOpinionEventManager, IProductEventManager, IQuestionEventManager {
     @Override
     public Event getEvent(UUID ID) {
         //TODO create implementation
-        return new QuestionNotifyEvent(ID, UUID.randomUUID(), "Test Question Notify Event", UUID.randomUUID()));
+        return new QuestionNotifyEvent(ID, UUID.randomUUID(), "Test Question Notify Event", UUID.randomUUID());
     }
 
     @Override
@@ -55,8 +56,8 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
         return null;
     }
 
-    public List<Event> GetEvents()
-    {
+    @Override
+    public List<Event> getEvents() {
         //TODO: Create implementation
         List<Event> Result = new ArrayList<Event>();
         Result.add(new OpinionReportEvent(UUID.randomUUID(), UUID.randomUUID(), "Test Opinion Report Event", UUID.randomUUID()));
@@ -64,5 +65,16 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
         Result.add(new QuestionNotifyEvent(UUID.randomUUID(), UUID.randomUUID(), "Test Question Notify Event", UUID.randomUUID()));
 
         return Result;
+    }
+
+    @Override
+    public void answerEvent(UUID event) {
+        //TODO: Create implementation
+        return;
+    }
+
+    @Override
+    public List<Event> getEvents(Predicate<Event> Predicate) {
+        return null;
     }
 }

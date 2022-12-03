@@ -18,6 +18,6 @@ public class EventsController {
     @GetMapping("/events")
     public List<Event> Events()
     {
-        return eventManager.GetEvents();
+        return eventManager.getEvents();
     }
 }
