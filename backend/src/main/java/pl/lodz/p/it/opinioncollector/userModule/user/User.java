@@ -1,4 +1,4 @@
-package pl.lodz.p.it.opinioncollector.user;
+package pl.lodz.p.it.opinioncollector.userModule.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
