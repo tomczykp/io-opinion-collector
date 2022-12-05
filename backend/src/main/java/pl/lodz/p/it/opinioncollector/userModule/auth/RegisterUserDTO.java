@@ -1,4 +1,4 @@
-package pl.lodz.p.it.opinioncollector.auth;
+package pl.lodz.p.it.opinioncollector.userModule.auth;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
