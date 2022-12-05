@@ -1,6 +1,8 @@
 package pl.lodz.p.it.opinioncollector.eventHandling;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.*;
 
@@ -12,7 +14,7 @@ import java.util.function.Predicate;
 
 @Service
 public class EventManager implements IOpinionEventManager, IProductEventManager, IQuestionEventManager {
-    private EventsRepository eventsRepository;
+    private final EventsRepository eventsRepository;
 
     @Autowired
     public EventManager(EventsRepository eventsRepository) {
@@ -76,10 +78,16 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     }
 
     @Override
-    public void answerEvent(UUID eventID) {
-        Event foundEvent = eventsRepository.getReferenceById(eventID);
-        foundEvent.changeStatus(EventStatus.Closed);
-        eventsRepository.save(foundEvent);
+    public Optional<Event> answerEvent( UUID eventID) {
+        var foundEvent = eventsRepository.findById(eventID);
+
+        if (!foundEvent.isPresent()) {
+            return foundEvent;
+        }
+
+        foundEvent.get().changeStatus(EventStatus.Closed);
+        eventsRepository.save(foundEvent.get());
+        return foundEvent;
     }
 
     @Override

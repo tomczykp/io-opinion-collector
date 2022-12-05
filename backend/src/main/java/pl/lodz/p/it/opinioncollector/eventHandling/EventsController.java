@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.Event;
 
@@ -39,13 +40,26 @@ public class EventsController {
     // TODO: Rename according to users module
     @GetMapping("/users/{userID}/events/")
     public ResponseEntity<List<Event>> GetUserEvents(@PathVariable("userID") String userID) {
-        Predicate<Event> UserPredicate = event -> event.getUserID().toString().equals(userID);
+        UUID userUUID = UUID.fromString(userID);
+        Predicate<Event> UserPredicate = event -> event.getUserID().equals(userUUID);
+
         List<Event> foundEvents = eventManager.getEvents(UserPredicate);
 
         if (foundEvents.isEmpty())
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(foundEvents);
+    }
+
+    @PostMapping("/events/{eventID}/close")
+    public ResponseEntity<Object> CloseEvent(@PathVariable("eventID") String eventID)
+    {
+        var response = eventManager.answerEvent(UUID.fromString(eventID));
+
+        if (response.isPresent())
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok().build();
     }
 
 
