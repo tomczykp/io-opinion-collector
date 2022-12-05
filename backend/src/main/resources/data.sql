@@ -1,6 +1,8 @@
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, opinionid)
 VALUES ('OpinionReportEvent', 'e8a5b357-db44-4a9a-8118-a35448145e2c', 'TEST', 0, '220ab2f4-dc64-4dde-9b4c-a951b4a752a2',
         '863a3c69-dedf-4d82-88fd-457b4a142f3b'),
+       ('OpinionReportEvent', '455db3e7-abfd-4d78-9eb4-399625c88959', 'TEST', 1, '220ab2f4-dc64-4dde-9b4c-a951b4a752a2',
+        'db784192-9c14-43af-a895-1ef504e092f0'),
        ('OpinionReportEvent', '032d9455-952a-404f-8006-873a6b242696', 'TEST', 0, '37509fa8-cf95-4cf3-815e-38f926440caf',
         '628be02c-d73f-4a7d-a596-21080997b436'),
        ('OpinionReportEvent', '82cdb009-cebf-4e2b-8c0d-5deb9b20b8ce', 'TEST', 0, '9a17968a-1bad-4d43-80d7-84440393704d',

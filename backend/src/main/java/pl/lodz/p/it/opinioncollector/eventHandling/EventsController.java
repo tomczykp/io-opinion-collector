@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.Event;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @RestController
 public class EventsController {
@@ -28,10 +30,23 @@ public class EventsController {
     public ResponseEntity<Event> GetEvent(@PathVariable("eventID") String eventID) {
         var foundEvent = eventManager.getEvent(UUID.fromString(eventID));
 
-        if (foundEvent.isPresent())
-        {
-            return ResponseEntity.ok(foundEvent.get());
-        }
-        return ResponseEntity.notFound().build();
+        if (!foundEvent.isPresent())
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(foundEvent.get());
     }
+
+    // TODO: Rename according to users module
+    @GetMapping("/users/{userID}/events/")
+    public ResponseEntity<List<Event>> GetUserEvents(@PathVariable("userID") String userID) {
+        Predicate<Event> UserPredicate = event -> event.getUserID().toString().equals(userID);
+        List<Event> foundEvents = eventManager.getEvents(UserPredicate);
+
+        if (foundEvents.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(foundEvents);
+    }
+
+
 }
