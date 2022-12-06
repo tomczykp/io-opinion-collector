@@ -38,4 +38,14 @@ public class AuthController {
         return "Confirmed!";
     }
 
+    @GetMapping("/refresh")
+    public String refreshToken(@Param("token") String token) {
+        return authManager.validateAndRenewRefreshToken(token);
+    }
+
+    @GetMapping("/logout")
+    public String logout(@Param("token") String token) {
+        authManager.deleteRefreshToken(token);
+        return "LoggedOut!";
+    }
 }
