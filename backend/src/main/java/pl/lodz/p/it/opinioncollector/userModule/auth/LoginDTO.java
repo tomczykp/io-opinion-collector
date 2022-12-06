@@ -1,10 +1,9 @@
 package pl.lodz.p.it.opinioncollector.userModule.auth;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import jakarta.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor

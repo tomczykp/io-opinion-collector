@@ -1,14 +1,13 @@
 package pl.lodz.p.it.opinioncollector.userModule.auth;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 
 
 @Service
@@ -29,7 +28,7 @@ public class MailManager {
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Confirm your email");
-            helper.setFrom("opinioncollector@gmail.com");
+            helper.setFrom("io.opinioncollector@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             log.error("Failed to send email", e);
