@@ -115,4 +115,17 @@ public class AuthManager {
         userRepository.save(user);
         tokenRepository.delete(verificationToken);
     }
+
+    @Transactional
+    public String validateAndRenewRefreshToken(String token) {
+        Token t = tokenRepository.findByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        User user = t.getUser();
+        return jwtProvider.generateJWT(user.getEmail());
+    }
+
+    @Transactional
+    public void deleteRefreshToken(String token) {
+        tokenRepository.deleteTokenByToken(token);
+    }
 }
