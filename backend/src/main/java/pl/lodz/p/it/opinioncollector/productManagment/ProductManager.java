@@ -20,12 +20,32 @@ public class ProductManager {
         return product;
     }
 
-    public Product createSuggestion(Product product) { //TODO DTO??
-        product.setConfirmed(false);     //TODO Maybe copying constructor?
-        productRepository.save(product); //FIXME Is the same UUID not a problem??
+    public Product createProduct(ProductDTO productDTO) {
+        Product product = new Product(productDTO);
+        productRepository.save(product);
         return product;
     }
 
+    public Product createSuggestion(Product product) {
+        product.setConfirmed(false);
+        productRepository.save(product);
+        return product;
+    }
+
+    public Product createSuggestion(ProductDTO productDTO) {
+        Product product = new Product(productDTO);
+        product.setConfirmed(false);
+        productRepository.save(product);
+        return product;
+    }
+
+    public Product getProduct(UUID uuid) {
+        Optional<Product> product = productRepository.findById(uuid);
+        if (product.isPresent()) {
+            return product.get();
+        }
+        return null;
+    }
 
     public Product updateProduct(Product product) {
         Optional<Product> productOptional = productRepository.findById(product.getProductId());
@@ -33,6 +53,15 @@ public class ProductManager {
             productRepository.save(product);
         }
         return product;
+    }
+    public Product updateProduct(UUID uuid, ProductDTO productDTO) {
+        Optional<Product> productOptional = productRepository.findById(uuid);
+        if (productOptional.isPresent()) {
+            productOptional.get().mergeProduct(productDTO);
+            productRepository.save(productOptional.get());
+            return productOptional.get();
+        }
+        return null; //fixme ?
     }
 
     public boolean deleteProduct(UUID uuid) {
@@ -43,10 +72,6 @@ public class ProductManager {
             return true;
         }
         return false;
-    }
-
-    public Optional<Product> getProduct(UUID uuid) {
-        return productRepository.findById(uuid);
     }
 
     public List<Product> getAllProducts() {

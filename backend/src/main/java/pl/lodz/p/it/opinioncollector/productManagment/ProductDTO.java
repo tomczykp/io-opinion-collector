@@ -1,9 +1,8 @@
 package pl.lodz.p.it.opinioncollector.productManagment;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.MapKeyColumn;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,24 +12,33 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @Data
+@Valid
 @NoArgsConstructor
 public class ProductDTO {
 
-//    @Setter(AccessLevel.NONE)
-//    private UUID productId;
-//
-//    @Setter(AccessLevel.NONE)
-//    private UUID categoryId;
-//
-//    private String name;
-//
-//    private String description;
-//
-//    @ElementCollection
-//    @MapKeyColumn(name = "KEY")
-//    @Column(name = "VALUE")
-//    @CollectionTable(name = "PROPERTIES")
-//    private HashMap<String, String> properties;
+    @Setter(AccessLevel.NONE)
+    private UUID productId;
 
-    //FIXME It's gonna be a problem with those properties?
+    @Setter(AccessLevel.NONE)
+    @NotNull
+    private UUID categoryId;
+
+    @NotEmpty
+    private String name;
+
+    @NotEmpty
+    private String description;
+
+    @NotNull
+    private HashMap<String, String> properties;
+
+    private boolean confirmed;
+
+    public ProductDTO(UUID categoryId, String name, String description, HashMap<String,
+            String> properties) {
+        this.categoryId = categoryId;
+        this.name = name;
+        this.description = description;
+        this.properties = properties;
+    }
 }

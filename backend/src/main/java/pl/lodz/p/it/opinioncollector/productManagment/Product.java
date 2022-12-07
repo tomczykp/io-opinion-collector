@@ -15,9 +15,10 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Product {
 
-    @Setter(AccessLevel.NONE)
     @Id
-    private UUID productId; //fixme generated in db or constructor?
+    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID productId;
 
     @Setter(AccessLevel.NONE)
     private UUID categoryId;
@@ -36,10 +37,7 @@ public class Product {
     @CollectionTable(name = "PROPERTIES")
     private HashMap<String, String> properties;
 
-
     public Product(UUID categoryId, String name, String description,  HashMap<String, String> properties) {
-
-        productId = UUID.randomUUID();
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
@@ -48,7 +46,31 @@ public class Product {
         this.properties = properties;
     }
 
+    public Product(ProductDTO productDTO) {
+        this.categoryId = productDTO.getCategoryId();
+        this.name = productDTO.getName();
+        this.description = productDTO.getDescription();
+        this.deleted = false;
+        this.confirmed = productDTO.isConfirmed();
+        this.properties = productDTO.getProperties();
+    }
+
     public void removeProperty(String key) {
-        properties.remove(key);
+        properties.remove(key); //TODO where to use that?
+    }
+
+    public void addProperty(String key, String value) {
+        properties.put(key, value);
+    }
+
+    public String getProperty(String key) {
+        return properties.get(key);
+    }
+
+    public void mergeProduct(ProductDTO productDTO) {
+        this.categoryId = productDTO.getCategoryId();
+        this.name = productDTO.getName();
+        this.description = productDTO.getDescription();
+        this.properties = productDTO.getProperties();
     }
 }
