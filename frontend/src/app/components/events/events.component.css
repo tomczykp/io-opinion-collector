@@ -1,0 +1,20 @@
+.mat-row {
+  height: auto;
+}
+
+.mat-cell {
+  padding: 20px;
+}
+.events-list-container {
+  width: 80%;
+  align-content: center;
+  margin: auto;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-header-cell, .mat-cell {
+  text-align: center !important;
+}
