@@ -1,1 +1,24 @@
-<p>events works!</p>
+<p xmlns="http://www.w3.org/1999/html">events works!</p>
+
+<br><br>
+
+<table class="table table-striped border mt-1">
+  <thead>
+    <tr>
+      <th scope="col">Użytkownik</th>
+      <th scope="col">Opis</th>
+      <th scope="col">Status</th>
+      <th scope="col">Akcje</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let event of events">
+      <td>{{event.userID}}</td>
+      <td>{{event.description}}</td>
+      <td>{{event.status}}</td>
+      <td>
+        <button (click)="closeEvent(event.eventID)">Zamknij</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

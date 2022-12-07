@@ -56,7 +56,7 @@ public class EventsController {
     {
         var response = eventManager.answerEvent(UUID.fromString(eventID));
 
-        if (response.isPresent())
+        if (!response.isPresent())
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok().build();
