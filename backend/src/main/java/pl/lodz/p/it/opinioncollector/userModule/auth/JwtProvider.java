@@ -1,9 +1,12 @@
 package pl.lodz.p.it.opinioncollector.userModule.auth;
 
 import io.jsonwebtoken.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import java.security.PublicKey;
 import java.util.Date;
 
 @Component
@@ -27,6 +30,17 @@ public class JwtProvider {
         return Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(jwt);
+    }
+
+
+
+    public String getToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.replace("Bearer ", "");
+        }
+        return null;
     }
 
     public boolean validateToken(String jwt) {

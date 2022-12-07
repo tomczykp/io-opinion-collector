@@ -43,9 +43,9 @@ public class AuthController {
         return authManager.validateAndRenewRefreshToken(token);
     }
 
-    @GetMapping("/logout")
-    public String logout(@Param("token") String token) {
-        authManager.deleteRefreshToken(token);
+    @DeleteMapping("/signout")
+    public String signout(@Param("token") String token) {
+        authManager.dropRefreshToken(token);
         return "LoggedOut!";
     }
 }

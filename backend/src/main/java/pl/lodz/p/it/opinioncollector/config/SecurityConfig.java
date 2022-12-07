@@ -45,6 +45,8 @@ public class SecurityConfig {
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/refresh").permitAll()
                         .requestMatchers("/logout").permitAll()
+                        .requestMatchers("/changePassword").permitAll()
+                        .requestMatchers("/remove/**").permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
