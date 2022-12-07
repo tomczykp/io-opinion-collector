@@ -1,6 +1,8 @@
 package pl.lodz.p.it.opinioncollector.userModule.auth;
 
 
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -23,6 +25,7 @@ import java.util.UUID;
 
 
 @Service
+@RequiredArgsConstructor
 public class AuthManager {
 
     private final UserRepository userRepository;
@@ -32,18 +35,9 @@ public class AuthManager {
     private final JwtProvider jwtProvider;
     private final MailManager mailManager;
 
-    public AuthManager(UserRepository userRepository,
-                       AuthenticationManager authenticationManager,
-                       TokenRepository tokenRepository,
-                       PasswordEncoder encoder,
-                       JwtProvider jwtProvider, MailManager mailService) {
-        this.userRepository = userRepository;
-        this.authenticationManager = authenticationManager;
-        this.tokenRepository = tokenRepository;
-        this.encoder = encoder;
-        this.jwtProvider = jwtProvider;
-        this.mailManager = mailService;
 
+    @PostConstruct
+    public void createUsers() {
         User admin = new User("admin", "Admin", encoder.encode("admin"), UserType.ADMIN);
         admin.setActive(true);
         userRepository.save(admin);
@@ -51,6 +45,7 @@ public class AuthManager {
         User user = new User("user", "User", encoder.encode("user"), UserType.USER);
         user.setActive(true);
         userRepository.save(user);
+
     }
 
 
