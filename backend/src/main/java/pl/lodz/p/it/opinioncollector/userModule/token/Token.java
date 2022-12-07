@@ -1,11 +1,11 @@
 package pl.lodz.p.it.opinioncollector.userModule.token;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
-import jakarta.persistence.*;
 import java.time.Instant;
 
 @Entity

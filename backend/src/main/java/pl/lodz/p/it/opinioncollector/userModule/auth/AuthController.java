@@ -1,15 +1,13 @@
 package pl.lodz.p.it.opinioncollector.userModule.auth;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
-
-import jakarta.validation.Valid;
 
 
 @RestController
@@ -19,9 +17,14 @@ public class AuthController {
     private final AuthManager authManager;
 
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     public User register(@Valid @RequestBody RegisterUserDTO dto) {
-        return authManager.register(dto);
+        try {
+            return authManager.register(dto);
+        } catch (EmailAlreadyRegisteredException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
     }
 
     @PostMapping("/login")
@@ -35,4 +38,14 @@ public class AuthController {
         return "Confirmed!";
     }
 
+    @GetMapping("/refresh")
+    public String refreshToken(@Param("token") String token) {
+        return authManager.validateAndRenewRefreshToken(token);
+    }
+
+    @GetMapping("/logout")
+    public String logout(@Param("token") String token) {
+        authManager.deleteRefreshToken(token);
+        return "LoggedOut!";
+    }
 }
