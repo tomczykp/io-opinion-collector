@@ -1,3 +1,4 @@
+import { LoginComponent } from './components/login/login.component';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
@@ -18,6 +19,8 @@ import {MatIconModule} from "@angular/material/icon";
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
+    AppComponent,
     EventsComponent,
     HomeComponent,
     NavComponent,
@@ -25,16 +28,13 @@ import {MatIconModule} from "@angular/material/icon";
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
-
+    NgbModule,
     // Material frontend
     MatTableModule,
     MatSortModule,
     BrowserAnimationsModule,
     MatButtonModule,
     MatPaginatorModule,
-
-    NgbModule,
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
