@@ -12,6 +12,7 @@ import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 public class AuthController {
 
     private final AuthManager authManager;
@@ -43,9 +44,9 @@ public class AuthController {
         return authManager.validateAndRenewRefreshToken(token);
     }
 
-    @DeleteMapping("/signout")
-    public String signout(@Param("token") String token) {
-        authManager.dropRefreshToken(token);
+    @GetMapping("/signout")
+    public String logout(@Param("token") String token) {
+        authManager.deleteRefreshToken(token);
         return "LoggedOut!";
     }
 }

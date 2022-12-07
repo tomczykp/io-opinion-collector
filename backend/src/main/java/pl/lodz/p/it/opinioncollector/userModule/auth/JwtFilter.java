@@ -13,6 +13,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +34,6 @@ public class JwtFilter extends OncePerRequestFilter {
         excludedMatchers.add(new AntPathRequestMatcher("/register/**"));
         excludedMatchers.add(new AntPathRequestMatcher("/login"));
         excludedMatchers.add(new AntPathRequestMatcher("/refresh"));
-        excludedMatchers.add(new AntPathRequestMatcher("/logout"));
-        excludedMatchers.add(new AntPathRequestMatcher("/changePassword"));
-        excludedMatchers.add(new AntPathRequestMatcher("/remove/**"));
     }
 
     @Override
@@ -47,7 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String jwt = jwtProvider.getToken(request);
+        String jwt = getToken(request);
 
         if (jwt != null && jwtProvider.validateToken(jwt)) {
             Claims claims = jwtProvider.parseJWT(jwt).getBody();
@@ -67,5 +65,14 @@ public class JwtFilter extends OncePerRequestFilter {
         } else {
             throw new RuntimeException();
         }
+    }
+
+    private String getToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.replace("Bearer ", "");
+        }
+        return null;
     }
 }
