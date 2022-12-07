@@ -61,7 +61,7 @@ public class AuthManager {
             userRepository.save(user);
             String verificationToken = generateAndSaveVerificationToken(user).getToken();
             String link = "http://localhost:8080/api/register/confirm?token=" + verificationToken;
-            mailManager.send(user.getEmail(), user.getVisibleName(), link);
+            mailManager.registrationEmail(user.getEmail(), user.getVisibleName(), link);
             return user;
         } catch (Exception e) {
             throw new EmailAlreadyRegisteredException();
@@ -102,7 +102,6 @@ public class AuthManager {
         return new SuccessfulLoginDTO(jwt, refreshToken.getToken(), dto.getEmail());
     }
 
-
     @Transactional
     public void confirmRegistration(String token) {
         Token verificationToken = tokenRepository.findByToken(token)
@@ -125,7 +124,7 @@ public class AuthManager {
     }
 
     @Transactional
-    public void deleteRefreshToken(String token) {
+    public void dropRefreshToken(String token) {
         tokenRepository.deleteTokenByToken(token);
     }
 }
