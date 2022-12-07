@@ -17,9 +17,6 @@ import java.util.UUID;
 public class ProductDTO {
 
     @Setter(AccessLevel.NONE)
-    private UUID productId;
-
-    @Setter(AccessLevel.NONE)
     @NotNull
     private UUID categoryId;
 
@@ -31,8 +28,6 @@ public class ProductDTO {
 
     @NotNull
     private HashMap<String, String> properties;
-
-    private boolean confirmed;
 
     public ProductDTO(UUID categoryId, String name, String description, HashMap<String,
             String> properties) {

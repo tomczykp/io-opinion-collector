@@ -1,9 +1,13 @@
 package pl.lodz.p.it.opinioncollector.productManagment;
 
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductManager {
@@ -14,20 +18,9 @@ public class ProductManager {
         this.productRepository = productRepository;
     }
 
-    public Product createProduct(UUID categoryId, String name, String description, HashMap<String, String> properties) {
-        Product product = new Product(categoryId, name, description, properties);  //TODO DTO??
-        productRepository.save(product);
-        return product;
-    }
 
     public Product createProduct(ProductDTO productDTO) {
         Product product = new Product(productDTO);
-        productRepository.save(product);
-        return product;
-    }
-
-    public Product createSuggestion(Product product) {
-        product.setConfirmed(false);
         productRepository.save(product);
         return product;
     }
@@ -47,13 +40,6 @@ public class ProductManager {
         return null;
     }
 
-    public Product updateProduct(Product product) {
-        Optional<Product> productOptional = productRepository.findById(product.getProductId());
-        if (productOptional.isPresent()) {
-            productRepository.save(product);
-        }
-        return product;
-    }
     public Product updateProduct(UUID uuid, ProductDTO productDTO) {
         Optional<Product> productOptional = productRepository.findById(uuid);
         if (productOptional.isPresent()) {
@@ -61,7 +47,7 @@ public class ProductManager {
             productRepository.save(productOptional.get());
             return productOptional.get();
         }
-        return null; //fixme ?
+        return null;
     }
 
     public boolean deleteProduct(UUID uuid) {

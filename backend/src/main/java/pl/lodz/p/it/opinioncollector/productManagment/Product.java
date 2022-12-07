@@ -2,18 +2,24 @@ package pl.lodz.p.it.opinioncollector.productManagment;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Data
 @Entity
+@Valid
 @NoArgsConstructor
-public class Product {
+public class Product implements Serializable {
 
     @Id
     @Setter(AccessLevel.NONE)
@@ -31,13 +37,16 @@ public class Product {
 
     private boolean confirmed;
 
+    @NotNull
     @ElementCollection
-    @MapKeyColumn(name = "KEY")
-    @Column(name = "VALUE")
-    @CollectionTable(name = "PROPERTIES")
-    private HashMap<String, String> properties;
+    @CollectionTable(name = "properties")
+    @MapKeyColumn(name = "key")
+    @Column(name = "value")
+    @JoinColumn(name = "productId")
+    private Map<String, String> properties;
 
-    public Product(UUID categoryId, String name, String description,  HashMap<String, String> properties) {
+
+    public Product(UUID categoryId, String name, String description, HashMap<String, String> properties) {
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
@@ -51,7 +60,7 @@ public class Product {
         this.name = productDTO.getName();
         this.description = productDTO.getDescription();
         this.deleted = false;
-        this.confirmed = productDTO.isConfirmed();
+        this.confirmed = true;
         this.properties = productDTO.getProperties();
     }
 
