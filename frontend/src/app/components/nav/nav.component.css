@@ -1,0 +1,11 @@
+nav {
+  box-shadow: 0 -1px 1px 1px;
+}
+
+i:hover {
+  cursor: pointer;
+}
+
+i {
+  font-size: 26px;
+}
