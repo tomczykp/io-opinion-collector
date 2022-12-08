@@ -13,4 +13,10 @@ export class UserService {
   getUser() {
     return this.http.get<User>(environment.apiUrl + "/users/" + localStorage.getItem('email'))
   }
+
+  changePassword(oldPassword: string, newPassword: string) {
+    return this.http.put(environment.apiUrl + "/users/password", {oldPassword, newPassword}, {observe: 'response'})
+  }
+
+
 }

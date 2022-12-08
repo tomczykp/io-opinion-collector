@@ -25,12 +25,12 @@ public class UserController {
     private final UserManager userManager;
 
     @PutMapping("/password")
-    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO dto, Principal principal) {
+    @ResponseStatus(HttpStatus.OK)
+    public void changePassword(@Valid @RequestBody ChangePasswordDTO dto) throws PasswordNotMatchesException {
         try {
             userManager.changePassword(dto.oldPassword, dto.newPassword);
-            return ResponseEntity.ok("Password has been changed");
         } catch (PasswordNotMatchesException e) {
-            return ResponseEntity.status(401).body("Wrong password");
+            throw new PasswordNotMatchesException();
         }
     }
 
