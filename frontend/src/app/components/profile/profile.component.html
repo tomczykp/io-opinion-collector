@@ -1,2 +1,78 @@
-<p>{{user?.email}}</p>
-<p>{{user?.visibleName}}</p>
+<div class="page-content page-container m-3" id="page-content">
+  <div class="justify-content-center">
+    <div class="row d-flex justify-content-center">
+      <div class="w-100">
+        <div class="card p-5">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="text-center text-white">
+                <div class="">
+                  <img class="card-img" style="max-width: 200px; min-width: 70px" src="https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png" alt="logo">
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <div class="card-block">
+                <h3 class="m-b-20 p-b-5 b-b-default">Information</h3>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <h4>Email</h4>
+                    <h6 class="text-muted f-w-400">{{user?.email}}</h6>
+                  </div>
+                  <div class="col-sm-6">
+                    <h3 class="m-b-10 f-w-600">Username</h3>
+                    <h6 class="text-muted f-w-400">{{user?.visibleName}}</h6>
+                  </div>
+                </div>
+                <div class="w-100">
+                  <button class="btn btn-danger col mt-3 mb-3 me-3">Log out from all devices</button>
+                  <button class="btn btn-warning col mt-3 mb-3 me-3">Change username</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page-content page-container m-3">
+  <div class="justify-content-center">
+    <div class="row d-flex justify-content-center">
+      <div class="w-100">
+        <div class="card p-3">
+          <div class="card card-outline-secondary">
+            <div class="card-header">
+              <h3 class="mb-0">Change password</h3>
+            </div>
+            <div class="card-body">
+              <form class="form" role="form" autocomplete="off">
+                <div class="form-group">
+                  <label for="inputPasswordOld">Current Password</label>
+                  <input type="password" class="form-control" id="inputPasswordOld" required="">
+                </div>
+                <div class="form-group">
+                  <label for="inputPasswordNew">New Password</label>
+                  <input type="password" class="form-control" id="inputPasswordNew" required="">
+                  <span class="form-text small text-muted">
+                                            The password must be 8-20 characters, and must <em>not</em> contain spaces.
+                                        </span>
+                </div>
+                <div class="form-group">
+                  <label for="inputPasswordNewVerify">Verify</label>
+                  <input type="password" class="form-control" id="inputPasswordNewVerify" required="">
+                  <span class="form-text small text-muted">
+                                            To confirm, type the new password again.
+                                        </span>
+                </div>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-success btn-lg float-right">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

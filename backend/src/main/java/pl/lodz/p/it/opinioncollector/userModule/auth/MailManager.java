@@ -5,13 +5,16 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 
 @Service
@@ -25,8 +28,11 @@ public class MailManager {
     @Async
     void send(String to, String name, String message, String last, String action, String link) {
         try {
-            File registrationEmail = new File("src/main/resources/html/template.html");
-            String email = FileUtils.readFileToString(registrationEmail);
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            Resource resource = resourceLoader.getResource("classpath:html/template.html");
+            Reader reader = new InputStreamReader(resource.getInputStream());
+            String email = FileCopyUtils.copyToString(reader);
+
             email = email.replace("$username", name);
             email = email.replace("$link", link);
             email = email.replace("$message", message);
@@ -48,6 +54,7 @@ public class MailManager {
         }
     }
 
+    @Async
     public void registrationEmail(String to, String name, String link) {
         this.send(to,
                 name,
@@ -57,6 +64,7 @@ public class MailManager {
                 link);
     }
 
+    @Async
     public void deletionEmail(String to, String name, String link) {
         this.send(to,
                 name,
