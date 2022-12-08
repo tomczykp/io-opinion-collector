@@ -27,6 +27,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthManager {
 
     private final UserRepository userRepository;
@@ -74,6 +75,7 @@ public class AuthManager {
         return tokenRepository.save(verificationToken);
     }
 
+
     private Token generateAndSaveRefreshToken(User user) {
         Token verificationToken = new Token();
         verificationToken.setUser(user);
@@ -98,7 +100,7 @@ public class AuthManager {
         return new SuccessfulLoginDTO(user.getRole(), jwt, refreshToken.getToken(), user.getEmail());
     }
 
-    @Transactional
+
     public void confirmRegistration(String token) {
         Token verificationToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
@@ -111,7 +113,6 @@ public class AuthManager {
         tokenRepository.delete(verificationToken);
     }
 
-    @Transactional
     public String validateAndRenewRefreshToken(String token) {
         Token t = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
@@ -119,12 +120,12 @@ public class AuthManager {
         return jwtProvider.generateJWT(user.getEmail(), user.getRole());
     }
 
-    @Transactional
+
     public void dropRefreshToken(String token) {
         tokenRepository.deleteTokenByToken(token);
     }
 
-    @Transactional
+
     public void dropAllRefreshTokens() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
