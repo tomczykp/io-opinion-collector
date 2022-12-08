@@ -29,21 +29,21 @@ public class UserController {
         return userManager.changePassword(oldPassword, newPassword, request);
     }
 
-    @PostMapping("/lockUser")
-    public String lockUser(@NotNull @RequestBody User user) {
-        userManager.lockUser(user);
+    @PostMapping("/lock")
+    public String lockUser(@NotNull @Param("id") Long id) {
+        userManager.lock(id);
         return "user locked";
     }
 
-    @PostMapping("/unlockUser")
-    public String unlockUser(@NotNull @RequestBody User user) {
-        userManager.unlockUser(user);
+    @PostMapping("/unlock")
+    public String unlockUser(@NotNull @Param("id") Long id) {
+        userManager.unlock(id);
         return "user unlocked";
     }
 
     @DeleteMapping("/remove/admin")
-    public String removeUserByAdmin(@NotNull @RequestBody User user) {
-        userManager.removeUserByAdmin(user);
+    public String removeUserByAdmin(@NotNull @Param("id") Long id) {
+        userManager.removeUserByAdmin(id);
         return "user deleted by admin";
     }
 
