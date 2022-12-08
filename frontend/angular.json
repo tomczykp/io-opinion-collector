@@ -23,7 +23,11 @@
               "src/assets"
             ],
             "styles": [
+<<<<<<< HEAD
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+=======
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+>>>>>>> upstream/master
               "src/styles.css"
             ],
             "scripts": []
@@ -101,6 +105,10 @@
     }
   },
   "cli": {
+<<<<<<< HEAD
     "analytics": false
+=======
+    "analytics": "95c6f432-91c2-4021-9f56-5a4fd1d08378"
+>>>>>>> upstream/master
   }
 }

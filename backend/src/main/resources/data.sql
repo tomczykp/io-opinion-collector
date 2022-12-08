@@ -17,3 +17,10 @@ VALUES ('AnswerReportEvent', 'b12ac4f9-9e79-4420-987e-039d3f64bc56', 'Not Good A
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, questionid)
 VALUES ('QuestionReportEvent', 'd60e9ea8-129f-4b8f-b9ab-5cdcd6aee228', 'Not Good Answer', 0, '388f8d19-668a-4b96-bd8d-74aed2825aba',
         '0338ce3f-b8d3-4cf2-b814-b7ddffc17632');
+INSERT INTO iodb.public.question (question_id, content, date, product_id)
+VALUES ('8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6', 'question-content1', CURRENT_DATE, '0e7cc688-ea1c-42c4-8286-f4ee8edcdb25'),
+       ('35c3863a-2241-4c05-942b-6df9dabdf193', 'question-content2', CURRENT_DATE, 'b9043342-cd20-4e70-b621-84d395e2a120');
+
+INSERT INTO iodb.public.answer (answer_id, content, date, question_id)
+VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'answer-content1', CURRENT_DATE, '8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6'),
+       ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'answer-content2', CURRENT_DATE, '35c3863a-2241-4c05-942b-6df9dabdf193');
