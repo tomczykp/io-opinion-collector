@@ -50,7 +50,6 @@ export class LoginComponent implements OnInit {
             localStorage.setItem("refreshToken", result.body!.refreshToken)
             localStorage.setItem("role", result.body!.role)
             this.authService.authenticated.next(true);
-            console.log("Successful login")
             this.router.navigate(['/']);
           }
       }, (error) => {
