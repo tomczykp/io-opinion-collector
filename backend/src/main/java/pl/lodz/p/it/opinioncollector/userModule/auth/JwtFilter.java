@@ -33,8 +33,6 @@ public class JwtFilter extends OncePerRequestFilter {
         excludedMatchers.add(new AntPathRequestMatcher("/register/**"));
         excludedMatchers.add(new AntPathRequestMatcher("/login"));
         excludedMatchers.add(new AntPathRequestMatcher("/refresh"));
-        excludedMatchers.add(new AntPathRequestMatcher("/signout"));
-        excludedMatchers.add(new AntPathRequestMatcher("/changePassword"));
         excludedMatchers.add(new AntPathRequestMatcher("/remove/**"));
     }
 

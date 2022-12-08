@@ -48,4 +48,9 @@ public class AuthController {
         authManager.dropRefreshToken(token);
         return "LoggedOut!";
     }
+
+    @DeleteMapping("/signout/force")
+    public void forceSignout() {
+        authManager.dropAllRefreshTokens();
+    }
 }
