@@ -49,7 +49,7 @@ public class UserManager implements UserDetailsService {
         return tokenRepository.save(deletionToken);
     }
 
-    @Transactional
+
     public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchesException {
         //TODO check if password is strong enough
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
