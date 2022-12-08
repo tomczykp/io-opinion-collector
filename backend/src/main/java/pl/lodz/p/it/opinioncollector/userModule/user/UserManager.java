@@ -76,14 +76,18 @@ public class UserManager implements UserDetailsService {
         return "Nie poprawne haslo!";
     }
 
-    public void lockUser(User user) {
+    public void lock(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         user.setLocked(true);
         userRepository.save(user);
         tokenRepository.deleteTokenByUser(user);
         mailManager.adminActionEmail(user.getEmail(), user.getUsername(), "blocked");
     }
 
-    public void unlockUser(User user) {
+    public void unlock(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         user.setLocked(false);
         userRepository.save(user);
         mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "unlocked");
@@ -105,7 +109,9 @@ public class UserManager implements UserDetailsService {
         userRepository.deleteUserByEmail(deletionToken.getUser().getEmail());
     }
 
-    public void removeUserByAdmin(User user) {
+    public void removeUserByAdmin(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         userRepository.deleteUserByEmail(user.getEmail());
         tokenRepository.deleteTokenByUser(user);
         mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "deleted");
