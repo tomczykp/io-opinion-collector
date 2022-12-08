@@ -1,8 +1,9 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, Output, ViewChild} from '@angular/core';
 import {EventsService, OC} from "../../services/events.service";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-events',
@@ -13,9 +14,9 @@ export class EventsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['userID', 'description', 'status', 'action'];
   dataSource: MatTableDataSource<OC.Event>;
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
-  events: Array<OC.Event>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  events: OC.Event[];
 
   constructor(private eventsService: EventsService) {
   }
@@ -24,6 +25,10 @@ export class EventsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.getEvents()
+  }
+
+  getEvents(): void {
     this.eventsService.getEvents().subscribe(value => {
       this.events = value;
 
@@ -35,6 +40,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
 
   closeEvent(id: string): void {
     this.eventsService.closeEvent(id);
+    this.getEvents();
   }
 
 }
