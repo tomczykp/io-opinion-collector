@@ -27,7 +27,7 @@ public class ProductDTO {
     private String description;
 
     @NotNull
-    private HashMap<String, String> properties;
+    private HashMap<@NotEmpty String, @NotEmpty String> properties;
 
     public ProductDTO(UUID categoryId, String name, String description, HashMap<String,
             String> properties) {

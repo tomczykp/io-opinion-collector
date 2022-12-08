@@ -1,10 +1,8 @@
 package pl.lodz.p.it.opinioncollector.productManagment;
 
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.opinioncollector.productManagment.exceptions.ProductNotFoundException;
 
@@ -50,13 +48,13 @@ public class ProductController {
     //PutMapping
 
     @PutMapping("")
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDTO productDTO) throws MethodArgumentNotValidException {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDTO productDTO) {
         Product product = productManager.createProduct(productDTO);
         return ResponseEntity.ok(product);
     }
 
     @PutMapping("/suggestion")
-    public ResponseEntity<Product> createSuggestion(@Valid @RequestBody ProductDTO productDTO) throws MethodArgumentNotValidException {
+    public ResponseEntity<Product> createSuggestion(@Valid @RequestBody ProductDTO productDTO) {
         Product product = productManager.createSuggestion(productDTO);
         return ResponseEntity.ok(product);
     }
@@ -65,7 +63,7 @@ public class ProductController {
 
     @PostMapping("/{uuid}")
     public ResponseEntity<Product> updateProduct(@PathVariable("uuid") UUID uuid,
-                                                 @Valid @RequestBody ProductDTO productDTO) throws MethodArgumentNotValidException {
+                                                 @Valid @RequestBody ProductDTO productDTO) {
         Product product = productManager.updateProduct(uuid, productDTO);
         if (product == null) {
             throw new ProductNotFoundException(uuid.toString());
