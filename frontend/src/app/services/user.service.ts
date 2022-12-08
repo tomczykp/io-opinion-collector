@@ -3,16 +3,21 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {BehaviorSubject, catchError, Observable} from "rxjs";
 
+import {User} from "../model/User";
+
 @Injectable({
-    providedIn: 'root'
-  })
+  providedIn: 'root'
+})
 export class UserService {
 
-    authenticated = new BehaviorSubject(false);
+  constructor(private http: HttpClient) { }
 
-    constructor(private http: HttpClient) {}
+  getUser() {
+    return this.http.get<User>(environment.apiUrl + "/users/" + localStorage.getItem('email'))
+  }
 
-    removeByUser() {
-        return this.http.delete(environment.apiUrl+"/remove/user");
-    }
+  removeByUser() {
+    return this.http.delete(environment.apiUrl+"/remove/user");
 }
+}
+
