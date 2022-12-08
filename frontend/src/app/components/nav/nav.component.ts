@@ -10,6 +10,7 @@ export class NavComponent implements OnInit {
 
   authenticated = false;
   email = "";
+  role = "";
 
   constructor(public authService: AuthService) { }
 
@@ -18,6 +19,7 @@ export class NavComponent implements OnInit {
       this.authenticated = change;
       if (this.authenticated) {
         this.email = localStorage.getItem("email")!;
+        this.role = localStorage.getItem("role")!;
       }
     })
   }

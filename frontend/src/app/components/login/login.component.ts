@@ -47,6 +47,7 @@ export class LoginComponent implements OnInit {
             localStorage.setItem("email", result.body!.email)
             localStorage.setItem("jwt", result.body!.jwt)
             localStorage.setItem("refreshToken", result.body!.refreshToken)
+            localStorage.setItem("role", result.body!.role)
             this.authService.authenticated.next(true);
             console.log("Successful login")
             this.router.navigate(['/']);
@@ -55,6 +56,7 @@ export class LoginComponent implements OnInit {
           localStorage.removeItem("email")
           localStorage.removeItem("jwt")
           localStorage.removeItem("refreshToken")
+          localStorage.removeItem("role")
           this.authService.authenticated.next(false);
           console.log("No authentication");
           this.clearPassword();

@@ -10,7 +10,6 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +56,7 @@ public class AuthManager {
         try {
             userRepository.save(user);
             String verificationToken = generateAndSaveVerificationToken(user).getToken();
-            String link = "http://localhost:8080/api/register/confirm?token=" + verificationToken;
+            String link = "http://localhost:8080/api/confirm/register?token=" + verificationToken;
             mailManager.registrationEmail(user.getEmail(), user.getVisibleName(), link);
             return user;
         } catch (Exception e) {
@@ -93,10 +92,10 @@ public class AuthManager {
             throw new ResponseStatusException(HttpStatus.LOCKED);
         }
 
-        String jwt = jwtProvider.generateJWT(dto.getEmail());
         User user = (User) authentication.getPrincipal();
+        String jwt = jwtProvider.generateJWT(user.getEmail(), user.getRole());
         Token refreshToken = generateAndSaveRefreshToken(user);
-        return new SuccessfulLoginDTO(jwt, refreshToken.getToken(), dto.getEmail());
+        return new SuccessfulLoginDTO(user.getRole(), jwt, refreshToken.getToken(), user.getEmail());
     }
 
     @Transactional
@@ -117,7 +116,7 @@ public class AuthManager {
         Token t = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         User user = t.getUser();
-        return jwtProvider.generateJWT(user.getEmail());
+        return jwtProvider.generateJWT(user.getEmail(), user.getRole());
     }
 
     @Transactional

@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<String> changePassword(@Param("oldPassword") String oldPassword, @Param("newPassword") String newPassword, Principal principal) {
+    public ResponseEntity<String> changePassword(@Param("oldPassword") String oldPassword, @Param("newPassword") String newPassword) {
         try {
             userManager.changePassword(oldPassword, newPassword);
             return ResponseEntity.ok("Password has been changed");
@@ -60,7 +60,7 @@ public class UserController {
         return "deletion confirmation email send";
     }
 
-    @GetMapping("/remove/confirm")
+    @GetMapping("/confirm/remove")
     public String confirmDeletion(@Param("token") String token) {
         userManager.confirmDeletion(token);
         return "Confirmed Deletion!";

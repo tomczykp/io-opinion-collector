@@ -27,6 +27,7 @@ export class AuthService {
 
   logout() {
     console.log("logging out")
+    localStorage.removeItem("role")
     localStorage.removeItem("email")
     localStorage.removeItem("jwt")
     localStorage.removeItem("refreshToken")

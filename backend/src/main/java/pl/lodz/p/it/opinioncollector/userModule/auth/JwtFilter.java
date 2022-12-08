@@ -30,10 +30,10 @@ public class JwtFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
         this.excludedMatchers = new ArrayList<>();
 
-        excludedMatchers.add(new AntPathRequestMatcher("/register/**"));
+        excludedMatchers.add(new AntPathRequestMatcher("/confirm/**"));
         excludedMatchers.add(new AntPathRequestMatcher("/login"));
         excludedMatchers.add(new AntPathRequestMatcher("/refresh"));
-        excludedMatchers.add(new AntPathRequestMatcher("/remove/**"));
+        excludedMatchers.add(new AntPathRequestMatcher("/register"));
     }
 
     @Override
