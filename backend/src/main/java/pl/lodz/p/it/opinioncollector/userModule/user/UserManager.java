@@ -17,8 +17,6 @@ import pl.lodz.p.it.opinioncollector.userModule.auth.*;
 import pl.lodz.p.it.opinioncollector.userModule.token.Token;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenRepository;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenType;
-
-import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +29,6 @@ public class UserManager implements UserDetailsService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder encoder;
-    private final JwtProvider jwtProvider;
     private final MailManager mailManager;
 
     @Override
@@ -49,7 +46,6 @@ public class UserManager implements UserDetailsService {
         return tokenRepository.save(deletionToken);
     }
 
-
     public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchesException {
         //TODO check if password is strong enough
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -65,26 +61,38 @@ public class UserManager implements UserDetailsService {
     public void lockUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        user.setLocked(true);
-        userRepository.save(user);
-        tokenRepository.deleteTokenByUser(user);
-        mailManager.adminActionEmail(user.getEmail(), user.getUsername(), "blocked");
+        try {
+            user.setLocked(true);
+            userRepository.save(user);
+            tokenRepository.deleteTokenByUser(user);
+            mailManager.adminActionEmail(user.getEmail(), user.getUsername(), "blocked");
+        } catch (Exception e) {
+            throw new EmailAlreadyRegisteredException();
+        }
     }
 
     public void unlockUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        user.setLocked(false);
-        userRepository.save(user);
-        mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "unlocked");
+        try {
+            user.setLocked(false);
+            userRepository.save(user);
+            mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "unlocked");
+        } catch (Exception e) {
+            throw new EmailAlreadyRegisteredException();
+        }
     }
 
     public void removeUserByUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = loadUserByUsername(email);
-        String deletionToken = generateAndSaveDeletionToken(user).getToken();
-        String link = "http://localhost:8080/api/remove/confirm?token=" + deletionToken;
-        mailManager.deletionEmail(user.getEmail(), user.getVisibleName(), link);
+        try {
+            String deletionToken = generateAndSaveDeletionToken(user).getToken();
+            String link = "http://localhost:8080/api/confirm/remove?token=" + deletionToken;
+            mailManager.deletionEmail(user.getEmail(), user.getVisibleName(), link);
+        } catch (Exception e) {
+            throw new EmailAlreadyRegisteredException();
+        }
     }
 
     public void confirmDeletion(String token) {
@@ -98,9 +106,13 @@ public class UserManager implements UserDetailsService {
     public void removeUserByAdmin(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        userRepository.deleteUserByEmail(user.getEmail());
-        tokenRepository.deleteTokenByUser(user);
-        mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "deleted");
+        try {
+            userRepository.deleteUserByEmail(user.getEmail());
+            tokenRepository.deleteTokenByUser(user);
+            mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "deleted");
+        } catch (Exception e) {
+            throw new EmailAlreadyRegisteredException();
+        }
     }
 
     public void changeUsername(String newUsername) {

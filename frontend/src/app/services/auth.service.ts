@@ -31,6 +31,7 @@ export class AuthService {
   logout() {
     this.http.delete(environment.apiUrl + "/signout?token=" + localStorage.getItem("refreshToken"))
       .subscribe((result) => {
+        localStorage.removeItem("role")
         localStorage.removeItem("email")
         localStorage.removeItem("jwt")
         localStorage.removeItem("refreshToken")
@@ -41,6 +42,7 @@ export class AuthService {
 
   logoutFromAllDevices() {
     this.http.delete(environment.apiUrl + "/signout/force").subscribe((result) => {
+      localStorage.removeItem("role")
       localStorage.removeItem("email")
       localStorage.removeItem("jwt")
       localStorage.removeItem("refreshToken")

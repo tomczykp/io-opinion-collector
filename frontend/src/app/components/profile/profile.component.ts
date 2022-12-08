@@ -76,4 +76,8 @@ export class ProfileComponent implements OnInit {
         });
     }
   }
+  removeUser() {
+    this.userService.removeByUser()
+    console.log("Email send");
+  }
 }

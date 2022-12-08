@@ -4,7 +4,6 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -13,8 +12,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
-
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 
 @Service
@@ -32,7 +32,6 @@ public class MailManager {
             Resource resource = resourceLoader.getResource("classpath:html/template.html");
             Reader reader = new InputStreamReader(resource.getInputStream());
             String email = FileCopyUtils.copyToString(reader);
-
             email = email.replace("$username", name);
             email = email.replace("$link", link);
             email = email.replace("$message", message);
@@ -68,7 +67,7 @@ public class MailManager {
     public void deletionEmail(String to, String name, String link) {
         this.send(to,
                 name,
-                "We are sad that you want to leave us already. If you really want to go, click on the link to activate your account:",
+                "We are sad to see you leave us already. If you really want to go, click on the link to delete your account:",
                 "Hope to see you soon",
                 "Delete Account",
                 link);

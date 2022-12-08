@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
+import {BehaviorSubject, catchError, Observable} from "rxjs";
+
 import {User} from "../model/User";
 
 @Injectable({
@@ -19,4 +21,9 @@ export class UserService {
   }
 
 
+
+  removeByUser() {
+    return this.http.delete(environment.apiUrl+"/remove/user");
 }
+}
+

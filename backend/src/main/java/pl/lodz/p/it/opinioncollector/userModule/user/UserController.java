@@ -24,6 +24,12 @@ public class UserController {
 
     private final UserManager userManager;
 
+    @GetMapping("/")
+    public String greet() {
+        return "Welcome to OpinionCollector!";
+    }
+
+
     @PutMapping("/password")
     @ResponseStatus(HttpStatus.OK)
     public void changePassword(@Valid @RequestBody ChangePasswordDTO dto) throws PasswordNotMatchesException {
@@ -58,7 +64,7 @@ public class UserController {
         return "deletion confirmation email send";
     }
 
-    @GetMapping("/remove/confirm")
+    @GetMapping("/confirm/remove")
     public String confirmDeletion(@Param("token") String token) {
         userManager.confirmDeletion(token);
         return "Confirmed Deletion!";
