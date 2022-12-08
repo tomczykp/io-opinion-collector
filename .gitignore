@@ -26,4 +26,3 @@ hs_err_pid*
 .idea
 tmp
 node_module
-backend/src/main/resources/data.sql
