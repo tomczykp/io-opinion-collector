@@ -3,18 +3,18 @@ package pl.lodz.p.it.opinioncollector.userModule.user;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-import pl.lodz.p.it.opinioncollector.userModule.auth.LoginDTO;
-
 import java.util.List;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 public class UserController {
 
     private final UserManager userManager;

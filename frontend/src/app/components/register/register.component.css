@@ -1,0 +1,9 @@
+#register_form {
+  background-color: ghostwhite;
+}
+
+.validation-message {
+  color: red;
+  font-size: 15px;
+  font-family: 'Poppins', 'sans-serif';
+}

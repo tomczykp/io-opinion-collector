@@ -23,7 +23,7 @@ public class MailManager {
 
 
     @Async
-    private void send(String to, String name, String message, String last, String action, String link) {
+    void send(String to, String name, String message, String last, String action, String link) {
         try {
             File registrationEmail = new File("src/main/resources/html/template.html");
             String email = FileUtils.readFileToString(registrationEmail);

@@ -1,0 +1,56 @@
+<section class="align-middle justify-content-center m-5">
+  <div *ngIf="failedRegister" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Error during signing up</strong> Try with different email or password
+  </div>
+  <div class="container py-5 h-100 w-100">
+    <div class="row d-flex align-items-center justify-content-center h-100">
+      <div class="col-md-8 col-lg-7 col-xl-6">
+        <img src="assets/logo.svg"
+             class="img-fluid " alt="Logo">
+      </div>
+      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 border-dark border-opacity-50 border p-5 rounded-4" id="register_form">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <!-- Email input -->
+          <div class="form-outline mb-4">
+            <span *ngIf="email && email.touched && email.invalid" class="validation-message">Enter a valid email</span>
+            <input required type="email" id="email" formControlName="email" class="form-control form-control-lg" />
+            <label class="form-label" for="email">Email address</label>
+          </div>
+
+          <!-- Username input -->
+          <div class="form-outline mb-4">
+            <span *ngIf="username && username.touched && username.invalid" class="validation-message">Enter a valid username</span>
+            <input required type="text" id="username" formControlName="username" class="form-control form-control-lg" />
+            <label class="form-label" for="email">Username</label>
+          </div>
+
+          <!-- Password input -->
+          <div class="form-outline mb-4">
+            <span *ngIf="password && password.touched && password.invalid" class="validation-message">Password is required</span>
+            <input required type="password" id="password" formControlName="password" class="form-control form-control-lg" />
+            <label class="form-label" for="password">Password</label>
+          </div>
+
+
+          <!-- Submit button -->
+          <input *ngIf="registerForm.valid" type="submit" class="btn btn-primary btn-lg btn-block w-100" value="Register">
+          <input *ngIf="!registerForm.valid" type="submit" class="disabled btn btn-primary btn-lg btn-block w-100" value="Register">
+
+          <div class="divider d-flex align-items-center my-4 justify-content-around">
+            <p class="text-center fw-bold mx-3 mb-0 text-muted">Or continue with:</p>
+          </div>
+
+          <div class="justify-content-around align-items-center d-flex">
+            <a class="btn btn-primary btn-lg btn-block w-50 me-2" style="background-color: #3b5998" href="#!"
+               role="button">
+              <i class="fab fa-facebook-f me-2"></i>
+            </a>
+            <a class="btn btn-danger btn-lg btn-block w-50 ms-2" style="background-color: #e8545f" href="#!"
+               role="button">
+              <i class="fab fa-google me-2"></i></a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
