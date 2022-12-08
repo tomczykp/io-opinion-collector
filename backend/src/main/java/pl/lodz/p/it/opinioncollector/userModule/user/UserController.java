@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,19 +27,24 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    public String changePassword(@Param("oldPassword") String oldPassword, @Param("newPassword") String newPassword, HttpServletRequest request) {
-        return userManager.changePassword(oldPassword, newPassword, request);
+    public ResponseEntity<String> changePassword(@Param("oldPassword") String oldPassword, @Param("newPassword") String newPassword, Principal principal) {
+        try {
+            userManager.changePassword(oldPassword, newPassword);
+            return ResponseEntity.ok("Password has been changed");
+        } catch (PasswordNotMatchesException e) {
+            return ResponseEntity.status(401).body("Wrong password");
+        }
     }
 
     @PostMapping("/lock")
     public String lockUser(@NotNull @Param("id") Long id) {
-        userManager.lock(id);
+        userManager.lockUser(id);
         return "user locked";
     }
 
     @PostMapping("/unlock")
     public String unlockUser(@NotNull @Param("id") Long id) {
-        userManager.unlock(id);
+        userManager.unlockUser(id);
         return "user unlocked";
     }
 
@@ -48,8 +55,8 @@ public class UserController {
     }
 
     @DeleteMapping("/remove/user")
-    public String removeUserByUser(HttpServletRequest request) {
-        userManager.removeUserByUser(request);
+    public String removeUserByUser() {
+        userManager.removeUserByUser();
         return "deletion confirmation email send";
     }
 
@@ -60,8 +67,8 @@ public class UserController {
     }
 
     @PostMapping("/changeUsername")
-    public String changeUsername(@Param("newUsername") String newUsername, HttpServletRequest request) {
-        userManager.changeUsername(newUsername, request);
+    public String changeUsername(@Param("newUsername") String newUsername) {
+        userManager.changeUsername(newUsername);
         return "username has been changed";
     }
 

@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/refresh").permitAll()
                         .requestMatchers("/logout").permitAll()
-                        .requestMatchers("/changePassword").permitAll()
+                        .requestMatchers("/changePassword").authenticated()
                         .requestMatchers("/remove/**").permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

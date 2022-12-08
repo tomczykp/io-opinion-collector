@@ -5,3 +5,7 @@ nav {
 i:hover {
   cursor: pointer;
 }
+
+i {
+  font-size: 26px;
+}

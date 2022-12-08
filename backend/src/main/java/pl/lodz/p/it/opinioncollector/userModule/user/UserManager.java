@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +18,7 @@ import pl.lodz.p.it.opinioncollector.userModule.token.Token;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenRepository;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenType;
 
+import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -33,26 +35,10 @@ public class UserManager implements UserDetailsService {
     private final MailManager mailManager;
 
     @Override
-    public UserDetails loadUserByUsername(String email) {
+    public User loadUserByUsername(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    private User getUserFromJwt(String jwt) {
-        Claims claims = jwtProvider.parseJWT(jwt).getBody();
-        UserDetails userDetails = loadUserByUsername(claims.getSubject());
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        return user;
-    }
-
-    private Token generateAndSaveRefreshToken(User user) {
-        Token verificationToken = new Token();
-        verificationToken.setUser(user);
-        verificationToken.setToken(UUID.randomUUID().toString());
-        verificationToken.setType(TokenType.REFRESH_TOKEN);
-        verificationToken.setCreatedAt(Instant.now());
-        return tokenRepository.save(verificationToken);
-    }
 
     private Token generateAndSaveDeletionToken(User user) {
         Token deletionToken = new Token();
@@ -63,20 +49,19 @@ public class UserManager implements UserDetailsService {
         return tokenRepository.save(deletionToken);
     }
 
-    public String changePassword(String oldPassword, String newPassword, HttpServletRequest httpServletRequest) {
-        String jwt = jwtProvider.getToken(httpServletRequest);
-        User user = getUserFromJwt(jwt);
+    @Transactional
+    public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchesException {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = loadUserByUsername(email);
         if (encoder.matches(oldPassword, user.getPassword())) {
-            tokenRepository.deleteTokenByToken(tokenRepository.findTokenByUser(userRepository.findByEmail(user.getUsername()).orElseThrow()).orElseThrow().getToken());
             user.setPassword(encoder.encode(newPassword));
             userRepository.save(user);
-            this.generateAndSaveRefreshToken(user);
-            return jwtProvider.generateJWT(user.getEmail());
+        } else {
+            throw new PasswordNotMatchesException();
         }
-        return "Nie poprawne haslo!";
     }
 
-    public void lock(Long id) {
+    public void lockUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         user.setLocked(true);
@@ -85,7 +70,7 @@ public class UserManager implements UserDetailsService {
         mailManager.adminActionEmail(user.getEmail(), user.getUsername(), "blocked");
     }
 
-    public void unlock(Long id) {
+    public void unlockUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         user.setLocked(false);
@@ -93,9 +78,9 @@ public class UserManager implements UserDetailsService {
         mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "unlocked");
     }
 
-    public void removeUserByUser(HttpServletRequest httpServletRequest) {
-        String jwt = jwtProvider.getToken(httpServletRequest);
-        User user = getUserFromJwt(jwt);
+    public void removeUserByUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = loadUserByUsername(email);
         String deletionToken = generateAndSaveDeletionToken(user).getToken();
         String link = "http://localhost:8080/api/remove/confirm?token=" + deletionToken;
         mailManager.deletionEmail(user.getEmail(), user.getVisibleName(), link);
@@ -117,9 +102,9 @@ public class UserManager implements UserDetailsService {
         mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "deleted");
     }
 
-    public void changeUsername(String newUsername, HttpServletRequest request) {
-        String jwt = jwtProvider.getToken(request);
-        User user = getUserFromJwt(jwt);
+    public void changeUsername(String newUsername) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = loadUserByUsername(email);
         user.setVisibleName(newUsername);
         userRepository.save(user);
     }
