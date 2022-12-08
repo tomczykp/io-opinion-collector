@@ -1,10 +1,9 @@
 package pl.lodz.p.it.opinioncollector.userModule.user;
 
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,24 +12,27 @@ import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin
-@RequestMapping("/users")
 public class UserController {
 
     private final UserManager userManager;
 
-    @PutMapping("/password")
-    @ResponseStatus(HttpStatus.OK)
-    public void changePassword(@Valid @RequestBody ChangePasswordDTO dto) throws PasswordNotMatchesException {
+    @GetMapping("/")
+    public String greet() {
+        return "Welcome to OpinionCollector!";
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<String> changePassword(@Param("oldPassword") String oldPassword, @Param("newPassword") String newPassword) {
         try {
-            userManager.changePassword(dto.oldPassword, dto.newPassword);
+            userManager.changePassword(oldPassword, newPassword);
+            return ResponseEntity.ok("Password has been changed");
         } catch (PasswordNotMatchesException e) {
-            throw new PasswordNotMatchesException();
+            return ResponseEntity.status(401).body("Wrong password");
         }
     }
 
@@ -58,30 +60,21 @@ public class UserController {
         return "deletion confirmation email send";
     }
 
-    @GetMapping("/remove/confirm")
+    @GetMapping("/confirm/remove")
     public String confirmDeletion(@Param("token") String token) {
         userManager.confirmDeletion(token);
         return "Confirmed Deletion!";
     }
 
-    @PostMapping("/username")
-    @ResponseStatus(HttpStatus.OK)
-    public void changeUsername(@Param("newUsername") String newUsername) {
-        try {
-            userManager.changeUsername(newUsername);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
-        }
-
+    @PostMapping("/changeUsername")
+    public String changeUsername(@Param("newUsername") String newUsername) {
+        userManager.changeUsername(newUsername);
+        return "username has been changed";
     }
 
-    @GetMapping
-    public List<User> getAll() {
-        return userManager.getAllUsers();
-    }
-
-    @GetMapping("/{email}")
-    public User getByEmail(@PathVariable("email") String email) {
-        return userManager.loadUserByUsername(email);
+    @GetMapping("/getAll")
+    public ResponseEntity getAll() {
+        List<User> userList = userManager.getAllUsers();
+        return ResponseEntity.ok(userList);
     }
 }

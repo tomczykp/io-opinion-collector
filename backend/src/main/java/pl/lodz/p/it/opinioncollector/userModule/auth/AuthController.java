@@ -33,7 +33,7 @@ public class AuthController {
         return authManager.login(dto);
     }
 
-    @GetMapping("/register/confirm")
+    @GetMapping("/confirm/register")
     public String confirmRegistration(@Param("token") String token) {
         authManager.confirmRegistration(token);
         return "Confirmed!";
