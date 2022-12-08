@@ -15,7 +15,8 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required])
   })
 
-  failedLogin = false;
+  wrongCredentials = false;
+  accountLocked = false;
 
   get email() {
     return this.loginForm.get('email');
@@ -56,9 +57,15 @@ export class LoginComponent implements OnInit {
           localStorage.removeItem("jwt")
           localStorage.removeItem("refreshToken")
           this.authService.authenticated.next(false);
-          console.log("No authentication");
+          console.log(error);
           this.clearPassword();
-          this.failedLogin = true;
+          if (error.status === 403) {
+            this.wrongCredentials = true;
+          }
+
+          if (error.status === 423) {
+            this.accountLocked = true;
+          }
         });
     }
   }

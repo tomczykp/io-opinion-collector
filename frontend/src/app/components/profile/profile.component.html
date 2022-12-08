@@ -25,7 +25,7 @@
                   </div>
                 </div>
                 <div class="w-100">
-                  <button class="btn btn-danger col mt-3 mb-3 me-3">Log out from all devices</button>
+                  <button (click)="forceLogout()" class="btn btn-danger col mt-3 mb-3 me-3">Log out from all devices</button>
                   <button class="btn btn-warning col mt-3 mb-3 me-3">Change username</button>
                 </div>
               </div>
@@ -35,6 +35,15 @@
       </div>
     </div>
   </div>
+</div>
+<div *ngIf="passwordChangeStatus == 1" class="alert alert-success alert-dismissible fade show m-3" role="alert">
+  <strong>Password changed successfully</strong> Now you can force log out on all devices
+</div>
+<div *ngIf="passwordChangeStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+  <strong>Error during changing password</strong> You should check your credentials
+</div>
+<div *ngIf="passwordChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+  <strong>Repeated new password doesn't match new password</strong>
 </div>
 <div class="page-content page-container m-3">
   <div class="justify-content-center">
@@ -46,21 +55,23 @@
               <h3 class="mb-0">Change password</h3>
             </div>
             <div class="card-body">
-              <form class="form" role="form" autocomplete="off">
+              <form [formGroup]="changePasswordForm" class="form" role="form" autocomplete="off" (ngSubmit)="onPasswordChangeSubmit()">
                 <div class="form-group">
+                  <h6 *ngIf="oldPassword && oldPassword.touched && oldPassword.invalid" class="validation-message">Old password is required</h6>
                   <label for="inputPasswordOld">Current Password</label>
-                  <input type="password" class="form-control" id="inputPasswordOld" required="">
+                  <input formControlName="oldPassword" type="password" class="form-control" id="inputPasswordOld" required="">
                 </div>
                 <div class="form-group">
+                  <h6 *ngIf="newPassword && newPassword.touched && newPassword.invalid" class="validation-message">New password doesn't meet the strength requirements</h6>
                   <label for="inputPasswordNew">New Password</label>
-                  <input type="password" class="form-control" id="inputPasswordNew" required="">
+                  <input formControlName="newPassword" type="password" class="form-control" id="inputPasswordNew" required="">
                   <span class="form-text small text-muted">
                                             The password must be 8-20 characters, and must <em>not</em> contain spaces.
                                         </span>
                 </div>
                 <div class="form-group">
                   <label for="inputPasswordNewVerify">Verify</label>
-                  <input type="password" class="form-control" id="inputPasswordNewVerify" required="">
+                  <input formControlName="repeatedPassword" type="password" class="form-control" id="inputPasswordNewVerify" required="">
                   <span class="form-text small text-muted">
                                             To confirm, type the new password again.
                                         </span>
@@ -76,3 +87,5 @@
     </div>
   </div>
 </div>
+
+
