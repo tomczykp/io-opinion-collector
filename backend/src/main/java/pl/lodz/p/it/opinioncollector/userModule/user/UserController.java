@@ -1,9 +1,10 @@
 package pl.lodz.p.it.opinioncollector.userModule.user;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,24 +13,21 @@ import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin
+@RequestMapping("/users")
 public class UserController {
 
     private final UserManager userManager;
 
-    @GetMapping("/")
-    public String greet() {
-        return "Welcome to OpinionCollector!";
-    }
-
-    @PostMapping("/changePassword")
-    public ResponseEntity<String> changePassword(@Param("oldPassword") String oldPassword, @Param("newPassword") String newPassword, Principal principal) {
+    @PutMapping("/password")
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO dto, Principal principal) {
         try {
-            userManager.changePassword(oldPassword, newPassword);
+            userManager.changePassword(dto.oldPassword, dto.newPassword);
             return ResponseEntity.ok("Password has been changed");
         } catch (PasswordNotMatchesException e) {
             return ResponseEntity.status(401).body("Wrong password");
@@ -66,15 +64,24 @@ public class UserController {
         return "Confirmed Deletion!";
     }
 
-    @PostMapping("/changeUsername")
-    public String changeUsername(@Param("newUsername") String newUsername) {
-        userManager.changeUsername(newUsername);
-        return "username has been changed";
+    @PostMapping("/username")
+    @ResponseStatus(HttpStatus.OK)
+    public void changeUsername(@Param("newUsername") String newUsername) {
+        try {
+            userManager.changeUsername(newUsername);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity getAll() {
-        List<User> userList = userManager.getAllUsers();
-        return ResponseEntity.ok(userList);
+    @GetMapping
+    public List<User> getAll() {
+        return userManager.getAllUsers();
+    }
+
+    @GetMapping("/{email}")
+    public User getByEmail(@PathVariable("email") String email) {
+        return userManager.loadUserByUsername(email);
     }
 }

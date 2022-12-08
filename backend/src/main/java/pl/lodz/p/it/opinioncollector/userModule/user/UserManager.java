@@ -51,6 +51,7 @@ public class UserManager implements UserDetailsService {
 
     @Transactional
     public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchesException {
+        //TODO check if password is strong enough
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = loadUserByUsername(email);
         if (encoder.matches(oldPassword, user.getPassword())) {
