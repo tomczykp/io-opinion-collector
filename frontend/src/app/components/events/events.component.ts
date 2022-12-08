@@ -40,7 +40,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
 
   closeEvent(id: string): void {
     this.eventsService.closeEvent(id);
-    this.getEvents();
+    location.reload();
   }
 
 }
