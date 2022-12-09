@@ -70,8 +70,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAll() {
-        return userManager.getAllUsers();
+    public List<User> getAll(@Param("email") String email) {
+        return userManager.getAllUsers(email);
     }
 
     @GetMapping("/{email}")

@@ -26,7 +26,7 @@ public class MailManager {
 
 
     @Async
-    void send(String to, String name, String message, String last, String action, String link) {
+    void send(String to, String name, String message, String last, String action, String link, String subject) {
         try {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
             Resource resource = resourceLoader.getResource("classpath:html/template.html");
@@ -60,7 +60,8 @@ public class MailManager {
                 "Thank you for joining Opinion Collector. Please click on the below link to activate your account:",
                 "See you soon",
                 "Activate Now",
-                link);
+                link,
+                "Confirm your email");
     }
 
     @Async
@@ -70,15 +71,29 @@ public class MailManager {
                 "We are sad to see you leave us already. If you really want to go, click on the link to delete your account:",
                 "Hope to see you soon",
                 "Delete Account",
-                link);
+                link,
+                "Confirm account deletion");
     }
 
+    @Async
     public void adminActionEmail(String to, String name, String action) {
         this.send(to,
                 name,
-                "We would like to report that Administrator has " + action + ",your accout.",
-                "See you soon",
+                "We would like to report that Administrator has " + action + " your accout.",
+                "Opinion Collector team.",
                 "",
-                "");
+                "",
+                "Administrator action");
+    }
+
+    @Async
+    public void resetPasswordEmail(String to, String name, String link) {
+        this.send(to,
+                name,
+                "Click the link below to reset your password.",
+                "Opinion Collector team.",
+                "Reset your password",
+                link,
+                "Reset password");
     }
 }

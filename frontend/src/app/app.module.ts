@@ -18,6 +18,8 @@ import {LoginComponent} from "./components/login/login.component";
 import {RegisterComponent} from "./components/register/register.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
+import { AdminComponent } from './components/admin/admin.component';
+import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import {JwtInterceptor} from "./interceptors/jwt.interceptor";
     NavComponent,
     LoginComponent,
     RegisterComponent,
-    ProfileComponent
+    ProfileComponent,
+    AdminComponent,
+    AdminNavComponent
   ],
   imports: [
     BrowserModule,
