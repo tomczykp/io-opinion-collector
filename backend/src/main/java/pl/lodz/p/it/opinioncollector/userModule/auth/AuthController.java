@@ -39,6 +39,12 @@ public class AuthController {
         return "Confirmed!";
     }
 
+    @GetMapping("/confirm/remove")
+    public String confirmDeletion(@Param("token") String token) {
+        authManager.confirmDeletion(token);
+        return "Confirmed Deletion!";
+    }
+
     @GetMapping("/refresh")
     public String refreshToken(@Param("token") String token) {
         return authManager.validateAndRenewRefreshToken(token);
@@ -50,6 +56,7 @@ public class AuthController {
     }
 
     @DeleteMapping("/signout/force")
+    @ResponseStatus(HttpStatus.OK)
     public void forceSignout() {
         authManager.dropAllRefreshTokens();
     }

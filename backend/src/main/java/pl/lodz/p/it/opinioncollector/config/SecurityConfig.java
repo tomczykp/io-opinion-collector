@@ -41,14 +41,10 @@ public class SecurityConfig {
         http
                 .csrf().disable().cors().and()
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/confirm/**").permitAll()
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/register").permitAll()
-                        .requestMatchers("/refresh").permitAll()
-                        .requestMatchers("/logout").permitAll()
-                        .requestMatchers("/changePassword").authenticated()
-                        .requestMatchers("/remove/**").authenticated()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/users/password").authenticated()
+                        .requestMatchers("/users/remove/**").authenticated()
+                        .requestMatchers("/signout/force").authenticated()
+                        .anyRequest().permitAll()
                 ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

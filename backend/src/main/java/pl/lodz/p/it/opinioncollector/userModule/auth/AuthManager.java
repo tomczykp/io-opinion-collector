@@ -120,6 +120,14 @@ public class AuthManager {
         return jwtProvider.generateJWT(user.getEmail(), user.getRole());
     }
 
+    public void confirmDeletion(String token) {
+        Token deletionToken = tokenRepository.findByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        tokenRepository.deleteTokenByUser(deletionToken.getUser());
+        tokenRepository.deleteTokenByToken(token);
+        userRepository.deleteUserByEmail(deletionToken.getUser().getEmail());
+    }
+
 
     public void dropRefreshToken(String token) {
         tokenRepository.deleteTokenByToken(token);

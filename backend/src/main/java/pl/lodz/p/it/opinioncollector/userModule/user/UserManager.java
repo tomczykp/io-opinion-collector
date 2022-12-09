@@ -47,6 +47,7 @@ public class UserManager implements UserDetailsService {
     }
 
     public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchesException {
+        //TODO check if password is strong enough
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = loadUserByUsername(email);
         if (encoder.matches(oldPassword, user.getPassword())) {
@@ -92,14 +93,6 @@ public class UserManager implements UserDetailsService {
         } catch (Exception e) {
             throw new EmailAlreadyRegisteredException();
         }
-    }
-
-    public void confirmDeletion(String token) {
-        Token deletionToken = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        tokenRepository.deleteTokenByUser(deletionToken.getUser());
-        tokenRepository.deleteTokenByToken(token);
-        userRepository.deleteUserByEmail(deletionToken.getUser().getEmail());
     }
 
     public void removeUserByAdmin(Long id) {

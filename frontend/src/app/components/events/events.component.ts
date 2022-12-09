@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, OnInit, Output, ViewChild} from '@angular/core';
-import {EventsService, OC} from "../../services/events.service";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {Observable} from "rxjs";
+import {EventsService, OC} from "../../services/events.service";
 
 @Component({
   selector: 'app-events',

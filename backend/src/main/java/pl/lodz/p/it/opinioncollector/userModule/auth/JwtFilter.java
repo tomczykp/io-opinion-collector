@@ -5,13 +5,16 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ResponseStatusException;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,25 +25,26 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final UserManager userDetailsService;
-    private final List<AntPathRequestMatcher> excludedMatchers;
+    private final List<AntPathRequestMatcher> securePaths;
 
 
     public JwtFilter(JwtProvider jwtProvider, UserManager userDetailsService) {
         this.jwtProvider = jwtProvider;
         this.userDetailsService = userDetailsService;
-        this.excludedMatchers = new ArrayList<>();
+        this.securePaths = new ArrayList<>();
 
-        excludedMatchers.add(new AntPathRequestMatcher("/confirm/**"));
-        excludedMatchers.add(new AntPathRequestMatcher("/login"));
-        excludedMatchers.add(new AntPathRequestMatcher("/refresh"));
-        excludedMatchers.add(new AntPathRequestMatcher("/register"));
+        //Add secure paths here, and then in SecurityConfig set who can access certain endpoints
+        securePaths.add(new AntPathRequestMatcher("/users/password"));
+        securePaths.add(new AntPathRequestMatcher("/users/remove/**"));
+        securePaths.add(new AntPathRequestMatcher("/signout/force"));
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return excludedMatchers.stream()
-                .anyMatch(antPathRequestMatcher -> antPathRequestMatcher.matches(request));
+        return securePaths.stream()
+                .noneMatch(path -> path.matches(request));
     }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -63,7 +67,7 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
         } else {
-            throw new RuntimeException();
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
     }
 }
