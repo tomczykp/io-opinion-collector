@@ -16,5 +16,5 @@ public interface IEventManager {
 
     List<Event> getEvents(Predicate<Event> Predicate);
 
-    void answerEvent(UUID event);
+    Optional<Event> answerEvent( UUID eventID);
 }

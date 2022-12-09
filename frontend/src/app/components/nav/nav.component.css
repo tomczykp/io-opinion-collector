@@ -9,3 +9,11 @@ i:hover {
 i {
   font-size: 26px;
 }
+
+.button-row {
+  padding: 10px;
+}
+
+.button-row > * {
+  margin: 10px;
+}
