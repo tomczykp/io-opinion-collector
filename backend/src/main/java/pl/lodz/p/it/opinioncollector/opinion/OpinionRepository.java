@@ -16,6 +16,5 @@ public interface OpinionRepository extends JpaRepository<Opinion, OpinionId> {
         """)
     Optional<Opinion> findOne(UUID productId, UUID opinionId);
 
-
     void deleteById_ProductIdAndId_OpinionId(UUID productId, UUID opinionId);
 }

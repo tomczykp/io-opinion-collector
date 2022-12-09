@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.lodz.p.it.opinioncollector.productManagment.Product;
+import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 @Entity
 @Getter
@@ -41,7 +42,6 @@ public class Opinion implements Serializable {
     @JoinColumn(name = "PRODUCT_ID", nullable = false)
     private Product product;
 
-    // TODO uncomment when User is marked with @Entity
-    // @ManyToOne
-    // private User author;
+    @ManyToOne
+    private User author;
 }
