@@ -8,6 +8,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { HomeComponent } from './components/home/home.component';
 import { NavComponent } from './components/nav/nav.component';
+import { ProductsComponent } from './components/products/products.component';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { NavComponent } from './components/nav/nav.component';
     AppComponent,
     HomeComponent,
     NavComponent,
+    ProductsComponent,
 
   ],
   imports: [
