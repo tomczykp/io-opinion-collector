@@ -46,4 +46,12 @@ export class UserService {
   unlock(id: number) {
     return this.http.post(environment.apiUrl + "/users/unlock?id=" + id, {id}, {observe: 'response'});
   }
+
+  confirmResetPassword(newPassword: string, resetToken: string) {
+    return this.http.put(environment.apiUrl + "/users/confirm/reset?password="+newPassword+"&token="+resetToken,{newPassword, resetToken}, {observe: 'response'});
+  }
+
+  resetPassword(email: string) {
+    return this.http.put(environment.apiUrl + "/users/reset?email=" + email, {email}, {observe: 'response'});
+  }
 }

@@ -20,6 +20,8 @@ import {ProfileComponent} from "./components/profile/profile.component";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
 import { AdminComponent } from './components/admin/admin.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
+import { ResetComponent } from './components/reset/reset.component';
+import { ResetConfirmComponent } from './components/reset/reset-confirm/reset-confirm.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
     RegisterComponent,
     ProfileComponent,
     AdminComponent,
-    AdminNavComponent
+    AdminNavComponent,
+    ResetComponent,
+    ResetConfirmComponent
   ],
   imports: [
     BrowserModule,

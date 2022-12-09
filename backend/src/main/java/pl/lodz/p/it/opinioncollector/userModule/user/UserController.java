@@ -78,4 +78,16 @@ public class UserController {
     public User getByEmail(@PathVariable("email") String email) {
         return userManager.loadUserByUsername(email);
     }
+
+    @PutMapping("/reset")
+    public String resetPassword(@Param("email") String email) {
+        userManager.sendResetPassword(email);
+        return "Password reset email send";
+    }
+
+    @PutMapping("/confirm/reset")
+    public String confirmReset(@Param("password") String password, @Param("token") String token) {
+        userManager.resetPassword(password, token);
+        return "Password reset succesful!";
+    }
 }

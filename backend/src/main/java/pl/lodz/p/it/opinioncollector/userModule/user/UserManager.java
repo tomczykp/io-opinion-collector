@@ -46,35 +46,35 @@ public class UserManager implements UserDetailsService {
         return tokenRepository.save(deletionToken);
     }
 
-//    private Token generateAndSavePasswordResetToken(String email) {
-//        Token passwordResetToken = new Token();
-//        User user = userRepository.findByEmail(email)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-//        passwordResetToken.setUser(user);
-//        passwordResetToken.setToken(UUID.randomUUID().toString());
-//        passwordResetToken.setType(TokenType.PASSWORD_RESET_TOKEN);
-//        passwordResetToken.setCreatedAt(Instant.now());
-//        return tokenRepository.save(passwordResetToken);
-//    }
-//
-//    public void sendResetPassword(String email) {
-//        try {
-//            String resetPasswordToken = generateAndSavePasswordResetToken(email).getToken();
-//            String link = "http://localhost:8080/api/confirm/resetPassword?token=" + resetPasswordToken;
-//            mailManager.deletionEmail(email, "your email " + email, link);
-//        } catch (Exception e) {
-//            throw new EmailAlreadyRegisteredException();
-//        }
-//    }
-//
-//    public void resetPassword(String newPassword, String resetToken) {
-//        Token token = tokenRepository.findByToken(resetToken)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-//        User user = token.getUser();
-//        user.setPassword(newPassword);
-//        userRepository.save(user);
-//        tokenRepository.deleteTokenByToken(resetToken);
-//    }
+    private Token generateAndSavePasswordResetToken(String email) {
+        Token passwordResetToken = new Token();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        passwordResetToken.setUser(user);
+        passwordResetToken.setToken(UUID.randomUUID().toString());
+        passwordResetToken.setType(TokenType.PASSWORD_RESET_TOKEN);
+        passwordResetToken.setCreatedAt(Instant.now());
+        return tokenRepository.save(passwordResetToken);
+    }
+
+    public void sendResetPassword(String email) {
+        try {
+            String resetPasswordToken = generateAndSavePasswordResetToken(email).getToken();
+            String link = "http://localhost:4200/resetConfirm/" + resetPasswordToken;
+            mailManager.resetPasswordEmail(email, "your email " + email, link);
+        } catch (Exception e) {
+            throw new EmailAlreadyRegisteredException();
+        }
+    }
+
+    public void resetPassword(String newPassword, String resetToken) {
+        Token token = tokenRepository.findByToken(resetToken)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        User user = token.getUser();
+        user.setPassword(encoder.encode(newPassword));
+        userRepository.save(user);
+        tokenRepository.deleteTokenByToken(resetToken);
+    }
 
     public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchesException {
         //TODO check if password is strong enough
