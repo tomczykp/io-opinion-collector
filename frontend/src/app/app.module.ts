@@ -18,6 +18,11 @@ import {LoginComponent} from "./components/login/login.component";
 import {RegisterComponent} from "./components/register/register.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
+import { ResetComponent } from './components/reset/reset.component';
+import { ResetConfirmComponent } from './components/reset/reset-confirm/reset-confirm.component';
+import { UsersComponent } from './components/users/users.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +32,12 @@ import {JwtInterceptor} from "./interceptors/jwt.interceptor";
     NavComponent,
     LoginComponent,
     RegisterComponent,
-    ProfileComponent
+    ProfileComponent,
+    DashboardComponent,
+    AdminNavComponent,
+    ResetComponent,
+    ResetConfirmComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,
