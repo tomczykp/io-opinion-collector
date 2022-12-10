@@ -7,7 +7,6 @@ import {AuthService} from "../../services/auth.service";
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
 
@@ -16,6 +15,11 @@ export class ProfileComponent implements OnInit {
     repeatedPassword: new FormControl('', [Validators.required]),
     newPassword: new FormControl('', [Validators.required])
   })
+
+  showUsernameChangeInput = false;
+  newUsername = "";
+
+  showDeletionLinkSent = false;
 
   get oldPassword() {
     return this.changePasswordForm.get('oldPassword');
@@ -36,6 +40,8 @@ export class ProfileComponent implements OnInit {
   // 2 if failed password change
   // 3 if newPassword and repeatedPassword not match
 
+  usernameChangeStatus = 0;
+
   constructor(
     private userService: UserService,
     private authService: AuthService) { }
@@ -49,6 +55,8 @@ export class ProfileComponent implements OnInit {
   forceLogout() {
     this.authService.logoutFromAllDevices();
   }
+
+
 
   onPasswordChangeSubmit() {
     if (this.changePasswordForm.valid) {
@@ -79,5 +87,38 @@ export class ProfileComponent implements OnInit {
   removeUser() {
     this.userService.removeByUser()
     console.log("Email send");
+  }
+
+  showUsernameChange() {
+    this.showUsernameChangeInput = true;
+  }
+
+  changeUsername() {
+    if (this.user?.visibleName == this.newUsername) {
+      this.usernameChangeStatus = 3
+      return
+    }
+
+    this.userService.changeUsername(this.newUsername).subscribe((result) => {
+      if (result.status === 200) {
+        this.usernameChangeStatus = 1;
+        this.newUsername = "";
+        this.ngOnInit();
+      }
+    }, (error) => {
+      this.usernameChangeStatus = 2;
+    })
+    this.showUsernameChangeInput = false;
+  }
+
+  cancelUsernameChange() {
+    this.usernameChangeStatus = 0;
+    this.showUsernameChangeInput = false;
+    this.newUsername = "";
+  }
+
+  deleteAccount() {
+    this.userService.removeByUser()
+    this.showDeletionLinkSent = true;
   }
 }

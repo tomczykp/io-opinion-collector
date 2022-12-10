@@ -1,28 +1,27 @@
-<div class="col-md-offset">
-    <div class="panel panel-default" style="position: absolute; top:20vh; bottom:0; left:10%; right:10%; margin: auto">
-        <div class="panel-body">
-        <div *ngIf="emailStatus == 1" class="alert alert-success alert-dismissible fade show m-3" role="alert">
-            <strong>Email has been send</strong>
-            </div>
-            <div *ngIf="emailStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-            <strong>Given data is not an email, or there is no user with given email</strong>
-            </div>   
-        <div class="text-center">
-            <h3><i class="fa fa-lock fa-4x"></i></h3>
+<div *ngIf="emailStatus == 1" class="alert alert-success alert-dismissible fade show m-3" role="alert">
+  <strong>Email has been sent</strong>
+</div>
+<div *ngIf="emailStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+  <strong>Given data is not an email, or there is no user with given email</strong>
+</div>
+<div class="container">
+    <div style="" class="justify-content-center align-middle d-flex">
+        <div class="card p-5 mt-5 rounded-4" style="background-color: ghostwhite;">
+        <div class="text-center card-body">
+            <h3><i class="bi bi-lock bi-lock"></i></h3>
             <h2 class="text-center">Forgot Password?</h2>
             <p>You can reset your password here.</p>
             <div class="panel-body">
             <form [formGroup]="resetPasswordForm" role="form" autocomplete="off" class="form" (ngSubmit)="resetPassword()">
                 <div class="form-group" style="position: relative; margin: auto; max-width: 300px;">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope color-blue"></i></span>
-                    <input formControlName="email" name="email" placeholder="email address" class="form-control"  type="email">
+                  <input formControlName="email" name="email" placeholder="email address" class="form-control"  type="email">
                 </div>
                 </div>
                 <div class="form-group">
                 <input name="recover-submit" class="btn btn-lg btn-primary btn-block mt-3" value="Send email" type="submit">
-                </div>    
-                <input type="hidden" class="hide" name="token" id="token" value=""> 
+                </div>
+                <input type="hidden" class="hide" name="token" id="token" value="">
             </form>
             </div>
         </div>

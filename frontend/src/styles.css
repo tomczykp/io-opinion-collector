@@ -11,8 +11,16 @@ body {
   background-color: whitesmoke;
 }
 
+html, body {
+  height: 100%;
+}
+
 .validation-message {
   color: red;
   font-size: 15px;
   font-family: 'Poppins', 'sans-serif';
+}
+
+.hover-icon:hover {
+  cursor: pointer;
 }

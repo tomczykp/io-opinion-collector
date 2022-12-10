@@ -31,20 +31,24 @@ export class UserService {
     return this.http.put(environment.apiUrl + "/users/password", {oldPassword, newPassword}, {observe: 'response'})
   }
 
+  changeUsername(username: string) {
+    return this.http.put(environment.apiUrl + "/users/username?newUsername=" + username, {},{observe: 'response'})
+  }
+
   removeByUser() {
     return this.http.delete(environment.apiUrl + "/users/remove/user", {observe: 'response'});
   }
 
-  removeByAdmin(id: number) {
-    return this.http.delete(environment.apiUrl + "/users/remove/admin?id=" + id, {observe: 'response'})
+  removeByAdmin(email: String) {
+    return this.http.delete(environment.apiUrl + "/users/remove/admin?email=" + email, {observe: 'response'})
   }
 
-  lock(id: number) {
-    return this.http.post(environment.apiUrl + "/users/lock?id=" + id, null, {observe: 'response'});
+  lock(email: String) {
+    return this.http.post(environment.apiUrl + "/users/lock?email=" + email, {}, {observe: 'response'});
   }
 
-  unlock(id: number) {
-    return this.http.post(environment.apiUrl + "/users/unlock?id=" + id, null, {observe: 'response'});
+  unlock(email: String) {
+    return this.http.post(environment.apiUrl + "/users/unlock?email=" + email, {}, {observe: 'response'});
   }
 
   confirmResetPassword(newPassword: string, resetToken: string) {

@@ -1,33 +1,31 @@
-<div class="col-md-offset">
-    <div class="panel panel-default" style="position: absolute; top:20vh; bottom:0; left:10%; right:10%; margin: auto">
+<div *ngIf="passwordChangeStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+  <strong>Error during changing password</strong>
+</div>
+<div *ngIf="passwordChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+  <strong>Repeated password doesn't match password</strong>
+</div>
+<div class="container">
+    <div class="justify-content-center align-middle d-flex">
         <div class="panel-body">
-              <div *ngIf="passwordChangeStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-                <strong>Error during changing password</strong>
-              </div>
-              <div *ngIf="passwordChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-                <strong>Repeated password doesn't match password</strong>
-              </div>
-        <div class="text-center">
-            <h3><i class="fa fa-lock fa-4x"></i></h3>
-            <h2 class="text-center">Hello user, this is a form for a password reset!</h2>
+        <div class="text-center card p-5 rounded-4 mt-5" style="background-color: ghostwhite">
+            <h3><i class="bi-lock bi-unlock fa-4x"></i></h3>
+            <h2 class="text-center">You're almost there!</h2>
             <p>You can reset your password here.</p>
             <div class="panel-body">
             <form [formGroup]="confirmPassword" role="form" autocomplete="off" class="form" (ngSubmit)="resetPassword()">
                 <div class="form-group" style="position: relative; margin: auto; max-width: 300px;">
                 <h6 *ngIf="password && password.touched && password.invalid" class="validation-message">Enter your password</h6>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope color-blue"></i></span>
                     <input formControlName="password" name="email" placeholder="password" class="form-control"  type="password" required="">
                 </div>
                 <div class="input-group mt-3">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope color-blue"></i></span>
-                    <input formControlName="repeatPassword" name="email" placeholder="reenter password" class="form-control"  type="password" required="">
+                    <input formControlName="repeatPassword" name="email" placeholder="repeat password" class="form-control"  type="password" required="">
                 </div>
                 </div>
                 <div class="form-group">
                 <input name="recover-submit" class="btn btn-lg btn-primary btn-block mt-3" value="Reset Password" type="submit">
                 </div>
-            
+
                 <input type="hidden" class="hide" name="token" id="token" value="">
             </form>
             </div>
@@ -35,4 +33,3 @@
         </div>
     </div>
 </div>
-    
