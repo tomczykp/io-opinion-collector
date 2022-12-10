@@ -11,10 +11,11 @@ import {Router} from "@angular/router";
 export class ResetConfirmComponent implements OnInit {
 
   token: string = "";
+  passwordChangeStatus = 0;
 
   confirmPassword = new FormGroup({
     password: new FormControl('', [Validators.required]),
-    repeatedPassword: new FormControl('', [Validators.required])
+    repeatPassword: new FormControl('', [Validators.required])
   })
 
   get password() {
@@ -36,12 +37,27 @@ export class ResetConfirmComponent implements OnInit {
   }
 
   resetPassword() {
+    if (this.confirmPassword.valid) {
     let pass = this.confirmPassword.getRawValue().password;
-    let repeat = this.confirmPassword.getRawValue().repeatedPassword;
+    let repeat = this.confirmPassword.getRawValue().repeatPassword;
+
+    if (pass !== repeat) {
+      this.passwordChangeStatus = 3;
+      return;
+    }
+
       this.userService.confirmResetPassword(pass!.toString(), this.token)
       .subscribe((result) => {
-        this.router.navigate(['/login']);
-      })
-      this.router.navigate(['/login']);
+        console.log(result.status)
+        if (result.status == 200) {
+          this.router.navigate(['/login']);
+        }
+      }, (error) => {
+        console.log(error);
+        this.passwordChangeStatus = 2;
+        this.password?.reset();
+        this.repeatPassword?.reset();
+      });
+    }
   }
 }

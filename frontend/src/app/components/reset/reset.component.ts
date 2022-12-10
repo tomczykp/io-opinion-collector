@@ -9,7 +9,7 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class ResetComponent implements OnInit {
 
-  token: string = "";
+  emailStatus = 0;
 
   resetPasswordForm = new FormGroup({
     email: new FormControl('', [Validators.required])
@@ -19,19 +19,24 @@ export class ResetComponent implements OnInit {
     return this.resetPasswordForm.get('email');
   }
 
-  constructor(private route: ActivatedRoute,
-              private userService: UserService) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
   }
 
   resetPassword() {
     let email= this.resetPasswordForm.getRawValue().email;
-    console.log(email);
-    this.userService.resetPassword(email!.toString()).subscribe((result) => {
+    this.userService.resetPassword(email!.toString())
+    .subscribe((result) => {
+       console.log(result.status);
        if (result.status == 200) {
-        console.log("Email has been send");
+        this.email?.reset();
+        this.emailStatus = 1;
        }
+    }, (error) => {
+      console.log(error);
+      this.email?.reset();
+      this.emailStatus = 2;
     });
   }
 }

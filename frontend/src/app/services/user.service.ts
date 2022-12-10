@@ -40,18 +40,18 @@ export class UserService {
   }
 
   lock(id: number) {
-    return this.http.post(environment.apiUrl + "/users/lock?id=" + id, {id}, {observe: 'response'});
+    return this.http.post(environment.apiUrl + "/users/lock?id=" + id, null, {observe: 'response'});
   }
 
   unlock(id: number) {
-    return this.http.post(environment.apiUrl + "/users/unlock?id=" + id, {id}, {observe: 'response'});
+    return this.http.post(environment.apiUrl + "/users/unlock?id=" + id, null, {observe: 'response'});
   }
 
   confirmResetPassword(newPassword: string, resetToken: string) {
-    return this.http.put(environment.apiUrl + "/users/confirm/reset?password="+newPassword+"&token="+resetToken,{newPassword, resetToken}, {observe: 'response'});
+    return this.http.put(environment.apiUrl + "/users/confirm/reset?password="+newPassword+"&token="+resetToken, null , {observe: 'response'});
   }
 
   resetPassword(email: string) {
-    return this.http.put(environment.apiUrl + "/users/reset?email=" + email, {email}, {observe: 'response'});
+    return this.http.put(environment.apiUrl + "/users/reset?email=" + email, null, {observe: 'response'});
   }
 }

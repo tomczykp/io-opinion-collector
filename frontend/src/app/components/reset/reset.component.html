@@ -1,6 +1,12 @@
 <div class="col-md-offset">
     <div class="panel panel-default" style="position: absolute; top:20vh; bottom:0; left:10%; right:10%; margin: auto">
         <div class="panel-body">
+        <div *ngIf="emailStatus == 1" class="alert alert-success alert-dismissible fade show m-3" role="alert">
+            <strong>Email has been send</strong>
+            </div>
+            <div *ngIf="emailStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+            <strong>Given data is not an email, or there is no user with given email</strong>
+            </div>   
         <div class="text-center">
             <h3><i class="fa fa-lock fa-4x"></i></h3>
             <h2 class="text-center">Forgot Password?</h2>

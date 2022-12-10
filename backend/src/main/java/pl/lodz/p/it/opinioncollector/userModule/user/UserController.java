@@ -53,9 +53,9 @@ public class UserController {
     }
 
     @DeleteMapping("/remove/user")
-    public String removeUserByUser() {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeUserByUser() {
         userManager.removeUserByUser();
-        return "Deletion confirmation email has been sent";
     }
 
     @PostMapping("/username")
@@ -70,6 +70,7 @@ public class UserController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<User> getAll(@Param("email") String email) {
         return userManager.getAllUsers(email);
     }
@@ -80,14 +81,14 @@ public class UserController {
     }
 
     @PutMapping("/reset")
-    public String resetPassword(@Param("email") String email) {
+    @ResponseStatus(HttpStatus.OK)
+    public void resetPassword(@Param("email") String email) {
         userManager.sendResetPassword(email);
-        return "Password reset email send";
     }
 
     @PutMapping("/confirm/reset")
-    public String confirmReset(@Param("password") String password, @Param("token") String token) {
+    @ResponseStatus(HttpStatus.OK)
+    public void confirmReset(@Param("password") String password, @Param("token") String token) {
         userManager.resetPassword(password, token);
-        return "Password reset succesful!";
     }
 }

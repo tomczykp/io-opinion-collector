@@ -42,7 +42,7 @@ public class MailManager {
                     new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(email, true);
             helper.setTo(to);
-            helper.setSubject("Confirm your email");
+            helper.setSubject(subject);
             helper.setFrom("io.opinioncollector@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
