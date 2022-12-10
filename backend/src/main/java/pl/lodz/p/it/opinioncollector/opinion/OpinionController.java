@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.opinioncollector.eventHandling.EventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
+import pl.lodz.p.it.opinioncollector.productManagment.exceptions.ProductNotFoundException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 @RestController
@@ -47,7 +48,8 @@ public class OpinionController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Opinion create(@PathVariable UUID productId,
-                          @Valid @RequestBody CreateOpinionDto createOpinionDto) {
+                          @Valid @RequestBody CreateOpinionDto createOpinionDto)
+			throws ProductNotFoundException {
         return opinionManager.create(productId, createOpinionDto);
     }
 

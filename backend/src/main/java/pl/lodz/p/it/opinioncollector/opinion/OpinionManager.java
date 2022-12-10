@@ -32,7 +32,7 @@ public class OpinionManager {
                                 .orElseThrow(OpinionNotFoundException::new);
     }
 
-    public Opinion create(UUID productId, CreateOpinionDto createOpinionDto) {
+    public Opinion create(UUID productId, CreateOpinionDto createOpinionDto) throws ProductNotFoundException {
         return productRepository.findById(productId)
                                 .map(product -> {
                                     User user = (User) SecurityContextHolder.getContext()
