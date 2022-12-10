@@ -9,8 +9,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import pl.lodz.p.it.opinioncollector.opinion.exceptions.OpinionNotFoundException;
-import pl.lodz.p.it.opinioncollector.opinion.exceptions.OpinionOperationAccessForbiddenException;
+import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
 import pl.lodz.p.it.opinioncollector.productManagment.ProductRepository;
 import pl.lodz.p.it.opinioncollector.productManagment.exceptions.ProductNotFoundException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
@@ -46,11 +46,13 @@ public class OpinionManager {
                                 .orElseThrow(ProductNotFoundException::new);
     }
 
-    public void deleteOpinion(UUID productId, UUID opinionId) throws OpinionOperationAccessForbiddenException {
+    public void deleteOpinion(UUID productId, UUID opinionId)
+        throws OpinionOperationAccessForbiddenException {
         Optional<Opinion> opinionOptional = opinionRepository.findOne(productId, opinionId);
 
         if (opinionOptional.isPresent()) {
             Opinion opinion = opinionOptional.get();
+            // FIXME userId should be of type UUID
             Long userId = ((User) SecurityContextHolder.getContext()
                                                        .getAuthentication()
                                                        .getPrincipal()).getId();
@@ -64,14 +66,25 @@ public class OpinionManager {
 
     @Transactional
     public Opinion update(UUID productId, UUID opinionId, CreateOpinionDto dto)
-        throws OpinionNotFoundException {
-        return opinionRepository.findOne(productId, opinionId)
-                                .map(opinion -> {
-                                    opinion.setDescription(dto.getDescription());
-                                    opinion.setRate(dto.getRate());
-                                    return opinionRepository.save(opinion);
-                                })
-                                .orElseThrow(OpinionNotFoundException::new);
+        throws OpinionNotFoundException, OpinionOperationAccessForbiddenException {
+
+        Optional<Opinion> opinionOptional = opinionRepository.findOne(productId, opinionId);
+
+        if (opinionOptional.isPresent()) {
+            Opinion opinion = opinionOptional.get();
+
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            if (!Objects.equals(opinion.getAuthor().getId(), user.getId())) {
+                throw new OpinionOperationAccessForbiddenException();
+            }
+
+            opinion.setDescription(dto.getDescription());
+            opinion.setRate(dto.getRate());
+            return opinionRepository.save(opinion);
+        } else {
+            throw new OpinionNotFoundException();
+        }
     }
 
 

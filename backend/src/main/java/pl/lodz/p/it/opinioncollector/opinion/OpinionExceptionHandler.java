@@ -5,8 +5,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import pl.lodz.p.it.opinioncollector.opinion.exceptions.OpinionNotFoundException;
-import pl.lodz.p.it.opinioncollector.opinion.exceptions.OpinionOperationAccessForbiddenException;
+import pl.lodz.p.it.opinioncollector.exceptions.BaseApplicationException;
+import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
 
 @ControllerAdvice
 @ResponseBody
@@ -16,7 +17,7 @@ public class OpinionExceptionHandler {
         OpinionNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleNotFoundException(Exception e) {
+    public String handleNotFoundException(BaseApplicationException e) {
         return e.getMessage();
     }
 
@@ -24,7 +25,7 @@ public class OpinionExceptionHandler {
         OpinionOperationAccessForbiddenException.class
     })
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public String handleAccessForbidenException(Exception e) {
+    public String handleAccessForbidenException(BaseApplicationException e) {
         return e.getMessage();
     }
 }

@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.opinioncollector.eventHandling.EventManager;
-import pl.lodz.p.it.opinioncollector.opinion.exceptions.OpinionNotFoundException;
-import pl.lodz.p.it.opinioncollector.opinion.exceptions.OpinionOperationAccessForbiddenException;
+import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
 
 @RestController
 @RequestMapping("/products/{productId}/opinions")
@@ -62,7 +62,7 @@ public class OpinionController {
     public Opinion update(@PathVariable UUID productId,
                           @PathVariable UUID opinionId,
                           @Valid @RequestBody CreateOpinionDto dto)
-        throws OpinionNotFoundException {
+        throws OpinionNotFoundException, OpinionOperationAccessForbiddenException {
         return opinionManager.update(productId, opinionId, dto);
     }
 
