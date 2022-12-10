@@ -1,9 +1,8 @@
 package pl.lodz.p.it.opinioncollector.productManagment.exceptions;
 
 
-import jakarta.persistence.EntityNotFoundException;
 
-public class ProductNotFoundException extends EntityNotFoundException {
+public class ProductNotFoundException extends Exception {
     public ProductNotFoundException() {
     }
 

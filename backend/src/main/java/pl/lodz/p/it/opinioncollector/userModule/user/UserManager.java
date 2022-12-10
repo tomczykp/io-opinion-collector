@@ -1,12 +1,8 @@
 package pl.lodz.p.it.opinioncollector.userModule.user;
 
-
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,8 +85,8 @@ public class UserManager implements UserDetailsService {
         }
     }
 
-    public void lockUser(Long id) {
-        User user = userRepository.findById(id)
+    public void lockUser(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         try {
             user.setLocked(true);
@@ -102,8 +98,8 @@ public class UserManager implements UserDetailsService {
         }
     }
 
-    public void unlockUser(Long id) {
-        User user = userRepository.findById(id)
+    public void unlockUser(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         try {
             user.setLocked(false);
@@ -126,8 +122,8 @@ public class UserManager implements UserDetailsService {
         }
     }
 
-    public void removeUserByAdmin(Long id) {
-        User user = userRepository.findById(id)
+    public void removeUserByAdmin(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         try {
             userRepository.deleteUserByEmail(user.getEmail());

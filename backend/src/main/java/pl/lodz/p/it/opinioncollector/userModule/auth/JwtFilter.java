@@ -36,10 +36,10 @@ public class JwtFilter extends OncePerRequestFilter {
         //Add secure paths here, and then in SecurityConfig set who can access certain endpoints
         securePaths.add(new AntPathRequestMatcher("/users/password"));
         securePaths.add(new AntPathRequestMatcher("/users/remove/**"));
-        securePaths.add(new AntPathRequestMatcher("/signout/force"));
-        securePaths.add(new AntPathRequestMatcher("/users/remove/admin"));
         securePaths.add(new AntPathRequestMatcher("/users/lock"));
         securePaths.add(new AntPathRequestMatcher("/users/unlock"));
+        securePaths.add(new AntPathRequestMatcher("/users/username"));
+        securePaths.add(new AntPathRequestMatcher("/signout/force"));
     }
 
     @Override
