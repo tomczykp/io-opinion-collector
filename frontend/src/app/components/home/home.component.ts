@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-home',
@@ -7,8 +8,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  text = "";
+  authenticated = false;
 
-  ngOnInit(): void {  }
+  constructor(public authService: AuthService) { }
+
+  ngOnInit(): void {
+
+    this.authService.authenticated.subscribe((change) => {
+      this.authenticated = change;
+
+      if (this.authenticated) {
+        this.text = localStorage.getItem("email")!;
+      } else {
+        this.text = "";
+      }
+    })
+  }
 
 }
