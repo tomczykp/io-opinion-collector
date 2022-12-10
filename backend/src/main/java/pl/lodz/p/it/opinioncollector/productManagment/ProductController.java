@@ -46,23 +46,22 @@ public class ProductController {
         return productManager.getUnconfirmedSuggestions();
     }
 
-    //PutMapping
+    //PostMapping
 
-    @PutMapping("")
+    @PostMapping("")
     public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDTO productDTO) {
         Product product = productManager.createProduct(productDTO);
         return ResponseEntity.ok(product);
     }
 
-    @PutMapping("/suggestion")
+    @PostMapping("/suggestion")
     public ResponseEntity<Product> createSuggestion(@Valid @RequestBody ProductDTO productDTO) {
         Product product = productManager.createSuggestion(productDTO);
         return ResponseEntity.ok(product);
     }
 
-    //PostMapping
-
-    @PostMapping("/{uuid}")
+    //PutMapping
+    @PutMapping("/{uuid}")
     public ResponseEntity<Product> updateProduct(@PathVariable("uuid") UUID uuid,
                                                  @Valid @RequestBody ProductDTO productDTO) throws ProductNotFoundException {
         Product product = productManager.updateProduct(uuid, productDTO);
