@@ -5,6 +5,7 @@ import java.util.UUID;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.opinioncollector.eventHandling.EventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
+import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 @RestController
 @RequestMapping("/products/{productId}/opinions")
@@ -67,13 +69,11 @@ public class OpinionController {
     }
 
     @PostMapping("/{opinionId}/report")
-    // @ResponseStatus(HttpStatus.ACCEPTED)
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void reportOpinion(@PathVariable UUID productId,
                               @PathVariable UUID opinionId,
                               @RequestBody String reason) {
-        // FIXME userId should be of type UUID
-        // User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        // eventManager.createOpinionReportEvent(user.getId(), reason, opinionId);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        eventManager.createOpinionReportEvent(user.getId(), reason, opinionId);
     }
 }

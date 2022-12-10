@@ -52,8 +52,7 @@ public class OpinionManager {
 
         if (opinionOptional.isPresent()) {
             Opinion opinion = opinionOptional.get();
-            // FIXME userId should be of type UUID
-            Long userId = ((User) SecurityContextHolder.getContext()
+            UUID userId = ((User) SecurityContextHolder.getContext()
                                                        .getAuthentication()
                                                        .getPrincipal()).getId();
             if (Objects.equals(opinion.getAuthor().getId(), userId)) {
