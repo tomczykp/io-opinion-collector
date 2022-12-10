@@ -11,6 +11,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ProductsComponent} from './components/products/products.component';
 import {HomeComponent} from './components/home/home.component';
 import {NavComponent} from './components/nav/nav.component';
 import {MatIconModule} from "@angular/material/icon";
@@ -30,6 +31,7 @@ import { UsersComponent } from './components/users/users.component';
     EventsComponent,
     HomeComponent,
     NavComponent,
+    ProductsComponent,
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
