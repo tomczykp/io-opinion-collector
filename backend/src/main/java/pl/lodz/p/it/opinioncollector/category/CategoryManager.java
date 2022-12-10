@@ -1,6 +1,9 @@
 package pl.lodz.p.it.opinioncollector.category;
 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -8,33 +11,30 @@ import java.util.function.Predicate;
 
 public class CategoryManager {
 
-    private List<Category> categories;
+    private CategoryRepository categories;
 
-    public CategoryManager()
+    public CategoryManager(CategoryRepository categoryRepository)
     {
-        categories = new ArrayList<Category>();
+        categories = categoryRepository;
     }
 
     public Category createCategory(String name, List<Field> fields)
     {
         Category category = new Category(UUID.randomUUID(), name, fields);
-        categories.add(category);
+        categories.save(category);
         return category;
     }
 
     public Category getCategory(UUID categoryID)
     {
-        for(Category c: categories){
-            if(c.getCategoryID() == categoryID)
-                return c;
-        }
-        return null;
+        return categories.findById(categoryID).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
     }
 
     public List<Category> getCategories(Predicate<Category> Predicate)
     {
+        List<Category> allCategories  = categories.findAll();
         List<Category> result = new ArrayList<Category> ();
-        for(Category c: categories){
+        for(Category c: allCategories){
             if(Predicate.test(c)) {
                 result.add(c);
             }
@@ -49,14 +49,9 @@ public class CategoryManager {
         return modifiedCategory;
     }
 
-    public boolean deleteCategory(String name)
+    public void deleteCategory(String name)
     {
-        for(Category c: categories){
-            if(c.getName() == name){
-                return categories.remove(c);
-            }
-        }
-        return false;
+        categories.deleteByName(name);
     }
 
     public Field getField(UUID categoryID, String filedName)

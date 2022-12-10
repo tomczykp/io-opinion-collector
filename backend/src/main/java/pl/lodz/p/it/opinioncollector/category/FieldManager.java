@@ -1,52 +1,46 @@
 package pl.lodz.p.it.opinioncollector.category;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
 public class FieldManager {
-    private List<Field> fields;
+    private FieldRepository fields;
 
-    public FieldManager()
+    public FieldManager(FieldRepository fieldRepository)
     {
-        fields = new ArrayList<Field>();
+        fields = fieldRepository;
     }
 
     public Field createField(String name, Class type)
     {
         Field f = new Field(UUID.randomUUID(),name,type);
-        fields.add(f);
+        fields.save(f);
         return f;
     }
 
     public Field getField(UUID fieldID)
     {
-        for(Field f:fields){
-            if(fieldID == f.getFieldID()){
-                return f;
-            }
-        }
-        return null;
+        return fields.getById(fieldID);
     }
 
     public List<Field> getFields(Predicate<Field> Predicate)
     {
+        List<Field> allFields = fields.findAll();
         List<Field> result = new ArrayList<Field>();
-        for(Field f: fields){
+        for(Field f: allFields){
             if(Predicate.test(f))
                 result.add(f);
         }
         return result;
     }
 
-    public boolean deleteField(String name)
+    public void deleteField(String name)
     {
-        for(Field f: fields){
-            if(f.getName() == name){
-                return fields.remove(f);
-            }
-        }
-        return false;
+        deleteField(name);
     }
 }
