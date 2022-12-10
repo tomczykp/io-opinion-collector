@@ -11,7 +11,7 @@
         <img src="assets/logo.svg"
              class="img-fluid " alt="Logo">
       </div>
-      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 border-dark border-opacity-50 border p-5 rounded-4" id="login_form">
+      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 border-dark border-opacity-50 border p-5 rounded-4" style="background-color: ghostwhite;">
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
           <!-- Email input -->
           <div class="form-outline mb-4">
@@ -28,7 +28,7 @@
           </div>
 
           <div class="d-flex justify-content-around align-items-center mb-4">
-            <a href="#!">Forgot password?</a>
+            <a href="/reset">Forgot password?</a>
           </div>
 
           <!-- Submit button -->

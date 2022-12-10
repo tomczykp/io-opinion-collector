@@ -36,31 +36,31 @@ public class UserController {
 
     @PostMapping("/lock")
     @ResponseStatus(HttpStatus.OK)
-    public void lockUser(@NotNull @Param("id") Long id) {
-        userManager.lockUser(id);
+    public void lockUser(@NotNull @Param("email") String email) {
+        userManager.lockUser(email);
     }
 
     @PostMapping("/unlock")
     @ResponseStatus(HttpStatus.OK)
-    public void unlockUser(@NotNull @Param("id") Long id) {
-        userManager.unlockUser(id);
+    public void unlockUser(@NotNull @Param("email") String email) {
+        userManager.unlockUser(email);
     }
 
     @DeleteMapping("/remove/admin")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeUserByAdmin(@NotNull @Param("id") Long id) {
-        userManager.removeUserByAdmin(id);
+    public void removeUserByAdmin(@NotNull @Param("email") String email) {
+        userManager.removeUserByAdmin(email);
     }
 
     @DeleteMapping("/remove/user")
-    public String removeUserByUser() {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeUserByUser() {
         userManager.removeUserByUser();
-        return "Deletion confirmation email has been sent";
     }
 
-    @PostMapping("/username")
+    @PutMapping("/username")
     @ResponseStatus(HttpStatus.OK)
-    public void changeUsername(@Param("newUsername") String newUsername) {
+    public void changeUsername(@NotNull @Param("newUsername") String newUsername) {
         try {
             userManager.changeUsername(newUsername);
         } catch (Exception e) {
@@ -70,12 +70,25 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAll() {
-        return userManager.getAllUsers();
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> getAll(@Param("email") String email) {
+        return userManager.getAllUsers(email);
     }
 
     @GetMapping("/{email}")
     public User getByEmail(@PathVariable("email") String email) {
         return userManager.loadUserByUsername(email);
+    }
+
+    @PutMapping("/reset")
+    @ResponseStatus(HttpStatus.OK)
+    public void resetPassword(@Param("email") String email) {
+        userManager.sendResetPassword(email);
+    }
+
+    @PutMapping("/confirm/reset")
+    @ResponseStatus(HttpStatus.OK)
+    public void confirmReset(@Param("password") String password, @Param("token") String token) {
+        userManager.resetPassword(password, token);
     }
 }

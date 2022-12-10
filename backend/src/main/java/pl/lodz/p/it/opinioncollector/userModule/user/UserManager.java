@@ -46,8 +46,39 @@ public class UserManager implements UserDetailsService {
         return tokenRepository.save(deletionToken);
     }
 
+    private Token generateAndSavePasswordResetToken(String email) {
+        Token passwordResetToken = new Token();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        passwordResetToken.setUser(user);
+        passwordResetToken.setToken(UUID.randomUUID().toString());
+        passwordResetToken.setType(TokenType.PASSWORD_RESET_TOKEN);
+        passwordResetToken.setCreatedAt(Instant.now());
+        return tokenRepository.save(passwordResetToken);
+    }
+
+    public void sendResetPassword(String email) {
+        try {
+            String resetPasswordToken = generateAndSavePasswordResetToken(email).getToken();
+            String link = "http://localhost:4200/resetConfirm/" + resetPasswordToken;
+            mailManager.resetPasswordEmail(email, "your email " + email, link);
+        } catch (Exception e) {
+            throw new EmailAlreadyRegisteredException();
+        }
+    }
+
+    public void resetPassword(String newPassword, String resetToken) {
+        Token token = tokenRepository.findByToken(resetToken)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        User user = token.getUser();
+        user.setPassword(encoder.encode(newPassword));
+        userRepository.save(user);
+        tokenRepository.deleteTokenByToken(resetToken);
+    }
+
     public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchesException {
         //TODO check if password is strong enough
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = loadUserByUsername(email);
         if (encoder.matches(oldPassword, user.getPassword())) {
@@ -58,8 +89,8 @@ public class UserManager implements UserDetailsService {
         }
     }
 
-    public void lockUser(Long id) {
-        User user = userRepository.findById(id)
+    public void lockUser(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         try {
             user.setLocked(true);
@@ -71,8 +102,8 @@ public class UserManager implements UserDetailsService {
         }
     }
 
-    public void unlockUser(Long id) {
-        User user = userRepository.findById(id)
+    public void unlockUser(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         try {
             user.setLocked(false);
@@ -95,8 +126,8 @@ public class UserManager implements UserDetailsService {
         }
     }
 
-    public void removeUserByAdmin(Long id) {
-        User user = userRepository.findById(id)
+    public void removeUserByAdmin(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         try {
             userRepository.deleteUserByEmail(user.getEmail());
@@ -114,7 +145,10 @@ public class UserManager implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<User> getAllUsers(String email) {;
+        if (email == null || email.equals("")) {
+            return userRepository.findAll();
+        }
+        return userRepository.findByEmailContainingIgnoreCase(email);
     }
 }
