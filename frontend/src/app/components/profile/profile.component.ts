@@ -30,7 +30,9 @@ export class ProfileComponent implements OnInit {
   }
 
   user: User | undefined;
-  passwordChangeStatus = 0
+  passwordChangeStatus = 0;
+  deletionStatus = 0;
+  onChange = false;
   // 0 if no display message
   // 1 if successful password change
   // 2 if failed password change
@@ -76,8 +78,25 @@ export class ProfileComponent implements OnInit {
         });
     }
   }
-  removeUser() {
+
+  deleteUser() {
     this.userService.removeByUser()
-    console.log("Email send");
+    .subscribe((result) => {
+      console.log(result.status)
+        if(result.status == 200) {
+          this.deletionStatus = 1;
+        }
+      }, (error) => {
+        console.log(error);
+          this.deletionStatus = 2;
+        });
+    }
+
+    editUsername() {
+      this.onChange = true;
+    }
+
+    stopEditing() {
+      this.onChange = false;
+    }
   }
-}

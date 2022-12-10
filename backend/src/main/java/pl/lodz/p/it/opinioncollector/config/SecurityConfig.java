@@ -44,6 +44,9 @@ public class SecurityConfig {
                         .requestMatchers("/users/password").authenticated()
                         .requestMatchers("/users/remove/**").authenticated()
                         .requestMatchers("/signout/force").authenticated()
+                        .requestMatchers("/users/remove/admin").authenticated()
+                        .requestMatchers("/users/lock").authenticated()
+                        .requestMatchers("/users/unlock").authenticated()
                         .anyRequest().permitAll()
                 ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

@@ -37,6 +37,9 @@ public class JwtFilter extends OncePerRequestFilter {
         securePaths.add(new AntPathRequestMatcher("/users/password"));
         securePaths.add(new AntPathRequestMatcher("/users/remove/**"));
         securePaths.add(new AntPathRequestMatcher("/signout/force"));
+        securePaths.add(new AntPathRequestMatcher("/users/remove/admin"));
+        securePaths.add(new AntPathRequestMatcher("/users/lock"));
+        securePaths.add(new AntPathRequestMatcher("/users/unlock"));
     }
 
     @Override

@@ -21,12 +21,20 @@
                   </div>
                   <div class="col-sm-6">
                     <h3 class="m-b-10 f-w-600">Username</h3>
-                    <h6 class="text-muted f-w-400">{{user?.visibleName}}</h6>
+                    <h6 *ngIf="!onChange" class="text-muted f-w-400">{{user?.visibleName}}</h6>
+                    <form *ngIf="onChange" [formGroup]="changePasswordForm" class="form" role="form" autocomplete="off" (ngSubmit)="onPasswordChangeSubmit()">
+                      <div class="form-group" style="display: flex;">
+                        <input formControlName="oldPassword" value="abs" type="password" class="form-control" id="inputPasswordOld" required="" style="max-width: 200px; max-height: 25px;">
+                        <i class="bi bi-check-square-fill" style="font-size: 25px; color: green;"></i>
+                      </div>
+                    </form>
                   </div>
                 </div>
                 <div class="w-100">
                   <button (click)="forceLogout()" class="btn btn-danger col mt-3 mb-3 me-3">Log out from all devices</button>
-                  <button class="btn btn-warning col mt-3 mb-3 me-3">Change username</button>
+                  <button (click)="editUsername()" *ngIf="!onChange" class="btn btn-warning col mt-3 mb-3 me-3">Edit username</button>
+                  <button (click)="stopEditing()" *ngIf="onChange" class="btn btn-warning col mt-3 mb-3 me-3">Stop editing</button>
+                  <button (click)="deleteUser()" class="btn btn-dark col mt-3 mb-3 me-3">Delete my Account</button>
                 </div>
               </div>
             </div>
@@ -44,6 +52,12 @@
 </div>
 <div *ngIf="passwordChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
   <strong>Repeated new password doesn't match new password</strong>
+</div>
+<div *ngIf="deletionStatus == 1" class="alert alert-success alert-dismissible fade show m-3" role="alert">
+  <strong>Deletion Success, email with confirmation send</strong>
+</div>
+<div *ngIf="deletionStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+  <strong>Deletion failure</strong>
 </div>
 <div class="page-content page-container m-3">
   <div class="justify-content-center">
