@@ -42,10 +42,14 @@ public class SecurityConfig {
                 .csrf().disable().cors().and()
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/users/password").authenticated()
-                        .requestMatchers("/users/remove/**").authenticated()
+                        .requestMatchers("/users/remove/admin").hasRole("ADMIN")
+                        .requestMatchers("/users/lock").hasRole("ADMIN")
+                        .requestMatchers("/users/unlock").hasRole("ADMIN")
+                        .requestMatchers("/users/remove/user").hasRole("USER")
                         .requestMatchers("/signout/force").authenticated()
                         .anyRequest().permitAll()
                 ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+        //If you add paths here, remember to add it also in JwtFilter
     }
 }

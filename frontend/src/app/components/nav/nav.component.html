@@ -21,6 +21,7 @@
       </ul>
       <span *ngIf="authenticated" class="me-4">Hi, {{email}}</span>
       <i routerLink="/profile" class="bi bi-person me-4 fa-2xl" *ngIf="authenticated"></i>
+      <i routerLink="/dashboard/users" class="bi bi-person-gear me-4 fa-2xl" *ngIf="authenticated && role=='ADMIN'"></i>
       <button class="btn-danger btn" *ngIf="authenticated" (click)="onLogout()">Logout</button>
       <button class="btn-primary btn me-3" *ngIf="!authenticated" routerLink="/register">Register</button>
       <button class="btn-primary btn" *ngIf="!authenticated" routerLink="/login">Login</button>

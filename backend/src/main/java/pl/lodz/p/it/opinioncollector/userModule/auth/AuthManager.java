@@ -38,19 +38,6 @@ public class AuthManager {
     private final MailManager mailManager;
 
 
-    @PostConstruct
-    public void createUsers() {
-        User admin = new User("admin", "Admin", encoder.encode("admin"), UserType.ADMIN);
-        admin.setActive(true);
-        userRepository.save(admin);
-
-        User user = new User("user", "User", encoder.encode("user"), UserType.USER);
-        user.setActive(true);
-        userRepository.save(user);
-
-    }
-
-
     public User register(RegisterUserDTO dto) {
         String hashedPassword = encoder.encode(dto.getPassword());
         User user = new User(dto.getEmail(), dto.getUsername(), hashedPassword);

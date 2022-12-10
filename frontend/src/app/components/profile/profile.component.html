@@ -1,3 +1,15 @@
+<div *ngIf="usernameChangeStatus == 1" class="alert alert-success alert-dismissible fade show m-3" role="alert">
+  <strong>Username changed successfully</strong>
+</div>
+<div *ngIf="usernameChangeStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+  <strong>This username is taken</strong> You should try with different username
+</div>
+<div *ngIf="usernameChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+  <strong>Your new username can't be same as old</strong> You should try with different username
+</div>
+<div *ngIf="showDeletionLinkSent" class="alert alert-info alert-dismissible fade show m-3" role="alert">
+  <strong>Link for account deletion has been sent</strong> After you confirm deletion, your account will be deleted FOREVER!
+</div>
 <div class="page-content page-container m-3" id="page-content">
   <div class="justify-content-center">
     <div class="row d-flex justify-content-center">
@@ -26,7 +38,14 @@
                 </div>
                 <div class="w-100">
                   <button (click)="forceLogout()" class="btn btn-danger col mt-3 mb-3 me-3">Log out from all devices</button>
-                  <button class="btn btn-warning col mt-3 mb-3 me-3">Change username</button>
+                  <button *ngIf="!showUsernameChangeInput" (click)="showUsernameChange()" class="btn btn-warning col mt-3 mb-3 me-3">Change username</button>
+                  <button *ngIf="showUsernameChangeInput" (click)="changeUsername()" class="btn btn-success col mt-3 mb-3 me-3">Save username</button>
+                  <button class="btn btn-dark col mt-3 mb-3 me-3" (click)="deleteAccount()">Delete account</button>
+                  <div *ngIf="showUsernameChangeInput">
+                    New username
+                    <input type="text" class="form-control mw-25" [(ngModel)]="newUsername">
+                    <button class="btn btn-dark col mt-3 mb-3 me-3" (click)="cancelUsernameChange()">Cancel</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -40,7 +59,7 @@
   <strong>Password changed successfully</strong> Now you can force log out on all devices
 </div>
 <div *ngIf="passwordChangeStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-  <strong>Error during changing password</strong> You should check your credentials
+  <strong>Error during changing password</strong> You should check your password
 </div>
 <div *ngIf="passwordChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
   <strong>Repeated new password doesn't match new password</strong>
@@ -62,7 +81,7 @@
                   <input formControlName="oldPassword" type="password" class="form-control" id="inputPasswordOld" required="">
                 </div>
                 <div class="form-group">
-                  <h6 *ngIf="newPassword && newPassword.touched && newPassword.invalid" class="validation-message">New password doesn't meet the strength requirements</h6>
+                  <h6 *ngIf="newPassword && newPassword.touched && newPassword.invalid" class="validation-message mt-3">New password doesn't meet the strength requirements</h6>
                   <label for="inputPasswordNew">New Password</label>
                   <input formControlName="newPassword" type="password" class="form-control" id="inputPasswordNew" required="">
                   <span class="form-text small text-muted">
