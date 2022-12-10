@@ -14,7 +14,7 @@ export class ProductsService {
 
   public getProduct(uuid: string): Observable<OC.Product> {
     return this.httpClient
-      .get<OC.Product>('${this.baseUrl}/${uuid}');
+      .get<OC.Product>(this.baseUrl + '/' + uuid);
   }
 
 }
@@ -44,6 +44,6 @@ export namespace OC {
     description: string,
     deleted: boolean,
     confirmed: boolean,
-    properties: Map<string, string>
+    properties: Array<String> [];
   }
 }

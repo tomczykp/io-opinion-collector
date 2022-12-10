@@ -1,22 +1,46 @@
 <div class="container custom-container">
     <h3 class="mb-4 text-center">Product</h3>
-    <div class="col-6">
+    <div class="row justify-content-center">
       <table class="table table-bordered">
-        <thead>
+        <tbody>
+
         <tr>
           <th scope="col">productId</th>
-          <th scope="col">categoryId</th>
-          <th scope="col">name</th>
-          <th scope="col">description</th>
+          <td>{{ product.productId }}</td>
         </tr>
-        </thead>
+        <tr>
+          <th scope="col">categoryId</th>
+          <td>{{ product.categoryId }}</td>
+        </tr>
+        <tr>
+          <th scope="col">name</th>
+          <td>{{ product.name }}</td>
+        </tr>
+        <tr>
+          <th scope="col">description</th>
+          <td>{{ product.description }}</td>
+        </tr>
+
+        <tr>
+          <th scope="col">deleted</th>
+          <td>{{ product.deleted }}</td>
+        </tr>
+
+        <tr>
+          <th scope="col">confirmed</th>
+          <td>{{ product.confirmed }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <h3 class="mb-4">properties</h3>
+      <table class="table table-bordered">
         <tbody>
-          <tr>
-            <td>{{ 'product.productId' }}</td>
-            <td>{{ 'product.categoryId' }}</td>
-            <td>{{ 'product.name' }}</td>
-            <td>{{ 'product.description' }}</td>
-          </tr>
+        <tr *ngFor="let item of product.properties | keyvalue">
+            <th>{{ item.key }}</th>
+            <td>{{ item.value }}</td>
+        </tr>
+
         </tbody>
       </table>
     </div>
