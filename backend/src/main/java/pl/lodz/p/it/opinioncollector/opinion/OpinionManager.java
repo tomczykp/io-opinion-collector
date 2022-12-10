@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,9 +76,21 @@ public class OpinionManager {
 
 
     private Opinion mapDtoToEntity(CreateOpinionDto createOpinionDto) {
-        return Opinion.builder()
-                      .rate(createOpinionDto.getRate())
-                      .description(createOpinionDto.getDescription())
-                      .build();
+        Opinion built = Opinion.builder()
+                               .rate(createOpinionDto.getRate())
+                               .description(createOpinionDto.getDescription())
+                               .build();
+
+        built.setPros(createOpinionDto.getPros()
+                                      .stream()
+                                      .map(p -> new Advantage(p, built))
+                                      .collect(Collectors.toSet()));
+
+        built.setCons(createOpinionDto.getCons()
+                                      .stream()
+                                      .map(c -> new Disadvantage(c, built))
+                                      .collect(Collectors.toSet()));
+
+        return built;
     }
 }

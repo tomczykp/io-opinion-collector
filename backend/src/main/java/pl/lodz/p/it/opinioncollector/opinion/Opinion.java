@@ -1,12 +1,16 @@
 package pl.lodz.p.it.opinioncollector.opinion;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,7 +39,19 @@ public class Opinion implements Serializable {
     @Column(name = "LIKES", nullable = false)
     private int likesCounter;
 
-    // TODO add pros and cons
+    // TODO add eager fetching
+    @OneToMany(mappedBy = "opinion",
+               orphanRemoval = true,
+               cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE })
+    @Builder.Default
+    private Set<Advantage> pros = new LinkedHashSet<>();
+
+    // TODO add eager fetching
+    @OneToMany(orphanRemoval = true,
+               cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE },
+               mappedBy = "opinion")
+    @Builder.Default
+    private Set<Disadvantage> cons = new LinkedHashSet<>();
 
     @MapsId("PRODUCT_ID")
     @ManyToOne(optional = false)
