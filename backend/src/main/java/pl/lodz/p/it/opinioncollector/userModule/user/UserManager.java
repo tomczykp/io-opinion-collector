@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import pl.lodz.p.it.opinioncollector.exceptions.PasswordNotMatchesException;
+import pl.lodz.p.it.opinioncollector.exceptions.user.PasswordNotMatchesException;
 import pl.lodz.p.it.opinioncollector.userModule.auth.*;
 import pl.lodz.p.it.opinioncollector.userModule.token.Token;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenRepository;

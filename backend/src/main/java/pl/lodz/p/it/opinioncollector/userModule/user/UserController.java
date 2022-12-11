@@ -11,7 +11,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.lodz.p.it.opinioncollector.exceptions.PasswordNotMatchesException;
+import pl.lodz.p.it.opinioncollector.exceptions.user.PasswordNotMatchesException;
 import pl.lodz.p.it.opinioncollector.userModule.dto.ChangePasswordDTO;
 
 

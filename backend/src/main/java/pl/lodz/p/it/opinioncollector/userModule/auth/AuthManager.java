@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import pl.lodz.p.it.opinioncollector.exceptions.EmailAlreadyRegisteredException;
+import pl.lodz.p.it.opinioncollector.exceptions.user.EmailAlreadyRegisteredException;
 import pl.lodz.p.it.opinioncollector.userModule.dto.LoginDTO;
 import pl.lodz.p.it.opinioncollector.userModule.dto.RegisterUserDTO;
 import pl.lodz.p.it.opinioncollector.userModule.dto.SuccessfulLoginDTO;
@@ -40,7 +40,7 @@ public class AuthManager {
     private final MailManager mailManager;
 
 
-    public User register(RegisterUserDTO dto) {
+    public User register(RegisterUserDTO dto) throws EmailAlreadyRegisteredException {
         String hashedPassword = encoder.encode(dto.getPassword());
         User user = new User(dto.getEmail(), dto.getUsername(), hashedPassword);
         try {
