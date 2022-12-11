@@ -49,7 +49,7 @@ public class OpinionController {
     @ResponseBody
     public Opinion create(@PathVariable UUID productId,
                           @Valid @RequestBody CreateOpinionDto createOpinionDto)
-			throws ProductNotFoundException {
+        throws ProductNotFoundException {
         return opinionManager.create(productId, createOpinionDto);
     }
 
