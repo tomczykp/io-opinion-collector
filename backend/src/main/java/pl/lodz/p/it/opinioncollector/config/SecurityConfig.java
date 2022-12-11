@@ -41,11 +41,14 @@ public class SecurityConfig {
         http
                 .csrf().disable().cors().and()
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/users/password").authenticated()
                         .requestMatchers("/users/remove/admin").hasRole("ADMIN")
                         .requestMatchers("/users/lock").hasRole("ADMIN")
                         .requestMatchers("/users/unlock").hasRole("ADMIN")
-                        .requestMatchers("/users/remove/user").hasRole("USER")
+                        .requestMatchers("/users/remove/user").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/users/password").authenticated()
+                        .requestMatchers("/users/remove/admin").authenticated()
+                        .requestMatchers("/users/lock").authenticated()
+                        .requestMatchers("/users/unlock").authenticated()
                         .requestMatchers("/signout/force").authenticated()
                         .anyRequest().permitAll()
                 ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
