@@ -12,6 +12,7 @@ import { QAService } from 'src/app/services/qa.service';
 export class QuestionsComponent implements OnInit, OnChanges {
 
   questionForm: FormGroup;
+  
   counter: number;
   authenticated: boolean;
   role: string;
@@ -43,7 +44,6 @@ export class QuestionsComponent implements OnInit, OnChanges {
         this.questions = value;
       });
     }
-    
   }
  
   onSubmit() {

@@ -4,10 +4,6 @@
     position: relative;
   }
   
-  .question-container .right {
-    margin-left: 60px;
-  }
-  
   .question-container p {
     background: #e9ebee;
     padding: 6px 10px;

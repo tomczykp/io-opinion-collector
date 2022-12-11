@@ -44,13 +44,11 @@ VALUES ('8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6', 'Lorem ipsum dolor sit amet, con
        ('35c3863a-2241-4c05-942b-6df9dabdf193', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
         CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07'),
        ('95bc5f23-ac70-4c7e-a01f-4d9e92fad63d', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
-        CURRENT_TIMESTAMP, 'cbee1685-9b16-47ae-8c34-afa94e4f1a8f'),
-       ('8a80e873-21eb-4383-b520-edd72ecb9a6d', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
-        CURRENT_TIMESTAMP, '2f335bfb-6805-4a40-ae9c-53b43f22b3ce');
+        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07');
 
 INSERT INTO iodb.public.answer (answer_id, content, date, question_id)
-VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'answer-content1', CURRENT_TIMESTAMP, '8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6'),
-       ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'answer-content2', CURRENT_TIMESTAMP, '35c3863a-2241-4c05-942b-6df9dabdf193');
+VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'Yes', CURRENT_TIMESTAMP, '8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6'),
+       ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'No', CURRENT_TIMESTAMP, '35c3863a-2241-4c05-942b-6df9dabdf193');
 
 INSERT INTO iodb.public.product (product_id, category_id, name, description, deleted, confirmed)
 VALUES ('4811913c-b953-4856-979b-838488049d07', 'b293013b-40da-4dde-a997-bce3068636ec', 'Product1', 'Description1', false, true),

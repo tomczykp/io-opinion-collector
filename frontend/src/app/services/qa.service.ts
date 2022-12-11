@@ -27,10 +27,23 @@ export class QAService {
     });
   }
 
+  public addAnswer(answer: Answer): void {
+    this.http.post<any>(environment.apiUrl + '/answers', answer).subscribe(data => {
+      console.log(data);
+      
+    });
+  }
+
   public deleteQuestion(id: string): void {
     this.http.delete(environment.apiUrl + '/questions/' + id).subscribe(data => {
       console.log(data);
       
+    });
+  }
+
+  public deleteAnswer(id: string): void {
+    this.http.delete(environment.apiUrl + '/answers/' + id).subscribe(data => {
+      console.log(data); 
     });
   }
 }
