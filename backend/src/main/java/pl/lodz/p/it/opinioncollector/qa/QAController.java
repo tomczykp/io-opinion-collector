@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin
 public class QAController {
 
     private final QAManager qaManager;
@@ -29,6 +30,16 @@ public class QAController {
         Optional<Question> found =  qaManager.getQuestion(UUID.fromString(questionId));
         return found.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
+    }
+
+    @GetMapping("/products/{productId}/questions")
+    public List<Question> getQuestionsByProductId(@PathVariable("productId") String productId) {
+        return qaManager.getQuestions(q -> q.getProductId().equals(UUID.fromString(productId)));
+    }
+
+    @GetMapping("/questions/{questionId}/answers")
+    public List<Answer> getAnswersByQuestionId(@PathVariable("questionId") String questionId) {
+        return qaManager.getAnswers(a -> a.getQuestionId().equals(UUID.fromString(questionId)));
     }
 
     @PostMapping("/questions")

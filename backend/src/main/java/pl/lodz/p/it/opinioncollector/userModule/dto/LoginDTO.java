@@ -1,4 +1,4 @@
-package pl.lodz.p.it.opinioncollector.userModule.user;
+package pl.lodz.p.it.opinioncollector.userModule.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChangePasswordDTO {
+public class LoginDTO {
     @NotNull
-    String oldPassword;
+    String email;
 
     @NotNull
-    String newPassword;
+    String password;
 }

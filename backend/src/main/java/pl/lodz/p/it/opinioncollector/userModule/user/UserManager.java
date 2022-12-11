@@ -1,18 +1,15 @@
 package pl.lodz.p.it.opinioncollector.userModule.user;
 
-
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import pl.lodz.p.it.opinioncollector.exceptions.user.PasswordNotMatchesException;
 import pl.lodz.p.it.opinioncollector.userModule.auth.*;
 import pl.lodz.p.it.opinioncollector.userModule.token.Token;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenRepository;
@@ -63,7 +60,7 @@ public class UserManager implements UserDetailsService {
             String link = "http://localhost:4200/resetConfirm/" + resetPasswordToken;
             mailManager.resetPasswordEmail(email, "your email " + email, link);
         } catch (Exception e) {
-            throw new EmailAlreadyRegisteredException();
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
     }
 
@@ -78,7 +75,6 @@ public class UserManager implements UserDetailsService {
 
     public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchesException {
         //TODO check if password is strong enough
-
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = loadUserByUsername(email);
         if (encoder.matches(oldPassword, user.getPassword())) {
@@ -98,7 +94,7 @@ public class UserManager implements UserDetailsService {
             tokenRepository.deleteTokenByUser(user);
             mailManager.adminActionEmail(user.getEmail(), user.getUsername(), "blocked");
         } catch (Exception e) {
-            throw new EmailAlreadyRegisteredException();
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
     }
 
@@ -110,19 +106,22 @@ public class UserManager implements UserDetailsService {
             userRepository.save(user);
             mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "unlocked");
         } catch (Exception e) {
-            throw new EmailAlreadyRegisteredException();
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
     }
 
     public void removeUserByUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = loadUserByUsername(email);
+        if (tokenRepository.findTokenByUserAndType(user, TokenType.DELETION_TOKEN).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         try {
             String deletionToken = generateAndSaveDeletionToken(user).getToken();
             String link = "http://localhost:8080/api/confirm/remove?token=" + deletionToken;
             mailManager.deletionEmail(user.getEmail(), user.getVisibleName(), link);
         } catch (Exception e) {
-            throw new EmailAlreadyRegisteredException();
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
     }
 
@@ -134,15 +133,19 @@ public class UserManager implements UserDetailsService {
             tokenRepository.deleteTokenByUser(user);
             mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "deleted");
         } catch (Exception e) {
-            throw new EmailAlreadyRegisteredException();
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
     }
 
     public void changeUsername(String newUsername) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = loadUserByUsername(email);
-        user.setVisibleName(newUsername);
-        userRepository.save(user);
+        try {
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = loadUserByUsername(email);
+            user.setVisibleName(newUsername);
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
     }
 
     public List<User> getAllUsers(String email) {;
