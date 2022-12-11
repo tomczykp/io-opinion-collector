@@ -3,7 +3,7 @@
     <ul *ngIf="answers.length > 0">
         <li *ngFor="let a of answers">
             <div class="answer-container">
-              <p>{{ a.content }}</p>
+              <p class="fs-6">{{ a.content }}</p>
               <div class="actions">
                 <span>{{ a.date | date : "dd/MM/yyyy hh:mm:ss a" }}</span>
                 <div class="d-inline">
@@ -40,23 +40,23 @@
                 }"
               ></textarea>
               <div
-                class="invalid-feedback"
+                class="invalid-feedback fs-6"
                 *ngIf="submitted && answerForm.controls['answer'].errors"
               >
                 <div
                   *ngIf="answerForm.controls['answer'].errors['required']"
                 >
-                  Question cannnot be empty
+                  Answer cannnot be empty
                 </div>
                 <div
                   *ngIf="answerForm.controls['answer'].errors['minlength']"
                 >
-                  Question must be at least 6 characters
+                  Answer must be at least 2 characters
                 </div>
                 <div
                   *ngIf="answerForm.controls['answer'].errors['maxlength']"
                 >
-                  Question must be at most 100 characters
+                  Answer must be at most 100 characters
                 </div>
               </div>
             </div>
