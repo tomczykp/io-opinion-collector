@@ -1,0 +1,48 @@
+.divider {
+    margin: 0 5px;
+    width: 1px;
+    height: 20px;
+    background: #ccc;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.answer-container .left {
+    width: 50px;
+    height: 50px;
+    position: relative;
+}
+
+.answers {
+    margin-top: 2em;
+    margin-left: 20em;
+}
+
+.answers ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .answers ul li {
+    border-bottom: #EEE 1px solid;
+    margin-bottom: 10px;
+  }
+
+  .answers ul li:last-child {
+    border-bottom: none;
+  }
+
+
+.answer-container p {
+    background: #e9ebee;
+    padding: 6px 10px;
+}
+
+.actions {
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.actions .btn {
+    font-size: 12px;
+}

@@ -1,0 +1,13 @@
+body {
+    background: #e1e1e1;
+}
+
+.card {
+    padding: 25px 25px;
+    margin-top: 20px;
+}
+
+.header {
+    border-bottom: #EEE 1px solid;
+    margin-bottom: 20px;
+}

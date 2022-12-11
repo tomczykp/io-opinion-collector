@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
 })
 export class ProductsComponent implements OnInit {
 
-  product: OC.Product;
+  product: OC.Product = <OC.Product>{};
   regex: RegExp = new RegExp('[0-9a-f\-]+$');
 
   constructor(private productService: ProductsService, private router: Router) {
