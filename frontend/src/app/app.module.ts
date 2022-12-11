@@ -24,6 +24,7 @@ import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { ResetComponent } from './components/reset/reset.component';
 import { ResetConfirmComponent } from './components/reset/reset-confirm/reset-confirm.component';
 import { UsersComponent } from './components/users/users.component';
+import { QuestionsComponent } from './components/questions/questions.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { UsersComponent } from './components/users/users.component';
     AdminNavComponent,
     ResetComponent,
     ResetConfirmComponent,
-    UsersComponent
+    UsersComponent,
+    QuestionsComponent
   ],
   imports: [
     BrowserModule,
