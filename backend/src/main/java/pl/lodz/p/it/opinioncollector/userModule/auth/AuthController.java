@@ -7,6 +7,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pl.lodz.p.it.opinioncollector.exceptions.EmailAlreadyRegisteredException;
+import pl.lodz.p.it.opinioncollector.userModule.dto.LoginDTO;
+import pl.lodz.p.it.opinioncollector.userModule.dto.RegisterUserDTO;
+import pl.lodz.p.it.opinioncollector.userModule.dto.SuccessfulLoginDTO;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 

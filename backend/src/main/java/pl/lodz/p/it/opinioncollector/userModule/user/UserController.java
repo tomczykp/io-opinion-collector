@@ -5,15 +5,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import pl.lodz.p.it.opinioncollector.exceptions.PasswordNotMatchesException;
+import pl.lodz.p.it.opinioncollector.userModule.dto.ChangePasswordDTO;
 
 
 @RestController
@@ -27,11 +26,7 @@ public class UserController {
     @PutMapping("/password")
     @ResponseStatus(HttpStatus.OK)
     public void changePassword(@Valid @RequestBody ChangePasswordDTO dto) throws PasswordNotMatchesException {
-        try {
-            userManager.changePassword(dto.oldPassword, dto.newPassword);
-        } catch (PasswordNotMatchesException e) {
-            throw new PasswordNotMatchesException();
-        }
+        userManager.changePassword(dto.getOldPassword(), dto.getNewPassword());
     }
 
     @PostMapping("/lock")
@@ -61,12 +56,7 @@ public class UserController {
     @PutMapping("/username")
     @ResponseStatus(HttpStatus.OK)
     public void changeUsername(@NotNull @Param("newUsername") String newUsername) {
-        try {
-            userManager.changeUsername(newUsername);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
-        }
-
+        userManager.changeUsername(newUsername);
     }
 
     @GetMapping

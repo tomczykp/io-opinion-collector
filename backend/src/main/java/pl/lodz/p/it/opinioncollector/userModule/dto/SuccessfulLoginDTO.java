@@ -1,4 +1,4 @@
-package pl.lodz.p.it.opinioncollector.userModule.auth;
+package pl.lodz.p.it.opinioncollector.userModule.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
