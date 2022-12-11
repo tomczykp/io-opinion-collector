@@ -36,7 +36,9 @@ export class AuthService {
         localStorage.removeItem("jwt")
         localStorage.removeItem("refreshToken")
         this.authenticated.next(false);
-        this.router.navigate(['/'])
+        this.router.navigate(['/']).then(() => {
+          window.location.reload();
+        });
     })
   }
 
