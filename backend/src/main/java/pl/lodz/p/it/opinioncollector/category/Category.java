@@ -1,18 +1,30 @@
 package pl.lodz.p.it.opinioncollector.category;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
+@Data
+@Entity
+@Valid
+@NoArgsConstructor
 public class Category {
     @Id
     @Column(name = "categoryID")
-    private final UUID categoryID;
+    private UUID categoryID;
+
     private UUID parentCategoryID;
     private String name;
-    private List<Field> fields;
+    private List<Field> fields = new ArrayList<>();
 
     public Category(UUID categoryID, String name, List<Field> fields) {
         this.categoryID = categoryID;

@@ -20,7 +20,7 @@ public class FieldController {
     {
         return fieldManager.getField(uuid);
     }
-    @PutMapping("/field")
+    @PutMapping("")
     public Field createField(@PathVariable String name, @PathVariable Class type){
         return fieldManager.createField(name, type);
     }

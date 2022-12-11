@@ -1,14 +1,21 @@
 package pl.lodz.p.it.opinioncollector.category;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.Valid;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
-
+@Data
+@Entity
+@Valid
+@NoArgsConstructor
 public class Field {
     @Id
     @Column(name = "fieldID")
-    private final UUID fieldID;
+    private UUID fieldID;
     private String name;
     private Class type;
     public Field(UUID fieldID, String name, Class type)

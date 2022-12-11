@@ -22,7 +22,7 @@ public class CategoryController {
     }
 
 
-    @PutMapping("/category")
+    @PutMapping("")
     public Category createCategory(@PathVariable String name, @PathVariable List<Field> fields ){
         return  categoryManager.createCategory(name, fields);
     }
