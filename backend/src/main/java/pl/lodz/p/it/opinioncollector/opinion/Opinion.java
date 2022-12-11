@@ -3,6 +3,7 @@ package pl.lodz.p.it.opinioncollector.opinion;
 import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -56,6 +57,7 @@ public class Opinion implements Serializable {
     @MapsId("PRODUCT_ID")
     @ManyToOne(optional = false)
     @JoinColumn(name = "PRODUCT_ID", nullable = false)
+    @JsonIgnore
     private Product product;
 
     @ManyToOne
