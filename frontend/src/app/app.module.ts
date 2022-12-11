@@ -11,6 +11,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ProductsComponent} from './components/products/products.component';
 import {HomeComponent} from './components/home/home.component';
 import {NavComponent} from './components/nav/nav.component';
 import {MatIconModule} from "@angular/material/icon";
@@ -18,6 +19,11 @@ import {LoginComponent} from "./components/login/login.component";
 import {RegisterComponent} from "./components/register/register.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
+import { ResetComponent } from './components/reset/reset.component';
+import { ResetConfirmComponent } from './components/reset/reset-confirm/reset-confirm.component';
+import { UsersComponent } from './components/users/users.component';
 
 @NgModule({
   declarations: [
@@ -25,9 +31,15 @@ import {JwtInterceptor} from "./interceptors/jwt.interceptor";
     EventsComponent,
     HomeComponent,
     NavComponent,
+    ProductsComponent,
     LoginComponent,
     RegisterComponent,
-    ProfileComponent
+    ProfileComponent,
+    DashboardComponent,
+    AdminNavComponent,
+    ResetComponent,
+    ResetConfirmComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,

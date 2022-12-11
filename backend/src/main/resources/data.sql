@@ -24,3 +24,23 @@ VALUES ('8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6', 'question-content1', CURRENT_DAT
 INSERT INTO iodb.public.answer (answer_id, content, date, question_id)
 VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'answer-content1', CURRENT_DATE, '8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6'),
        ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'answer-content2', CURRENT_DATE, '35c3863a-2241-4c05-942b-6df9dabdf193');
+
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('8378b753-6d05-454b-8447-efb125846fc7', true, 'admin', false, '$2a$10$xjb0b4oZfvGJkIPd2c7FP.owcLUH0h2bIhnTEIUkr4SpofB/cS4yu', 'ADMIN', 'Admin');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('66208864-7b61-4e6e-8573-53863bd93b35', true, 'user', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User');
+
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('12208864-7b61-4e6e-8573-53863bd93b35', true, 'user1', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User1');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('22208864-7b61-4e6e-8573-53863bd93b35', true, 'user2', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User2');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('32208864-7b61-4e6e-8573-53863bd93b35', true, 'user3', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User3');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('42208864-7b61-4e6e-8573-53863bd93b35', true, 'user4', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User4');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('52208864-7b61-4e6e-8573-53863bd93b35', true, 'user5', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User5');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('72208864-7b61-4e6e-8573-53863bd93b35', true, 'user6', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User6');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('82208864-7b61-4e6e-8573-53863bd93b35', true, 'user7', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User7');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('92208864-7b61-4e6e-8573-53863bd93b35', true, 'user8', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User8');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('62108864-7b61-4e6e-8573-53863bd93b35', true, 'user9', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User9');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('62308864-7b61-4e6e-8573-53863bd93b35', true, 'user10', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User10');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('62408864-7b61-4e6e-8573-53863bd93b35', true, 'user11', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User11');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('62508864-7b61-4e6e-8573-53863bd93b35', true, 'user12', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User12');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('62608864-7b61-4e6e-8573-53863bd93b35', true, 'user13', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User13');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('62708864-7b61-4e6e-8573-53863bd93b35', true, 'user14', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User14');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('62808864-7b61-4e6e-8573-53863bd93b35', true, 'user15', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User15');
+INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('62908864-7b61-4e6e-8573-53863bd93b35', true, 'user16', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User16');

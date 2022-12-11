@@ -9,6 +9,7 @@ import pl.lodz.p.it.opinioncollector.productManagment.exceptions.ProductNotFound
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController()
 @RequestMapping("/products")
 public class ProductController {
@@ -27,7 +28,7 @@ public class ProductController {
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<Product> getProductById(@PathVariable("uuid") UUID uuid) {
+    public ResponseEntity<Product> getProductById(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
         Product product = productManager.getProduct(uuid);
         if (product == null) {
             throw new ProductNotFoundException(uuid.toString());
@@ -45,25 +46,24 @@ public class ProductController {
         return productManager.getUnconfirmedSuggestions();
     }
 
-    //PutMapping
+    //PostMapping
 
-    @PutMapping("")
+    @PostMapping("")
     public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDTO productDTO) {
         Product product = productManager.createProduct(productDTO);
         return ResponseEntity.ok(product);
     }
 
-    @PutMapping("/suggestion")
+    @PostMapping("/suggestion")
     public ResponseEntity<Product> createSuggestion(@Valid @RequestBody ProductDTO productDTO) {
         Product product = productManager.createSuggestion(productDTO);
         return ResponseEntity.ok(product);
     }
 
-    //PostMapping
-
-    @PostMapping("/{uuid}")
+    //PutMapping
+    @PutMapping("/{uuid}")
     public ResponseEntity<Product> updateProduct(@PathVariable("uuid") UUID uuid,
-                                                 @Valid @RequestBody ProductDTO productDTO) {
+                                                 @Valid @RequestBody ProductDTO productDTO) throws ProductNotFoundException {
         Product product = productManager.updateProduct(uuid, productDTO);
         if (product == null) {
             throw new ProductNotFoundException(uuid.toString());
@@ -74,7 +74,7 @@ public class ProductController {
     //DeleteMapping
 
     @DeleteMapping("/{uuid}")
-    public ResponseEntity<Product> deleteProduct(@PathVariable("uuid") UUID uuid) {
+    public ResponseEntity<Product> deleteProduct(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
         if (productManager.deleteProduct(uuid)) {
             return ResponseEntity.ok().build();
         }
