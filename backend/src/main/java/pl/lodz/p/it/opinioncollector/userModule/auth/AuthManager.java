@@ -1,7 +1,6 @@
 package pl.lodz.p.it.opinioncollector.userModule.auth;
 
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,12 +13,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import pl.lodz.p.it.opinioncollector.exceptions.user.EmailAlreadyRegisteredException;
+import pl.lodz.p.it.opinioncollector.userModule.dto.LoginDTO;
+import pl.lodz.p.it.opinioncollector.userModule.dto.RegisterUserDTO;
+import pl.lodz.p.it.opinioncollector.userModule.dto.SuccessfulLoginDTO;
 import pl.lodz.p.it.opinioncollector.userModule.token.Token;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenRepository;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenType;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserRepository;
-import pl.lodz.p.it.opinioncollector.userModule.user.UserType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -38,7 +40,7 @@ public class AuthManager {
     private final MailManager mailManager;
 
 
-    public User register(RegisterUserDTO dto) {
+    public User register(RegisterUserDTO dto) throws EmailAlreadyRegisteredException {
         String hashedPassword = encoder.encode(dto.getPassword());
         User user = new User(dto.getEmail(), dto.getUsername(), hashedPassword);
         try {

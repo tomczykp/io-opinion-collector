@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,16 @@ export class ProductsService {
   public getProduct(uuid: string): Observable<OC.Product> {
     return this.httpClient
       .get<OC.Product>(this.baseUrl + '/' + uuid);
+  }
+
+  public getProducts(): Observable<OC.Product[]> {
+    return this.httpClient.get<OC.Product[]>(environment.apiUrl + '/products');
+  }
+  
+  public deleteProduct(id: string): void {
+    this.httpClient.delete(environment.apiUrl + '/products/' + id).subscribe(data => {
+      console.log(data);
+    });
   }
 
 }
