@@ -24,6 +24,7 @@ public class Category {
 
     private UUID parentCategoryID;
     private String name;
+    @ElementCollection
     private List<Field> fields = new ArrayList<>();
 
     public Category(UUID categoryID, String name, List<Field> fields) {

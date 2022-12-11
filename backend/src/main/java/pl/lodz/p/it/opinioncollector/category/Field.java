@@ -1,6 +1,7 @@
 package pl.lodz.p.it.opinioncollector.category;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.Valid;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Valid
+@Embeddable
 @NoArgsConstructor
 public class Field {
     @Id
