@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessFo
 import pl.lodz.p.it.opinioncollector.productManagment.exceptions.ProductNotFoundException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/products/{productId}/opinions")
 @RequiredArgsConstructor
