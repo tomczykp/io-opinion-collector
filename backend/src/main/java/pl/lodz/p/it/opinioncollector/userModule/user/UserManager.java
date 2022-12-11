@@ -113,6 +113,9 @@ public class UserManager implements UserDetailsService {
     public void removeUserByUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = loadUserByUsername(email);
+        if (tokenRepository.findTokenByUserAndType(user, TokenType.DELETION_TOKEN).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         try {
             String deletionToken = generateAndSaveDeletionToken(user).getToken();
             String link = "http://localhost:8080/api/confirm/remove?token=" + deletionToken;

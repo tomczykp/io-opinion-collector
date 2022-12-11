@@ -19,7 +19,7 @@ export class ProfileComponent implements OnInit {
   showUsernameChangeInput = false;
   newUsername = "";
 
-  showDeletionLinkSent = false;
+  deletionStatus = 0;
 
   get oldPassword() {
     return this.changePasswordForm.get('oldPassword');
@@ -118,7 +118,12 @@ export class ProfileComponent implements OnInit {
   }
 
   deleteAccount() {
-    this.userService.removeByUser()
-    this.showDeletionLinkSent = true;
+    this.userService.removeByUser().subscribe((result) => {
+      if (result.status == 200) {
+        this.deletionStatus = 1;
+      }
+    }, (error) => {
+      this.deletionStatus = 2;
+    })
   }
 }

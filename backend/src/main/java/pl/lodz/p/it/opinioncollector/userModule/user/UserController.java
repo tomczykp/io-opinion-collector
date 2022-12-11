@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @DeleteMapping("/remove/user")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public void removeUserByUser() {
         userManager.removeUserByUser();
     }

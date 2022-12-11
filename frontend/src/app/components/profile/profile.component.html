@@ -10,8 +10,11 @@
 <div *ngIf="usernameChangeStatus == 4" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
   <strong>Password cannot be empty</strong> Input correct username
 </div>
-<div *ngIf="showDeletionLinkSent" class="alert alert-info alert-dismissible fade show m-3" role="alert">
+<div *ngIf="deletionStatus == 1" class="alert alert-info alert-dismissible fade show m-3" role="alert">
   <strong>Link for account deletion has been sent</strong> After you confirm deletion, your account will be deleted FOREVER!
+</div>
+<div *ngIf="deletionStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+  <strong>Deletion link was already sent</strong>
 </div>
 <div class="page-content page-container m-3" id="page-content">
   <div class="justify-content-center">
@@ -39,7 +42,7 @@
                     <h6 *ngIf="!showUsernameChangeInput" class="text-muted f-w-400">{{user?.visibleName}}</h6>
                     <div *ngIf="showUsernameChangeInput" style="display: flex;">
                       <input type="text" class="form-control" [(ngModel)]="newUsername" style="max-width: 200px; max-height: 25px;">
-                      <button class="btn btn-success btn-sm" (click)="changeUsername()" (click)="showUsernameChange()" style="max-height: 25px; margin-left: 5px; display: inline-flex; align-items: center;">Save username</button>
+                      <button class="btn btn-success btn-sm" (click)="changeUsername()" (click)="showUsernameChange()" style="max-height: 25px; margin-left: 5px; display: inline-flex; align-items: center;">Save</button>
                     </div>
                   </div>
                 </div>
