@@ -23,12 +23,12 @@ public class CategoryController {
 
 
     @PutMapping("")
-    public Category createCategory(@PathVariable String name, @PathVariable List<Field> fields ){
+    public Category createCategory(@RequestParam String name, @RequestParam List<Field> fields ){
         return  categoryManager.createCategory(name, fields);
     }
 
     @PostMapping("")
-    public Category modifyCategory(Category category, String name, List<Field> fields){
+    public Category modifyCategory(@RequestParam Category category, @RequestParam String name, @RequestParam List<Field> fields){
         return  categoryManager.modifyCategory(category, name, fields);
     }
 

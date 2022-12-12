@@ -21,7 +21,7 @@ public class FieldController {
         return fieldManager.getField(uuid);
     }
     @PutMapping("")
-    public Field createField(@PathVariable String name, @PathVariable Class type){
+    public Field createField(@RequestParam String name,@RequestParam Class type){
         return fieldManager.createField(name, type);
     }
     @DeleteMapping("/{name}")
