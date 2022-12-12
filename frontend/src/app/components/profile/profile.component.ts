@@ -65,19 +65,17 @@ export class ProfileComponent implements OnInit {
       let repeatedP = this.changePasswordForm.getRawValue().repeatedPassword;
 
       if (newP !== repeatedP) {
-        this.passwordChangeStatus = 3
-        return
+        this.passwordChangeStatus = 3;
+        return;
       }
 
       this.userService.changePassword(oldP!.toString(), newP!.toString())
         .subscribe((result) => {
-          console.log(result.status)
           if (result.status == 200) {
-            console.log("Success")
-            this.passwordChangeStatus = 1
+            this.passwordChangeStatus = 1;
+            this.changePasswordForm.reset();
           }
         }, (error) => {
-          console.log(error)
           this.oldPassword?.reset()
           this.passwordChangeStatus = 2
         });
@@ -91,12 +89,12 @@ export class ProfileComponent implements OnInit {
 
   changeUsername() {
     if (this.user?.visibleName == this.newUsername) {
-      this.usernameChangeStatus = 3
-      return
+      this.usernameChangeStatus = 3;
+      return;
     }
     if (this.newUsername == "") {
-      this.usernameChangeStatus = 4
-      return
+      this.usernameChangeStatus = 4;
+      return;
     }
 
     this.userService.changeUsername(this.newUsername).subscribe((result) => {

@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -24,19 +25,21 @@ public class MailManager {
 
     private final JavaMailSender mailSender;
 
-
     @Async
     void send(String to, String name, String message, String last, String action, String link, String subject) {
         try {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
             Resource resource = resourceLoader.getResource("classpath:html/template.html");
             Reader reader = new InputStreamReader(resource.getInputStream());
+
             String email = FileCopyUtils.copyToString(reader);
-            email = email.replace("$username", name);
-            email = email.replace("$link", link);
-            email = email.replace("$message", message);
-            email = email.replace("$last", last);
-            email = email.replace("$action", action);
+            email = email
+                    .replace("$username", name)
+                    .replace("$link", link)
+                    .replace("$message", message)
+                    .replace("$last", last)
+                    .replace("$action", action);
+
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper =
                     new MimeMessageHelper(mimeMessage, "utf-8");

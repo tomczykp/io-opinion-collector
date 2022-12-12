@@ -25,7 +25,7 @@ export class ResetComponent implements OnInit {
   }
 
   resetPassword() {
-    let email= this.resetPasswordForm.getRawValue().email;
+    let email = this.resetPasswordForm.getRawValue().email;
     this.userService.resetPassword(email!.toString())
     .subscribe((result) => {
        console.log(result.status);
@@ -34,9 +34,12 @@ export class ResetComponent implements OnInit {
         this.emailStatus = 1;
        }
     }, (error) => {
-      console.log(error);
+      if (error.status == 409) {
+        this.emailStatus = 3;
+      } else {
+        this.emailStatus = 2;
+      }
       this.email?.reset();
-      this.emailStatus = 2;
     });
   }
 }
