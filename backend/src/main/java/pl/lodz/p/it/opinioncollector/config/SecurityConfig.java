@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/users/lock").authenticated()
                         .requestMatchers("/users/unlock").authenticated()
                         .requestMatchers("/signout/force").authenticated()
+                        .requestMatchers("/products/{productId}/opinions/**").authenticated()
                         .anyRequest().permitAll()
                 ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
