@@ -18,22 +18,21 @@ import java.util.UUID;
 @Table(name = "app_user")
 @Access(AccessType.FIELD)
 public class User implements UserDetails {
-
+    //TODO cascade delete on user's events, opinions when deleting user.
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String visibleName;
 
-
     @JsonIgnore
+    @Column(nullable = false)
     private String password;
-
 
     private boolean locked = false;
 
@@ -41,6 +40,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private UserType role;
+
 
     public User(String email, String visibleName, String password) {
         this.email = email;
