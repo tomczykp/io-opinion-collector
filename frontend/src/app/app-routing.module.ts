@@ -10,6 +10,7 @@ import { ResetComponent } from './components/reset/reset.component';
 import { ResetConfirmComponent } from './components/reset/reset-confirm/reset-confirm.component';
 import {UsersComponent} from "./components/users/users.component";
 import {ProductsComponent} from "./components/products/products.component";
+import {CategoriesComponent} from "./components/categories/categories.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'profile', component: ProfileComponent},
   {path: 'products/:uuid', component: ProductsComponent},
+  {path: 'categories', component: CategoriesComponent},
   {path: 'dashboard', component: DashboardComponent,
     children: [
       {
