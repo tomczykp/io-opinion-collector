@@ -25,10 +25,26 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID categoryID;
 
-    private UUID parentCategoryID;
+    @OneToOne(orphanRemoval = true, optional = true)
+    @JoinColumn(name = "parent_category_category_id")
+    private Category parentCategory;
+
+    //private UUID parentCategoryID;
     private String name;
-    @ElementCollection
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @JoinTable(name = "category_fields",
+            joinColumns = @JoinColumn(name = "category_categoryid"),
+            inverseJoinColumns = @JoinColumn(name = "fields_fieldid"))
     private List<Field> fields = new ArrayList<>();
+
+    public Category getParentCategory() {
+        return parentCategory;
+    }
+
+    public void setParentCategory(Category parentCategory) {
+        this.parentCategory = parentCategory;
+    }
 
     public Category(String name, List<Field> fields) {
         this.name = name;
@@ -40,15 +56,12 @@ public class Category {
         for(int i=0; i<categoryDTO.getFields().size(); i++){
             fields.add(new Field(categoryDTO.getFields().get(i)));
         }
-        this.parentCategoryID = categoryDTO.getParentCategoryID();
+        //this.parentCategoryID = categoryDTO.getParentCategoryID();
     }
 
-    public void mergeCategory(CategoryDTO categoryDTO)  {
+    public void mergeCategory(UpdateCategoryDTO categoryDTO)  {
         this.name = categoryDTO.getName();
-        for(int i=0; i<categoryDTO.getFields().size(); i++){
-            fields.add(new Field(categoryDTO.getFields().get(i)));
-        }
-        this.parentCategoryID = categoryDTO.getParentCategoryID();
+        //this.parentCategoryID = categoryDTO.getParentCategoryID();
     }
 
 }

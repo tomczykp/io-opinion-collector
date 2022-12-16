@@ -15,16 +15,28 @@ import java.util.function.Predicate;
 @Service
 public class CategoryManager {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
+    private final FieldRepository fieldRepository;
+
     @Autowired
-    public CategoryManager(CategoryRepository categoryRepository)
+    public CategoryManager(CategoryRepository categoryRepository,
+                           FieldRepository fieldRepository)
     {
         this.categoryRepository = categoryRepository;
+        this.fieldRepository = fieldRepository;
     }
 
     public Category createCategory(CategoryDTO categoryDTO)
     {
         Category category = new Category(categoryDTO);
+        if(categoryDTO.getParentCategoryID() != null){
+            Optional<Category>  parent = categoryRepository.findById(categoryDTO.getParentCategoryID());
+            if(parent.isPresent()){
+                category.setParentCategory(parent.get());
+            }else{
+                category.setParentCategory(null);
+            }
+        }
         categoryRepository.save(category);
         return category;
     }
@@ -42,7 +54,6 @@ public class CategoryManager {
         return categoryRepository.findAll();
     }
 
-    //TODO AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     public List<Category> getCategories(Predicate<Category> Predicate)
     {
         List<Category> allCategories  = categoryRepository.findAll();
@@ -55,10 +66,19 @@ public class CategoryManager {
         return result;
     }
 
-    public Category updateCategory(UUID uuid, CategoryDTO categoryDTO)
+    public Category updateCategory(UUID uuid, UpdateCategoryDTO categoryDTO)
     {
         Optional<Category> categoryOptional = categoryRepository.findById(uuid);
+
         if(categoryOptional.isPresent()){
+            if(categoryDTO.getParentCategoryID() != null){
+                Optional<Category>  parent = categoryRepository.findById(categoryDTO.getParentCategoryID());
+                if(parent.isPresent()){
+                    categoryOptional.get().setParentCategory(parent.get());
+                }else{
+                    categoryOptional.get().setParentCategory(null);
+                }
+            }
             categoryOptional.get().mergeCategory(categoryDTO);
             categoryRepository.save(categoryOptional.get());
             return categoryOptional.get();
@@ -84,6 +104,17 @@ public class CategoryManager {
             return category.get();
         }
         return null;
+    }
+
+    public void removeField(UUID fieldId){
+        Optional<Field> field = fieldRepository.findById(fieldId);
+        if(field.isPresent()){
+            field.get().getCategories().forEach((category -> {
+                category.getFields().remove(field.get());
+                categoryRepository.save(category);
+            }));
+        }
+        fieldRepository.deleteById(fieldId);
     }
 
 }

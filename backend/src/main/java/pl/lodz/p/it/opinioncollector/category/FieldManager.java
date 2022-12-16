@@ -8,31 +8,32 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 @Service
 public class FieldManager {
-    private FieldRepository fields;
+    private FieldRepository fieldRepository;
     @Autowired
     public FieldManager(FieldRepository fieldRepository)
     {
-        fields = fieldRepository;
+        this.fieldRepository = fieldRepository;
     }
 
-    public Field createField(FieldDTO fieldDTO) throws ClassNotFoundException, NoSuchMethodException {
+    public Field createField(FieldDTO fieldDTO){
         Field f = new Field(fieldDTO);
-        fields.save(f);
+        fieldRepository.save(f);
         return f;
     }
 
     public Field getField(UUID fieldID)
     {
-        return fields.getById(fieldID);
+        return fieldRepository.getById(fieldID);
     }
 
     public List<Field> getFields(Predicate<Field> Predicate)
     {
-        List<Field> allFields = fields.findAll();
+        List<Field> allFields = fieldRepository.findAll();
         List<Field> result = new ArrayList<Field>();
         for(Field f: allFields){
             if(Predicate.test(f))
@@ -44,5 +45,16 @@ public class FieldManager {
     public void deleteField(String name)
     {
         deleteField(name);
+    }
+
+    public Field updateField(UUID uuid, FieldDTO fieldDTO){
+        Optional<Field> fieldOptional = fieldRepository.findById(uuid);
+        if(fieldOptional.isPresent()){
+            fieldOptional.get().setName(fieldDTO.getName());
+            fieldOptional.get().setType(fieldDTO.getType());
+            fieldRepository.save(fieldOptional.get());
+            return fieldOptional.get();
+        }
+        return null;
     }
 }
