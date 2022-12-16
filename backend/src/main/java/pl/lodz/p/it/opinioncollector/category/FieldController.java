@@ -25,6 +25,7 @@ public class FieldController {
     @PutMapping("")
     public Field createField(@Valid @RequestBody FieldDTO fieldDTO) throws ClassNotFoundException, NoSuchMethodException {
         return fieldManager.createField(fieldDTO);
+
     }
     @DeleteMapping("/{name}")
     public void deleteCategory(@PathVariable("name") String name){

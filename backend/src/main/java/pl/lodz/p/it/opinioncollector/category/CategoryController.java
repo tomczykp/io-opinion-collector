@@ -26,6 +26,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{uuid}")
+
     public ResponseEntity<Category> getCategoryById(@PathVariable("uuid")UUID uuid) throws CategoryNotFoundException {
         Category category = categoryManager.getCategory(uuid);
         if(category == null){
@@ -38,7 +39,8 @@ public class CategoryController {
     public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryDTO categoryDTO){
         Category category = categoryManager.createCategory(categoryDTO);
         return  ResponseEntity.ok(category);
-    }
+
+    
 
     @PutMapping("/{uuid}")
     public ResponseEntity<Category> updateCategory(@PathVariable ("uuid") UUID uuid,

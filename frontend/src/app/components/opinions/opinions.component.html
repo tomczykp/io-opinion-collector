@@ -1,0 +1,39 @@
+<ng-container *ngIf="opinions$ | async as opinions; else loadingOpinions">
+    <div class="mt-5 header">
+        <h4>Opinions ({{ opinions.length }})</h4>
+    </div>
+    <div class="container">
+        <ng-container *ngIf="opinions.length; else noOpinions">
+            <div *ngFor="let opinion of opinions">
+                <div class="row">
+                    <p class="fs-6 fw-bold mb-1">{{ opinion.author.visibleName }}</p>
+                    <p class="mb-1 fs-4">{{ opinion.description }}</p>
+                </div>
+                <ng-container *ngIf="opinion.pros.length || opinion.cons.length">
+                    <div class="row">
+                        <div class="col">
+                            <p class="mb-0 fs-5">Pros:</p>
+                            <ul>
+                                <li *ngFor="let p of opinion.pros">{{ p.value }}</li>
+                            </ul>
+                        </div>
+                        <div class="col">
+                            <p class="mb-0 fs-5">Cons:</p>
+                            <ul>
+                                <li *ngFor="let c of opinion.cons">{{ c.value }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </ng-container>
+                <hr class="my-0">
+            </div>
+        </ng-container>
+        <ng-template #noOpinions>
+            <h5>No opinions yet.</h5>
+        </ng-template>
+    </div>
+</ng-container>
+
+<ng-template #loadingOpinions>
+    <h5>Loading opinions...</h5>
+</ng-template>

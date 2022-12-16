@@ -1,6 +1,7 @@
 package pl.lodz.p.it.opinioncollector.opinion;
 
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -25,6 +26,7 @@ public class Advantage {
     private String value;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Opinion opinion;
 
     public Advantage(String value, Opinion opinion) {
