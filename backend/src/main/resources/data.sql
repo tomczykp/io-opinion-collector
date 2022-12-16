@@ -17,13 +17,6 @@ VALUES ('AnswerReportEvent', 'b12ac4f9-9e79-4420-987e-039d3f64bc56', 'Not Good A
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, questionid)
 VALUES ('QuestionReportEvent', 'd60e9ea8-129f-4b8f-b9ab-5cdcd6aee228', 'Not Good Answer', 0, '388f8d19-668a-4b96-bd8d-74aed2825aba',
         '0338ce3f-b8d3-4cf2-b814-b7ddffc17632');
-INSERT INTO iodb.public.question (question_id, content, date, product_id)
-VALUES ('8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6', 'question-content1', CURRENT_DATE, '0e7cc688-ea1c-42c4-8286-f4ee8edcdb25'),
-       ('35c3863a-2241-4c05-942b-6df9dabdf193', 'question-content2', CURRENT_DATE, 'b9043342-cd20-4e70-b621-84d395e2a120');
-
-INSERT INTO iodb.public.answer (answer_id, content, date, question_id)
-VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'answer-content1', CURRENT_DATE, '8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6'),
-       ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'answer-content2', CURRENT_DATE, '35c3863a-2241-4c05-942b-6df9dabdf193');
 
 INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('8378b753-6d05-454b-8447-efb125846fc7', true, 'admin', false, '$2a$10$xjb0b4oZfvGJkIPd2c7FP.owcLUH0h2bIhnTEIUkr4SpofB/cS4yu', 'ADMIN', 'Admin');
 INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('66208864-7b61-4e6e-8573-53863bd93b35', true, 'user', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User');
@@ -44,3 +37,39 @@ INSERT INTO public.app_user (id, active, email, locked, password, role, visible_
 INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('62708864-7b61-4e6e-8573-53863bd93b35', true, 'user14', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User14');
 INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('62808864-7b61-4e6e-8573-53863bd93b35', true, 'user15', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User15');
 INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name) VALUES ('62908864-7b61-4e6e-8573-53863bd93b35', true, 'user16', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User16');
+
+INSERT INTO iodb.public.question (question_id, content, date, product_id)
+VALUES ('8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
+        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07'),
+       ('35c3863a-2241-4c05-942b-6df9dabdf193', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
+        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07'),
+       ('95bc5f23-ac70-4c7e-a01f-4d9e92fad63d', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
+        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07');
+
+INSERT INTO iodb.public.answer (answer_id, content, date, question_id)
+VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'Yes', CURRENT_TIMESTAMP, '8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6'),
+       ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'No', CURRENT_TIMESTAMP, '35c3863a-2241-4c05-942b-6df9dabdf193');
+
+INSERT INTO iodb.public.product (product_id, category_id, name, description, deleted, confirmed)
+VALUES ('4811913c-b953-4856-979b-838488049d07', 'b293013b-40da-4dde-a997-bce3068636ec', 'Product1', 'Description1', false, true),
+       ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'b293013b-40da-4dde-a997-bce3068636ec', 'Product2', 'Description2', false, true),
+       ('2f335bfb-6805-4a40-ae9c-53b43f22b3ce', 'b293013b-40da-4dde-a997-bce3068636ec', 'Product3', 'Description3', false, true),
+       ('b71a95ef-3f19-4ced-a0f4-ebdca10a7668', 'b293013b-40da-4dde-a997-bce3068636ec', 'Product4', 'Description4', false, true),
+       ('4950d349-1127-4690-82a0-94fdc81b019b', 'b293013b-40da-4dde-a997-bce3068636ec', 'Product5', 'Description5', false, true),
+       ('b4c7b393-2e26-49e2-9783-785583bd4c66', 'b293013b-40da-4dde-a997-bce3068636ec', 'Product6', 'Description6', true, true);
+
+INSERT INTO PROPERTIES (PRODUCT_PRODUCT_ID, VALUE, KEY)
+VALUES ('4811913c-b953-4856-979b-838488049d07', 'value1', 'key1'),
+       ('4811913c-b953-4856-979b-838488049d07', 'value2', 'key2'),
+       ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'value3', 'key3');
+
+INSERT INTO OPINION (OPINION_ID, PRODUCT_ID, DESCRIPTION, LIKES, RATE, AUTHOR_ID)
+VALUES ('6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07', 'Test desc 1', 0, 2, '12208864-7b61-4e6e-8573-53863bd93b35'),
+       ('dc0dac8a-797b-11ed-a1eb-0242ac120002', '4811913c-b953-4856-979b-838488049d07', 'desc 2', 0, 3, '66208864-7b61-4e6e-8573-53863bd93b35');
+
+INSERT INTO ADVANTAGE (ID, VALUE, OPINION_OPINION_ID, OPINION_PRODUCT_ID)
+VALUES ('29e8cfb6-7995-11ed-a1eb-0242ac120002', 'Lorem Ipsum', '6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07'),
+       ('37fbe192-7995-11ed-a1eb-0242ac120002' ,'Lorem ipsum dolor sit amet', '6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07');
+
+INSERT INTO DISADVANTAGE (ID, VALUE, OPINION_OPINION_ID, OPINION_PRODUCT_ID)
+VALUES ('43ddbb7a-7995-11ed-a1eb-0242ac120002', 'Lorem Ipsum', '6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07');

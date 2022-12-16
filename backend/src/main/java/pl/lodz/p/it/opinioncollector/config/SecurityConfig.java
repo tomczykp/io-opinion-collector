@@ -3,6 +3,7 @@ package pl.lodz.p.it.opinioncollector.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,12 +42,13 @@ public class SecurityConfig {
         http
                 .csrf().disable().cors().and()
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/users/password").authenticated()
-                        .requestMatchers("/users/remove/admin").hasRole("ADMIN")
-                        .requestMatchers("/users/lock").hasRole("ADMIN")
-                        .requestMatchers("/users/unlock").hasRole("ADMIN")
-                        .requestMatchers("/users/remove/user").hasRole("USER")
-                        .requestMatchers("/signout/force").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/users/remove/admin").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/users/lock").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/users/unlock").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/users/remove/user").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/users/password").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/signout/force").authenticated()
+                        // Place for your secured endpoints
                         .anyRequest().permitAll()
                 ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

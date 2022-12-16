@@ -1,5 +1,9 @@
 <div class="container custom-container">
-    <h3 class="mb-4 text-center">Product</h3>
+  <div class="card">
+    <div class="header">
+      <h3 class="mb-4 text-center">Product</h3>
+    </div>
+
     <div class="row justify-content-center">
       <table class="table table-bordered">
         <tbody>
@@ -44,4 +48,10 @@
         </tbody>
       </table>
     </div>
+
+    <app-opinions [productId]="product.productId"></app-opinions>
+
+    <app-questions [productId]="product.productId"></app-questions>
+
+  </div>
 </div>

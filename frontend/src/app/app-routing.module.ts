@@ -16,7 +16,6 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'profile', component: ProfileComponent},
-  {path: 'events/admin-panel', component: EventsComponent},
   {path: 'products/:uuid', component: ProductsComponent},
   {path: 'dashboard', component: DashboardComponent,
     children: [
@@ -24,10 +23,10 @@ const routes: Routes = [
         path: 'users', // child route path
         component: UsersComponent, // child route component that the router renders
       },
-      // {
-      //   path: 'child-b',
-      //   component: ChildBComponent, // another child route component that the router renders
-      // },
+      {
+        path: 'events',
+        component: EventsComponent, // another child route component that the router renders
+      },
     ]
   },
   {path: 'reset', component: ResetComponent},

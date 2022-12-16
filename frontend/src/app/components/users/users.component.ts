@@ -47,21 +47,18 @@ export class UsersComponent implements OnInit {
 
   removeUser(email: String) {
     this.userService.removeByAdmin(email).subscribe((result) => {
-      console.log(result.status);
       this.getUsers();
     });
   }
 
   lockUser(email: String) {
     this.userService.lock(email).subscribe((result) => {
-      //console.log(result.status);
       this.getUsers();
     });
   }
 
   unlockUser(email: String) {
     this.userService.unlock(email).subscribe((result) => {
-      //console.log(result.status);
       this.getUsers();
     });
   }

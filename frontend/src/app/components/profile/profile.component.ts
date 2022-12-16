@@ -19,7 +19,7 @@ export class ProfileComponent implements OnInit {
   showUsernameChangeInput = false;
   newUsername = "";
 
-  showDeletionLinkSent = false;
+  deletionStatus = 0;
 
   get oldPassword() {
     return this.changePasswordForm.get('oldPassword');
@@ -34,13 +34,12 @@ export class ProfileComponent implements OnInit {
   }
 
   user: User | undefined;
-  passwordChangeStatus = 0
+  passwordChangeStatus = 0;
+  usernameChangeStatus = 0;
   // 0 if no display message
   // 1 if successful password change
   // 2 if failed password change
   // 3 if newPassword and repeatedPassword not match
-
-  usernameChangeStatus = 0;
 
   constructor(
     private userService: UserService,
@@ -66,37 +65,36 @@ export class ProfileComponent implements OnInit {
       let repeatedP = this.changePasswordForm.getRawValue().repeatedPassword;
 
       if (newP !== repeatedP) {
-        this.passwordChangeStatus = 3
-        return
+        this.passwordChangeStatus = 3;
+        return;
       }
 
       this.userService.changePassword(oldP!.toString(), newP!.toString())
         .subscribe((result) => {
-          console.log(result.status)
           if (result.status == 200) {
-            console.log("Success")
-            this.passwordChangeStatus = 1
+            this.passwordChangeStatus = 1;
+            this.changePasswordForm.reset();
           }
         }, (error) => {
-          console.log(error)
           this.oldPassword?.reset()
           this.passwordChangeStatus = 2
         });
     }
   }
-  removeUser() {
-    this.userService.removeByUser()
-    console.log("Email send");
-  }
 
   showUsernameChange() {
+    this.newUsername = this.user!.visibleName;
     this.showUsernameChangeInput = true;
   }
 
   changeUsername() {
     if (this.user?.visibleName == this.newUsername) {
-      this.usernameChangeStatus = 3
-      return
+      this.usernameChangeStatus = 3;
+      return;
+    }
+    if (this.newUsername == "") {
+      this.usernameChangeStatus = 4;
+      return;
     }
 
     this.userService.changeUsername(this.newUsername).subscribe((result) => {
@@ -118,7 +116,12 @@ export class ProfileComponent implements OnInit {
   }
 
   deleteAccount() {
-    this.userService.removeByUser()
-    this.showDeletionLinkSent = true;
+    this.userService.removeByUser().subscribe((result) => {
+      if (result.status == 200) {
+        this.deletionStatus = 1;
+      }
+    }, (error) => {
+      this.deletionStatus = 2;
+    })
   }
 }

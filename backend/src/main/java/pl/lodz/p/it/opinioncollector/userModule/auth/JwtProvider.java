@@ -4,10 +4,8 @@ import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserType;
 
-import java.security.PublicKey;
 import java.util.Date;
 
 @Component
@@ -33,7 +31,6 @@ public class JwtProvider {
                 .setSigningKey(secret)
                 .parseClaimsJws(jwt);
     }
-
 
 
     public String getToken(HttpServletRequest request) {
