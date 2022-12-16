@@ -3,6 +3,7 @@ package pl.lodz.p.it.opinioncollector.category;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,9 +18,11 @@ import java.util.UUID;
 @Entity
 @Valid
 @NoArgsConstructor
+@AllArgsConstructor
 public class Category {
     @Id
     @Column(name = "categoryID")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID categoryID;
 
     private UUID parentCategoryID;
@@ -27,37 +30,25 @@ public class Category {
     @ElementCollection
     private List<Field> fields = new ArrayList<>();
 
-    public Category(UUID categoryID, String name, List<Field> fields) {
-        this.categoryID = categoryID;
+    public Category(String name, List<Field> fields) {
         this.name = name;
         this.fields = fields;
     }
 
-    public UUID getCategoryID() {
-        return categoryID;
+    public Category(CategoryDTO categoryDTO) {
+        this.name = categoryDTO.getName();
+        for(int i=0; i<categoryDTO.getFields().size(); i++){
+            fields.add(new Field(categoryDTO.getFields().get(i)));
+        }
+        this.parentCategoryID = categoryDTO.getParentCategoryID();
     }
 
-    public UUID getParentCategoryID() {
-        return parentCategoryID;
+    public void mergeCategory(CategoryDTO categoryDTO)  {
+        this.name = categoryDTO.getName();
+        for(int i=0; i<categoryDTO.getFields().size(); i++){
+            fields.add(new Field(categoryDTO.getFields().get(i)));
+        }
+        this.parentCategoryID = categoryDTO.getParentCategoryID();
     }
 
-    public void setParentCategoryID(UUID parentCategoryID) {
-        this.parentCategoryID = parentCategoryID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<Field> getFields() {
-        return fields;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setFields(List<Field> fields) {
-        this.fields = fields;
-    }
 }

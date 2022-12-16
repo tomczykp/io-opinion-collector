@@ -1,13 +1,12 @@
 package pl.lodz.p.it.opinioncollector.category;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+
+import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.lang.reflect.Constructor;
 import java.util.UUID;
 @Data
 @Entity
@@ -16,15 +15,20 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Field {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "fieldID")
     private UUID fieldID;
     private String name;
     private Class type;
-    public Field(UUID fieldID, String name, Class type)
-    {
-        this.fieldID = fieldID;
-        this.name = name;
-        this.type = type;
+
+    public Field(FieldDTO dto){
+        //this.fieldID = UUID.randomUUID();
+        try {
+            this.name = dto.getName();
+            this.type = Class.forName(dto.getType());
+        }catch(Exception e){
+            System.out.println(e);
+        }
     }
     public UUID getFieldID() {
         return fieldID;

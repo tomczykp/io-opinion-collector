@@ -19,9 +19,8 @@ public class FieldManager {
         fields = fieldRepository;
     }
 
-    public Field createField(String name, Class type)
-    {
-        Field f = new Field(UUID.randomUUID(),name,type);
+    public Field createField(FieldDTO fieldDTO) throws ClassNotFoundException, NoSuchMethodException {
+        Field f = new Field(fieldDTO);
         fields.save(f);
         return f;
     }

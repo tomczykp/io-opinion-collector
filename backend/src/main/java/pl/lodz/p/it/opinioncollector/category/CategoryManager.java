@@ -8,34 +8,44 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
 @Service
 public class CategoryManager {
 
-    private CategoryRepository categories;
+    private CategoryRepository categoryRepository;
     @Autowired
     public CategoryManager(CategoryRepository categoryRepository)
     {
-        categories = categoryRepository;
+        this.categoryRepository = categoryRepository;
     }
 
-    public Category createCategory(String name, List<Field> fields)
+    public Category createCategory(CategoryDTO categoryDTO)
     {
-        Category category = new Category(UUID.randomUUID(), name, fields);
-        categories.save(category);
+        Category category = new Category(categoryDTO);
+        categoryRepository.save(category);
         return category;
     }
 
-    public Category getCategory(UUID categoryID)
+    public Category getCategory(UUID uuid)
     {
-        return categories.findById(categoryID).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        Optional<Category> category = categoryRepository.findById(uuid);
+        if(category.isPresent()){
+            return category.get();
+        }
+        return null;
     }
 
+    public List<Category> getAllCategories(){
+        return categoryRepository.findAll();
+    }
+
+    //TODO AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     public List<Category> getCategories(Predicate<Category> Predicate)
     {
-        List<Category> allCategories  = categories.findAll();
+        List<Category> allCategories  = categoryRepository.findAll();
         List<Category> result = new ArrayList<Category> ();
         for(Category c: allCategories){
             if(Predicate.test(c)) {
@@ -45,26 +55,35 @@ public class CategoryManager {
         return result;
     }
 
-    public Category modifyCategory(Category modifiedCategory, String name, List<Field> fields)
+    public Category updateCategory(UUID uuid, CategoryDTO categoryDTO)
     {
-        modifiedCategory.setName(name);
-        modifiedCategory.setFields(fields);
-        return modifiedCategory;
-    }
-
-    public void deleteCategory(String name)
-    {
-        categories.deleteByName(name);
-    }
-
-    public Field getField(UUID categoryID, String filedName)
-    {
-        Category c = getCategory(categoryID);
-        for(Field f: c.getFields()){
-            if(f.getName()==filedName){
-                return f;
-            }
+        Optional<Category> categoryOptional = categoryRepository.findById(uuid);
+        if(categoryOptional.isPresent()){
+            categoryOptional.get().mergeCategory(categoryDTO);
+            categoryRepository.save(categoryOptional.get());
+            return categoryOptional.get();
         }
         return null;
     }
+
+    public boolean deleteCategory(UUID uuid)
+    {
+        Optional<Category> category = categoryRepository.findById(uuid);
+        if(category.isPresent()){
+            categoryRepository.deleteById(uuid);
+            return true;
+        }
+        return false;
+    }
+
+    public Category addField(UUID categoryId, Field field){
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if(category.isPresent()){
+            category.get().getFields().add(field);
+            categoryRepository.save(category.get());
+            return category.get();
+        }
+        return null;
+    }
+
 }

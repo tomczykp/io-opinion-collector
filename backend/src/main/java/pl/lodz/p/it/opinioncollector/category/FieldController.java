@@ -1,7 +1,9 @@
 package pl.lodz.p.it.opinioncollector.category;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.lodz.p.it.opinioncollector.productManagment.ProductDTO;
 
 import java.util.UUID;
 
@@ -21,8 +23,8 @@ public class FieldController {
         return fieldManager.getField(uuid);
     }
     @PutMapping("")
-    public Field createField(@PathVariable String name, @PathVariable Class type){
-        return fieldManager.createField(name, type);
+    public Field createField(@Valid @RequestBody FieldDTO fieldDTO) throws ClassNotFoundException, NoSuchMethodException {
+        return fieldManager.createField(fieldDTO);
     }
     @DeleteMapping("/{name}")
     public void deleteCategory(@PathVariable("name") String name){
