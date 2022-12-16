@@ -31,7 +31,7 @@ public class ProductController {
     public ResponseEntity<Product> getProductById(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
         Product product = productManager.getProduct(uuid);
         if (product == null) {
-            throw new ProductNotFoundException(uuid.toString());
+            throw new ProductNotFoundException();
         }
         return ResponseEntity.ok(product);
     }
@@ -66,7 +66,7 @@ public class ProductController {
                                                  @Valid @RequestBody ProductDTO productDTO) throws ProductNotFoundException {
         Product product = productManager.updateProduct(uuid, productDTO);
         if (product == null) {
-            throw new ProductNotFoundException(uuid.toString());
+            throw new ProductNotFoundException();
         }
         return ResponseEntity.ok(product);
     }
@@ -74,7 +74,7 @@ public class ProductController {
     @PutMapping("/{uuid}/confirm")
     public ResponseEntity<?> confirmProduct(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
         if (!productManager.confirmProduct(uuid)) {
-            throw new ProductNotFoundException(uuid.toString());
+            throw new ProductNotFoundException();
         }
         return ResponseEntity.noContent().build();
     }
@@ -82,7 +82,7 @@ public class ProductController {
     @PutMapping("/{uuid}/unconfirm")
     public ResponseEntity<?> unconfirmProduct(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
         if (!productManager.unconfirmProduct(uuid)) {
-            throw new ProductNotFoundException(uuid.toString());
+            throw new ProductNotFoundException();
         }
         return ResponseEntity.noContent().build();
     }
@@ -94,6 +94,6 @@ public class ProductController {
         if (productManager.deleteProduct(uuid)) {
             return ResponseEntity.noContent().build();
         }
-        throw new ProductNotFoundException(uuid.toString());
+        throw new ProductNotFoundException();
     }
 }
