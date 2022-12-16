@@ -50,6 +50,26 @@ public class ProductManager {
         return null;
     }
 
+    public boolean confirmProduct(UUID uuid) {
+        Optional<Product> productOptional = productRepository.findById(uuid);
+        if (productOptional.isPresent()) {
+            productOptional.get().setConfirmed(true);
+            productRepository.save(productOptional.get());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean unconfirmProduct(UUID uuid) {
+        Optional<Product> productOptional = productRepository.findById(uuid);
+        if (productOptional.isPresent()) {
+            productOptional.get().setConfirmed(false);
+            productRepository.save(productOptional.get());
+            return true;
+        }
+        return false;
+    }
+
     public boolean deleteProduct(UUID uuid) {
         Optional<Product> product = productRepository.findById(uuid);
         if (product.isPresent()) {

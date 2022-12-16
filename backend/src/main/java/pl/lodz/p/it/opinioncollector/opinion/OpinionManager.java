@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
 import pl.lodz.p.it.opinioncollector.productManagment.ProductRepository;
-import pl.lodz.p.it.opinioncollector.productManagment.exceptions.ProductNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 @Service

@@ -4,12 +4,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.lodz.p.it.opinioncollector.productManagment.exceptions.ProductNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController()
 @RequestMapping("/products")
 public class ProductController {
@@ -71,12 +71,28 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
+    @PutMapping("/{uuid}/confirm")
+    public ResponseEntity<?> confirmProduct(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
+        if (!productManager.confirmProduct(uuid)) {
+            throw new ProductNotFoundException(uuid.toString());
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{uuid}/unconfirm")
+    public ResponseEntity<?> unconfirmProduct(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
+        if (!productManager.unconfirmProduct(uuid)) {
+            throw new ProductNotFoundException(uuid.toString());
+        }
+        return ResponseEntity.noContent().build();
+    }
+
     //DeleteMapping
 
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Product> deleteProduct(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
         if (productManager.deleteProduct(uuid)) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
         }
         throw new ProductNotFoundException(uuid.toString());
     }

@@ -1,4 +1,4 @@
-package pl.lodz.p.it.opinioncollector.productManagment.exceptions;
+package pl.lodz.p.it.opinioncollector.exceptions.products;
 
 
 
