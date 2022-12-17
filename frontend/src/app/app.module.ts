@@ -27,6 +27,7 @@ import { UsersComponent } from './components/users/users.component';
 import { QuestionsComponent } from './components/questions/questions.component';
 import { AnswersComponent } from './components/answers/answers.component';
 import { OpinionsComponent } from './components/opinions/opinions.component';
+import { AddProductComponent } from './components/products/add-product/add-product.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { OpinionsComponent } from './components/opinions/opinions.component';
     UsersComponent,
     QuestionsComponent,
     AnswersComponent,
-    OpinionsComponent
+    OpinionsComponent,
+    AddProductComponent
   ],
   imports: [
     BrowserModule,
