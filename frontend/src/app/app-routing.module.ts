@@ -18,8 +18,8 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'profile', component: ProfileComponent},
   {path: 'products/:uuid', component: ProductsComponent},
-  {path: 'categories', component: CategoriesComponent},
-  {path: 'dashboard', component: DashboardComponent,
+  {
+    path: 'dashboard', component: DashboardComponent,
     children: [
       {
         path: 'users', // child route path
@@ -28,6 +28,10 @@ const routes: Routes = [
       {
         path: 'events',
         component: EventsComponent, // another child route component that the router renders
+      },
+      {
+        path: 'categories',
+        component: CategoriesComponent
       },
     ]
   },
