@@ -20,8 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.opinioncollector.eventHandling.EventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
-import pl.lodz.p.it.opinioncollector.productManagment.exceptions.ProductNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
+import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
 
 @CrossOrigin
 @RestController
@@ -31,6 +32,7 @@ public class OpinionController {
 
     private final OpinionManager opinionManager;
     private final EventManager eventManager;
+    private final UserManager userManager;
 
     @GetMapping
     @ResponseBody
@@ -77,7 +79,8 @@ public class OpinionController {
     public void reportOpinion(@PathVariable UUID productId,
                               @PathVariable UUID opinionId,
                               @RequestBody String reason) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userManager.loadUserByUsername(email);
         eventManager.createOpinionReportEvent(user.getId(), reason, opinionId);
     }
 }

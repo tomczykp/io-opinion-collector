@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {ProductsService, OC} from "../../services/productsServices/products.service";
+import {ProductsService} from "../../services/products.service";
 import {Router} from "@angular/router";
+import {Product} from "../../model/Product";
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-products',
@@ -9,7 +11,7 @@ import {Router} from "@angular/router";
 })
 export class ProductsComponent implements OnInit {
 
-  product: OC.Product = <OC.Product>{};
+  product: Product = <Product>{};
   regex: RegExp = new RegExp('[0-9a-f\-]+$');
 
   constructor(private productService: ProductsService, private router: Router) {
@@ -24,9 +26,9 @@ export class ProductsComponent implements OnInit {
   }
 
   getProduct(uuid: string) {
-    this.productService.getProduct(uuid).subscribe((data: OC.Product) => {
+    this.productService.getProduct(uuid).subscribe((data: HttpResponse<Product>) => {
       console.log(data)
-      this.product = data;
+      this.product = data.body!;
     })};
 
 }

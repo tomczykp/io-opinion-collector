@@ -2,8 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { OC, ProductsService } from 'src/app/services/productsServices/products.service';
+import {ProductsService } from 'src/app/services/products.service';
 import {AuthService} from "../../services/auth.service";
+import {Product} from "../../model/Product";
 
 @Component({
   selector: 'app-home',
@@ -14,16 +15,16 @@ export class HomeComponent implements OnInit {
 
   adminColumns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId', 'action'];
   columns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId'];
-  data: MatTableDataSource<OC.Product>;
+  data: MatTableDataSource<Product>;
   authenticated = false;
-  products: OC.Product[];
+  products: Product[];
   text: string;
   role: string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  
+
   constructor(public productsService: ProductsService,
               public authService: AuthService ) { }
 

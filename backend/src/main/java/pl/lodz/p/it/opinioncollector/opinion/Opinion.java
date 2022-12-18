@@ -8,6 +8,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -29,6 +30,7 @@ import pl.lodz.p.it.opinioncollector.userModule.user.User;
 public class Opinion implements Serializable {
 
     @EmbeddedId
+    @GeneratedValue
     private OpinionId id;
 
     @Column(name = "RATE", nullable = false)

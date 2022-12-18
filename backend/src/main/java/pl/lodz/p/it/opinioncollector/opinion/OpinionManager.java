@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
 import pl.lodz.p.it.opinioncollector.productManagment.ProductRepository;
-import pl.lodz.p.it.opinioncollector.productManagment.exceptions.ProductNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
+import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class OpinionManager {
 
     private final OpinionRepository opinionRepository;
     private final ProductRepository productRepository;
+    private final UserManager userManager;
 
     public List<Opinion> getOpinions(UUID productId) {
         return opinionRepository.findById_ProductId(productId);
@@ -35,26 +37,31 @@ public class OpinionManager {
     public Opinion create(UUID productId, CreateOpinionDto createOpinionDto) throws ProductNotFoundException {
         return productRepository.findById(productId)
                                 .map(product -> {
-                                    User user = (User) SecurityContextHolder.getContext()
-                                                                            .getAuthentication()
-                                                                            .getPrincipal();
+                                    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+                                    User user = userManager.loadUserByUsername(email);
+
                                     Opinion opinion = mapDtoToEntity(createOpinionDto);
+
+                                    OpinionId opinionId = new OpinionId(productId, UUID.randomUUID());
                                     opinion.setProduct(product);
                                     opinion.setAuthor(user);
+                                    opinion.setId(opinionId);
                                     return opinionRepository.save(opinion);
                                 })
                                 .orElseThrow(ProductNotFoundException::new);
     }
 
+    @Transactional
     public void deleteOpinion(UUID productId, UUID opinionId)
         throws OpinionOperationAccessForbiddenException {
         Optional<Opinion> opinionOptional = opinionRepository.findOne(productId, opinionId);
 
         if (opinionOptional.isPresent()) {
             Opinion opinion = opinionOptional.get();
-            UUID userId = ((User) SecurityContextHolder.getContext()
-                                                       .getAuthentication()
-                                                       .getPrincipal()).getId();
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userManager.loadUserByUsername(email);
+
+            UUID userId = user.getId();
             if (Objects.equals(opinion.getAuthor().getId(), userId)) {
                 opinionRepository.deleteById_ProductIdAndId_OpinionId(productId, opinionId);
             } else {
@@ -72,7 +79,8 @@ public class OpinionManager {
         if (opinionOptional.isPresent()) {
             Opinion opinion = opinionOptional.get();
 
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userManager.loadUserByUsername(email);
 
             if (!Objects.equals(opinion.getAuthor().getId(), user.getId())) {
                 throw new OpinionOperationAccessForbiddenException();

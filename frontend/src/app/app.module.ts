@@ -28,6 +28,7 @@ import { QuestionsComponent } from './components/questions/questions.component';
 import { AnswersComponent } from './components/answers/answers.component';
 import { OpinionsComponent } from './components/opinions/opinions.component';
 import { CategoriesComponent } from './components/categories/categories.component';
+import { AddProductComponent } from './components/products/add-product/add-product.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { CategoriesComponent } from './components/categories/categories.componen
     AnswersComponent,
     OpinionsComponent,
     CategoriesComponent
+    AddProductComponent
   ],
   imports: [
     BrowserModule,

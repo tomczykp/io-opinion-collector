@@ -37,17 +37,21 @@
         </tbody>
       </table>
 
-      <h3 class="mb-4">properties</h3>
-      <table class="table table-bordered">
-        <tbody>
-        <tr *ngFor="let item of product.properties | keyvalue">
+      <div class="mb-4">
+        <h3>properties</h3>
+        <table class="table table-bordered">
+          <tbody>
+          <tr *ngFor="let item of product.properties | keyvalue">
             <th>{{ item.key }}</th>
             <td>{{ item.value }}</td>
-        </tr>
+          </tr>
+          </tbody>
+        </table>
+      </div>
 
-        </tbody>
-      </table>
     </div>
+
+    <app-add-product></app-add-product>
 
     <app-opinions [productId]="product.productId"></app-opinions>
 
