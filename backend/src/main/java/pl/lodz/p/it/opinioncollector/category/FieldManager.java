@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.server.ResponseStatusException;
+import pl.lodz.p.it.opinioncollector.exceptions.category.FieldNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,14 +48,15 @@ public class FieldManager {
         deleteField(name);
     }
 
-    public Field updateField(UUID uuid, FieldDTO fieldDTO){
+    public Field updateField(UUID uuid, FieldDTO fieldDTO) throws FieldNotFoundException {
         Optional<Field> fieldOptional = fieldRepository.findById(uuid);
         if(fieldOptional.isPresent()){
             fieldOptional.get().setName(fieldDTO.getName());
             fieldOptional.get().setType(fieldDTO.getType());
             fieldRepository.save(fieldOptional.get());
             return fieldOptional.get();
+        } else {
+            throw new FieldNotFoundException(uuid.toString());
         }
-        return null;
     }
 }
