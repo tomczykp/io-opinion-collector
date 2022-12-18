@@ -23,7 +23,7 @@ export class ProductsService {
   }
 
   public addProduct(ProductDTO: object): Observable<HttpResponse<Product>> {
-    return this.httpClient.post<Product>(this.baseUrl, JSON.stringify(ProductDTO),
+    return this.httpClient.post<Product>(this.baseUrl, ProductDTO,
       {'headers': {'content-type': 'application/json'} ,observe: 'response'})
   }
 

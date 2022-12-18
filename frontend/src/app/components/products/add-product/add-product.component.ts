@@ -8,9 +8,10 @@ import {ProductsService} from "../../../services/products.service";
   templateUrl: './add-product.component.html'
 })
 export class AddProductComponent implements OnInit {
+  regex: RegExp = new RegExp('^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$');
 
   addProductForm = new FormGroup({
-    categoryId: new FormControl('', [Validators.required]), //Validators.email]),
+    categoryId: new FormControl('', [Validators.required, Validators.pattern(this.regex)]),
     name: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
     properties: new FormControl('')
@@ -41,6 +42,7 @@ export class AddProductComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
   addProduct() {
     if (this.addProductForm.valid) {
       const ProductDTO: object = {
@@ -50,17 +52,12 @@ export class AddProductComponent implements OnInit {
         "properties": {
           "test": "test"
         }
-      }
+    }
       console.log(ProductDTO);
       this.productService.addProduct(ProductDTO)
         .subscribe((result) => {
             if (result.status === 200) {
-              // localStorage.setItem("categoryId", result.body!.categoryId)
-              // localStorage.setItem("name", result.body!.name)
-              // localStorage.setItem("description", result.body!.description)
-              // result.body!.properties.forEach(value, index)
               this.router.navigate(['/']);
-
             }
           }
         )

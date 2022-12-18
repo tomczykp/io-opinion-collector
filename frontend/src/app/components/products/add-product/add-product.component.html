@@ -4,20 +4,35 @@
   <div class="col-sm-6 col-7 bg-white col-sm-6 border-4 border p-md-5">
     <form [formGroup]="addProductForm" (ngSubmit)="addProduct()">
       <div class="mat-form-field align-self-auto">
-        <span *ngIf="categoryId && categoryId.touched && categoryId.invalid" class="validation-message">Category ID is required</span>
         <input required type="text" id="categoryId" formControlName="categoryId" class="form-control form-control-lg" />
+        <div *ngIf="categoryId && categoryId?.touched && categoryId?.dirty">
+          <small class="text-danger" *ngIf="categoryId.errors?.['pattern']">
+            Not matching UUID pattern
+          </small>
+          <small class="text-danger" *ngIf="categoryId.errors?.['required']">
+            CategoryId is required
+          </small>
+        </div>
         <label class="form-label" for="categoryId">Category ID</label>
       </div>
 
       <div class="mat-form-field align-self-auto">
-        <span *ngIf="name && name.touched && name.invalid" class="validation-message">Name is required</span>
         <input required type="text" id="name" formControlName="name" class="form-control form-control-lg" />
+        <div *ngIf="name && name?.touched && name?.dirty">
+          <small class="text-danger" *ngIf="name.errors?.['required']">
+            Name is required
+          </small>
+        </div>
         <label class="form-label" for="name">Name</label>
       </div>
 
       <div class="mat-form-field align-self-auto">
-        <span *ngIf="description && description.touched && description.invalid" class="validation-message">Description is required</span>
         <input required type="text" id="description" formControlName="description" class="form-control form-control-lg" />
+        <div *ngIf="description && description?.touched && description?.dirty">
+          <small class="text-danger" *ngIf="description.errors?.['required']">
+            Description is required
+          </small>
+        </div>
         <label class="form-label" for="description">Description</label>
       </div>
 
