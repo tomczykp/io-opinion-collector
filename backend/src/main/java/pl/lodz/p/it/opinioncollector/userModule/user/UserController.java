@@ -6,13 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.opinioncollector.exceptions.user.PasswordNotMatchesException;
 import pl.lodz.p.it.opinioncollector.userModule.dto.ChangePasswordDTO;
+
+import java.util.List;
 
 
 @RestController
@@ -29,13 +26,13 @@ public class UserController {
         userManager.changePassword(dto.getOldPassword(), dto.getNewPassword());
     }
 
-    @PostMapping("/lock")
+    @PutMapping("/lock")
     @ResponseStatus(HttpStatus.OK)
     public void lockUser(@NotNull @Param("email") String email) {
         userManager.lockUser(email);
     }
 
-    @PostMapping("/unlock")
+    @PutMapping("/unlock")
     @ResponseStatus(HttpStatus.OK)
     public void unlockUser(@NotNull @Param("email") String email) {
         userManager.unlockUser(email);
@@ -49,8 +46,8 @@ public class UserController {
 
     @DeleteMapping("/remove/user")
     @ResponseStatus(HttpStatus.OK)
-    public void removeUserByUser() {
-        userManager.removeUserByUser();
+    public void deleteOwnAccount() {
+        userManager.deleteOwnAccount();
     }
 
     @PutMapping("/username")

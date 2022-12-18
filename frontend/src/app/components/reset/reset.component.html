@@ -4,6 +4,9 @@
 <div *ngIf="emailStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
   <strong>Given data is not an email, or there is no user with given email</strong>
 </div>
+<div *ngIf="emailStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+  <strong>Link for password reset was already sent.</strong>
+</div>
 <div class="container">
     <div style="" class="justify-content-center align-middle d-flex">
         <div class="card p-5 mt-5 rounded-4" style="background-color: ghostwhite;">

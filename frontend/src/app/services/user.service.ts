@@ -44,15 +44,15 @@ export class UserService {
   }
 
   lock(email: String) {
-    return this.http.post(environment.apiUrl + "/users/lock?email=" + email, {}, {observe: 'response'});
+    return this.http.put(environment.apiUrl + "/users/lock?email=" + email, {}, {observe: 'response'});
   }
 
   unlock(email: String) {
-    return this.http.post(environment.apiUrl + "/users/unlock?email=" + email, {}, {observe: 'response'});
+    return this.http.put(environment.apiUrl + "/users/unlock?email=" + email, {}, {observe: 'response'});
   }
 
   confirmResetPassword(newPassword: string, resetToken: string) {
-    return this.http.put(environment.apiUrl + "/users/confirm/reset?password="+newPassword+"&token="+resetToken, null , {observe: 'response'});
+    return this.http.put(environment.apiUrl + "/users/confirm/reset?password="+ newPassword + "&token=" + resetToken, null , {observe: 'response'});
   }
 
   resetPassword(email: string) {
