@@ -48,6 +48,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/users/remove/user").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/users/password").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/signout/force").authenticated()
+                        // opinion endpoints
+                        .requestMatchers(HttpMethod.GET, "/products/{productId}/opinions/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/products/{productId}/opinions/**").authenticated()
                         // Place for your secured endpoints
                         .anyRequest().permitAll()
                 ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

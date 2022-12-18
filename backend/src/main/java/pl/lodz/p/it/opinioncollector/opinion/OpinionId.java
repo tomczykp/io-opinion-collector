@@ -27,5 +27,5 @@ public class OpinionId implements Serializable {
 
     @Column(name = "OPINION_ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID opinionId;
+    private UUID opinionId = UUID.randomUUID();
 }
