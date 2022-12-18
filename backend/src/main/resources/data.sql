@@ -73,3 +73,8 @@ VALUES ('29e8cfb6-7995-11ed-a1eb-0242ac120002', 'Lorem Ipsum', '6c3a61be-955c-41
 
 INSERT INTO DISADVANTAGE (ID, VALUE, OPINION_OPINION_ID, OPINION_PRODUCT_ID)
 VALUES ('43ddbb7a-7995-11ed-a1eb-0242ac120002', 'Lorem Ipsum', '6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07');
+
+INSERT INTO public.field (fieldid, name, type) VALUES ('e65b1f71-f3d8-4e16-ba55-df16a316f051', 'Numer', 'Int');
+INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'Category_2', null);
+INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'e65b1f71-f3d8-4e16-ba55-df16a316f051');
+
