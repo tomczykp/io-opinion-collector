@@ -17,16 +17,16 @@ public class FieldController {
         this.fieldManager = fieldManager;
     }
 
-    @GetMapping("/{uuid}")
+    //@GetMapping("/{uuid}")
     public Field getField(@PathVariable("uuid") UUID uuid)
     {
         return fieldManager.getField(uuid);
     }
-    @PutMapping("")
+    //@PutMapping("")
     public Field createField(@Valid @RequestBody FieldDTO fieldDTO) throws ClassNotFoundException, NoSuchMethodException {
         return fieldManager.createField(fieldDTO);
     }
-    @DeleteMapping("/{name}")
+    //@DeleteMapping("/{name}")
     public void deleteCategory(@PathVariable("name") String name){
         fieldManager.deleteField(name);
     }
