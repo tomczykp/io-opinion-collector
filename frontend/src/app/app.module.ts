@@ -48,7 +48,7 @@ import { AddProductComponent } from './components/products/add-product/add-produ
     QuestionsComponent,
     AnswersComponent,
     OpinionsComponent,
-    CategoriesComponent
+    CategoriesComponent,
     AddProductComponent
   ],
   imports: [
