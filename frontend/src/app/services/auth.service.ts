@@ -52,4 +52,12 @@ export class AuthService {
       this.router.navigate(['/'])
     })
   }
+
+  getRole() {
+    return localStorage.getItem("role");
+  }
+
+  getEmail() {
+    return localStorage.getItem("email");
+  }
 }

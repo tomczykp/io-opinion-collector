@@ -11,23 +11,25 @@ import { ResetConfirmComponent } from './components/reset/reset-confirm/reset-co
 import {UsersComponent} from "./components/users/users.component";
 import {ProductsComponent} from "./components/products/products.component";
 import {CategoriesComponent} from "./components/categories/categories.component";
+import {AuthGuard} from "./guards/auth.guard";
+import {AdminGuard} from "./guards/admin.guard";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'profile', component: ProfileComponent},
+  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {path: 'products/:uuid', component: ProductsComponent},
   {
-    path: 'dashboard', component: DashboardComponent,
+    path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard, AdminGuard],
     children: [
       {
-        path: 'users', // child route path
-        component: UsersComponent, // child route component that the router renders
+        path: 'users',
+        component: UsersComponent,
       },
       {
         path: 'events',
-        component: EventsComponent, // another child route component that the router renders
+        component: EventsComponent,
       },
       {
         path: 'categories',

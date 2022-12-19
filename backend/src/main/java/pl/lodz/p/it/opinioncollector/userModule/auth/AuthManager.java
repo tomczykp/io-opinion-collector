@@ -114,9 +114,7 @@ public class AuthManager {
     }
 
     public void dropAllRefreshTokens() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         tokenRepository.deleteAllByUserAndType(user, TokenType.REFRESH_TOKEN);
     }
 }

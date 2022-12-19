@@ -46,6 +46,10 @@ export class ProfileComponent implements OnInit {
     private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.getUser();
+  }
+
+  getUser() {
     this.userService.getUser().subscribe((user) => {
       this.user = user;
     })
@@ -54,8 +58,6 @@ export class ProfileComponent implements OnInit {
   forceLogout() {
     this.authService.logoutFromAllDevices();
   }
-
-
 
   onPasswordChangeSubmit() {
     if (this.changePasswordForm.valid) {
@@ -101,12 +103,12 @@ export class ProfileComponent implements OnInit {
       if (result.status === 200) {
         this.usernameChangeStatus = 1;
         this.newUsername = "";
-        this.ngOnInit();
+        this.getUser();
+        this.showUsernameChangeInput = false;
       }
     }, (error) => {
       this.usernameChangeStatus = 2;
     })
-    this.showUsernameChangeInput = false;
   }
 
   cancelUsernameChange() {
