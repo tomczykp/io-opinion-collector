@@ -1,10 +1,16 @@
 <section class="align-middle justify-content-center m-sm-5 m-2">
-  <div *ngIf="wrongCredentials" class="alert alert-danger alert-dismissible fade show" role="alert">
-    <strong>Error during login</strong> You should check your credentials or use option of resetting password.
-  </div>
-  <div *ngIf="accountLocked" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <ngb-alert *ngIf="registerSuccessful" [dismissible]="true" type="success" (closed)="registerSuccessful = false" class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>You have successfully registered.</strong> Now you have to confirm your account by clicking link we sent to your email.
+  </ngb-alert>
+  <ngb-alert *ngIf="logoutSuccessful" [dismissible]="true" type="success" (closed)="logoutSuccessful = false" class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>You have successfully logged out.</strong>
+  </ngb-alert>
+  <ngb-alert *ngIf="wrongCredentials" [dismissible]="true" (closed)="wrongCredentials = false" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Error during login.</strong> You should check your credentials or use option of resetting password.
+  </ngb-alert>
+  <ngb-alert *ngIf="accountLocked" [dismissible]="true" (closed)="wrongCredentials = false" class="alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Your account is locked or you did not activate your account via email</strong>
-  </div>
+  </ngb-alert>
   <div class="container pt-xl-5 h-100 w-100">
     <div class="row d-flex align-items-center justify-content-center h-100">
       <div class="col-md-8 col-lg-7 col-xl-6">

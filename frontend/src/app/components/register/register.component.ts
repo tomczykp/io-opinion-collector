@@ -51,10 +51,8 @@ export class RegisterComponent implements OnInit {
       this.authService.register(email!.toString(), username!.toString(), password!.toString())
         .subscribe((result) => {
           if (result.status == 201) {
-            console.log("Successful register")
-            this.router.navigate(['/login']);
+            this.router.navigate(['/login'], {queryParams: {'register-success': true}});
           } else {
-            console.log("Error during register");
             this.clearPassword();
           }
         }, (error) => {

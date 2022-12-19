@@ -13,11 +13,12 @@ import {ProductsComponent} from "./components/products/products.component";
 import {CategoriesComponent} from "./components/categories/categories.component";
 import {AuthGuard} from "./guards/auth.guard";
 import {AdminGuard} from "./guards/admin.guard";
+import {LoginRegisterGuard} from "./guards/login-register.guard";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
+  {path: 'login', component: LoginComponent, canActivate: [LoginRegisterGuard]},
+  {path: 'register', component: RegisterComponent, canActivate: [LoginRegisterGuard]},
   {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {path: 'products/:uuid', component: ProductsComponent},
   {
