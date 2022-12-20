@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import pl.lodz.p.it.opinioncollector.opinion.model.Opinion;
+import pl.lodz.p.it.opinioncollector.opinion.model.OpinionId;
 
 public interface OpinionRepository extends JpaRepository<Opinion, OpinionId> {
     List<Opinion> findById_ProductId(UUID productId);

@@ -3,6 +3,7 @@ package pl.lodz.p.it.opinioncollector.opinion;
 import java.util.List;
 import java.util.UUID;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,7 @@ import pl.lodz.p.it.opinioncollector.eventHandling.EventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
 import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundException;
+import pl.lodz.p.it.opinioncollector.opinion.model.Opinion;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
 
@@ -78,7 +80,7 @@ public class OpinionController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void reportOpinion(@PathVariable UUID productId,
                               @PathVariable UUID opinionId,
-                              @RequestBody String reason) {
+                              @NotEmpty @RequestBody String reason) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userManager.loadUserByUsername(email);
         eventManager.createOpinionReportEvent(user.getId(), reason, opinionId);
