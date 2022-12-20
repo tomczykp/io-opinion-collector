@@ -1,17 +1,23 @@
-<section class="align-middle justify-content-center m-5">
-  <div *ngIf="wrongCredentials" class="alert alert-danger alert-dismissible fade show" role="alert">
-    <strong>Error during login</strong> You should check your credentials or use option of resetting password.
-  </div>
-  <div *ngIf="accountLocked" class="alert alert-danger alert-dismissible fade show" role="alert">
+<section class="align-middle justify-content-center m-sm-5 m-2">
+  <ngb-alert *ngIf="registerSuccessful" [dismissible]="true" type="success" (closed)="registerSuccessful = false" class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>You have successfully registered.</strong> Now you have to confirm your account by clicking link we sent to your email.
+  </ngb-alert>
+  <ngb-alert *ngIf="logoutSuccessful" [dismissible]="true" type="success" (closed)="logoutSuccessful = false" class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>You have successfully logged out.</strong>
+  </ngb-alert>
+  <ngb-alert *ngIf="wrongCredentials" [dismissible]="true" (closed)="wrongCredentials = false" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Error during login.</strong> You should check your credentials or use option of resetting password.
+  </ngb-alert>
+  <ngb-alert *ngIf="accountLocked" [dismissible]="true" (closed)="wrongCredentials = false" class="alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Your account is locked or you did not activate your account via email</strong>
-  </div>
-  <div class="container py-5 h-100 w-100">
+  </ngb-alert>
+  <div class="container pt-xl-5 h-100 w-100">
     <div class="row d-flex align-items-center justify-content-center h-100">
       <div class="col-md-8 col-lg-7 col-xl-6">
         <img src="assets/logo.svg"
              class="img-fluid " alt="Logo">
       </div>
-      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 border-dark border-opacity-50 border p-5 rounded-4" style="background-color: ghostwhite;">
+      <div class="col-md-11 col-lg-8 col-xl-5 offset-xl-1 border-dark border-opacity-50 border p-3 pt-5 p-sm-5 rounded-4" style="background-color: ghostwhite;">
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
           <!-- Email input -->
           <div class="form-outline mb-4">

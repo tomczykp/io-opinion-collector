@@ -22,7 +22,6 @@ public class OpinionManager {
 
     private final OpinionRepository opinionRepository;
     private final ProductRepository productRepository;
-    private final UserManager userManager;
 
     public List<Opinion> getOpinions(UUID productId) {
         return opinionRepository.findById_ProductId(productId);
@@ -37,8 +36,7 @@ public class OpinionManager {
     public Opinion create(UUID productId, CreateOpinionDto createOpinionDto) throws ProductNotFoundException {
         return productRepository.findById(productId)
                                 .map(product -> {
-                                    String email = SecurityContextHolder.getContext().getAuthentication().getName();
-                                    User user = userManager.loadUserByUsername(email);
+                                    User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
                                     Opinion opinion = mapDtoToEntity(createOpinionDto);
 
@@ -58,8 +56,7 @@ public class OpinionManager {
 
         if (opinionOptional.isPresent()) {
             Opinion opinion = opinionOptional.get();
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userManager.loadUserByUsername(email);
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             UUID userId = user.getId();
             if (Objects.equals(opinion.getAuthor().getId(), userId)) {
@@ -79,8 +76,7 @@ public class OpinionManager {
         if (opinionOptional.isPresent()) {
             Opinion opinion = opinionOptional.get();
 
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userManager.loadUserByUsername(email);
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             if (!Objects.equals(opinion.getAuthor().getId(), user.getId())) {
                 throw new OpinionOperationAccessForbiddenException();

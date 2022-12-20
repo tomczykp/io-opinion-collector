@@ -9,7 +9,7 @@ import {MatSortModule} from "@angular/material/sort";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
 import {MatPaginatorModule} from "@angular/material/paginator";
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbAlertModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ProductsComponent} from './components/products/products.component';
 import {HomeComponent} from './components/home/home.component';
@@ -62,6 +62,7 @@ import { AddProductComponent } from './components/products/add-product/add-produ
     BrowserAnimationsModule,
     MatButtonModule,
     MatPaginatorModule,
+    NgbAlertModule,
 
     NgbModule,
     ReactiveFormsModule,

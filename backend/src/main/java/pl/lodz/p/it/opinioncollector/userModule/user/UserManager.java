@@ -52,8 +52,7 @@ public class UserManager implements UserDetailsService {
 
     public void changeUsername(String newUsername) {
         try {
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = loadUserByUsername(email);
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             user.setVisibleName(newUsername);
             userRepository.save(user);
         } catch (Exception e) {
@@ -88,8 +87,7 @@ public class UserManager implements UserDetailsService {
 
     public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchesException {
         //TODO check if password is strong enough
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = loadUserByUsername(email);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (encoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(encoder.encode(newPassword));
@@ -100,8 +98,7 @@ public class UserManager implements UserDetailsService {
     }
 
     public void deleteOwnAccount() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = loadUserByUsername(email);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (tokenRepository.findTokenByUserAndType(user, TokenType.DELETION_TOKEN).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);

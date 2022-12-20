@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -16,6 +16,8 @@ export class LoginComponent implements OnInit {
 
   wrongCredentials = false;
   accountLocked = false;
+  registerSuccessful = false;
+  logoutSuccessful = false;
 
   get email() {
     return this.loginForm.get('email');
@@ -27,10 +29,15 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    let params = this.route.snapshot.queryParamMap;
+    this.logoutSuccessful = params.has('logout-success');
+    this.registerSuccessful = params.has('register-success');
+  }
 
   clearPassword() {
     this.loginForm.get('password')?.reset();
@@ -52,10 +59,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/']);
           }
       }, (error) => {
-          localStorage.removeItem("email")
-          localStorage.removeItem("jwt")
-          localStorage.removeItem("refreshToken")
-          localStorage.removeItem("role")
+          this.authService.clearUserData();
           this.authService.authenticated.next(false);
           console.log(error);
           this.clearPassword();
@@ -66,6 +70,8 @@ export class LoginComponent implements OnInit {
           if (error.status === 423) {
             this.accountLocked = true;
           }
+          this.registerSuccessful = false;
+          this.logoutSuccessful = false;
         });
     }
   }

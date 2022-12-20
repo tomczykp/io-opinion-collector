@@ -1,56 +1,83 @@
-<div *ngIf="usernameChangeStatus == 1" class="alert alert-success alert-dismissible fade show m-3" role="alert">
-  <strong>Username changed successfully</strong>
-</div>
-<div *ngIf="usernameChangeStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-  <strong>This username is taken</strong> You should try with different username
-</div>
-<div *ngIf="usernameChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-  <strong>Your new username can't be same as old</strong> You should try with different username
-</div>
-<div *ngIf="usernameChangeStatus == 4" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-  <strong>Username cannot be empty</strong> Input correct username
-</div>
-<div *ngIf="deletionStatus == 1" class="alert alert-info alert-dismissible fade show m-3" role="alert">
-  <strong>Link for account deletion has been sent</strong> After you confirm deletion, your account will be deleted FOREVER!
-</div>
-<div *ngIf="deletionStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-  <strong>Deletion link was already sent</strong>
-</div>
-<div class="page-content page-container m-3" id="page-content">
-  <div class="justify-content-center">
-    <div class="row d-flex justify-content-center">
-      <div class="w-100">
-        <div class="card p-5">
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="text-center text-white">
-                <div class="">
-                  <img class="card-img" style="max-width: 200px; min-width: 70px" src="https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png" alt="logo">
+<div class="col-xl-10 mx-auto">
+  <ngb-alert (closed)="usernameChangeStatus = 0" *ngIf="usernameChangeStatus == 1" [dismissible]="true"
+             class="alert alert-success fade show m-3" type="success">
+    <strong>Username changed successfully.</strong>
+  </ngb-alert>
+  <ngb-alert (closed)="usernameChangeStatus = 0" *ngIf="usernameChangeStatus == 2" [dismissible]="true"
+             class="alert alert-danger fade show m-3" type="danger">
+    <span><strong>This username is taken.</strong> You should try with different username. </span>
+  </ngb-alert>
+  <ngb-alert (closed)="usernameChangeStatus = 0" *ngIf="usernameChangeStatus == 3" [dismissible]="true"
+             class="alert alert-danger fade show m-3" role="alert" type="danger">
+    <span><strong>Your new username can't be same as old.</strong> You should try with different username. </span>
+  </ngb-alert>
+  <ngb-alert (closed)="usernameChangeStatus = 0" *ngIf="usernameChangeStatus == 4" [dismissible]="true"
+             class="alert alert-danger fade show m-3" role="alert" type="danger">
+    <span><strong>Username cannot be empty.</strong> Input correct username. </span>
+  </ngb-alert>
+  <ngb-alert (closed)="deletionStatus = 0" *ngIf="deletionStatus == 1" [dismissible]="true"
+             class="alert alert-info fade show m-3" role="alert" type="info">
+    <span><strong>Link for account deletion has been sent.</strong> After you confirm deletion, your account will be deleted FOREVER! </span>
+  </ngb-alert>
+  <ngb-alert (closed)="deletionStatus = 0" *ngIf="deletionStatus == 2" [dismissible]="true"
+             class="alert alert-danger fade show m-3" role="alert" type="danger">
+    <strong>Deletion link was already sent.</strong>
+  </ngb-alert>
+  <div>
+
+  </div>
+  <div class="page-content page-container m-3" id="page-content">
+    <div class="justify-content-center">
+      <div class="row d-flex justify-content-center">
+        <div class="w-100">
+          <div class="card p-5">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="text-center text-white">
+                  <div>
+                    <img *ngIf="user?.role == 'USER'" alt="avatar" class="card-img mb-4 mb-md-0"
+                         src="assets/user.png"
+                         style="max-width: 200px; min-width: 70px">
+                    <img *ngIf="user?.role == 'ADMIN'" alt="avatar" class="card-img mb-4 mb-md-0"
+                         src="assets/admin.png"
+                         style="max-width: 200px; min-width: 70px">
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-sm-8">
-              <div class="card-block">
-                <h3 class="m-b-20 p-b-5 b-b-default">Information</h3>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <h4>Email</h4>
-                    <h6 class="text-muted f-w-400">{{user?.email}}</h6>
-                  </div>
-                  <div class="col-sm-6">
-                    <h3 class="m-b-10 f-w-600">Username</h3>
-                    <h6 *ngIf="!showUsernameChangeInput" class="text-muted f-w-400">{{user?.visibleName}}</h6>
-                    <div *ngIf="showUsernameChangeInput" style="display: flex;">
-                      <input type="text" class="form-control" [(ngModel)]="newUsername" style="max-width: 200px; max-height: 25px;">
-                      <button class="btn btn-success btn-sm" (click)="changeUsername()" (click)="showUsernameChange()" style="max-height: 25px; margin-left: 5px; display: inline-flex; align-items: center;">Save</button>
+              <div class="col-sm-8">
+                <div class="card-block">
+                  <h3 class="m-b-20 p-b-5 b-b-default">Information</h3>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <h4>Email</h4>
+                      <h6 class="text-muted f-w-400">{{user?.email}}</h6>
+                    </div>
+                    <div class="col-md-6">
+                      <h3 class="m-b-10 f-w-600">Username</h3>
+                      <h6 *ngIf="!showUsernameChangeInput" class="text-muted f-w-400">{{user?.visibleName}}</h6>
+                      <div *ngIf="showUsernameChangeInput" style="display: flex;">
+                        <input [(ngModel)]="newUsername" class="form-control"
+                               style="max-width: 200px; max-height: 25px;"
+                               type="text">
+                        <button (click)="changeUsername()" class="btn btn-success btn-sm"
+                                style="max-height: 25px; margin-left: 5px; display: inline-flex; align-items: center;">
+                          Save
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="w-100">
-                  <button (click)="forceLogout()" class="btn btn-danger col mt-3 mb-3 me-3">Log out from all devices</button>
-                  <button *ngIf="!showUsernameChangeInput" (click)="showUsernameChange()" class="btn btn-warning col mt-3 mb-3 me-3">Change username</button>
-                  <button *ngIf="showUsernameChangeInput" (click)="cancelUsernameChange()" class="btn btn-info col mt-3 mb-3 me-3">Cancel</button>
-                  <button class="btn btn-dark col mt-3 mb-3 me-3" (click)="deleteAccount()">Delete account</button>
+                  <div class="w-100">
+                    <button (click)="forceLogout()" class="btn btn-danger col mt-3 mb-sm-3 me-3">Log out from all
+                      devices
+                    </button>
+                    <button (click)="showUsernameChange()" *ngIf="!showUsernameChangeInput"
+                            class="btn btn-warning col mt-3 mb-sm-3 me-3">Change username
+                    </button>
+                    <button (click)="cancelUsernameChange()" *ngIf="showUsernameChangeInput"
+                            class="btn btn-info col mt-3 mb-sm-3 me-3">Cancel
+                    </button>
+                    <button (click)="deleteAccount()" class="btn btn-dark col mt-3 mb-sm-3 me-3">Delete account</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -59,51 +86,62 @@
       </div>
     </div>
   </div>
-</div>
-<div *ngIf="passwordChangeStatus == 1" class="alert alert-success alert-dismissible fade show m-3" role="alert">
-  <strong>Password changed successfully</strong> Now you can force log out on all devices
-</div>
-<div *ngIf="passwordChangeStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-  <strong>Error during changing password</strong> You should check your password
-</div>
-<div *ngIf="passwordChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-  <strong>Repeated new password doesn't match new password</strong>
-</div>
-<div class="page-content page-container m-3">
-  <div class="justify-content-center">
-    <div class="row d-flex justify-content-center">
-      <div class="w-100">
-        <div class="card p-3">
-          <div class="card card-outline-secondary">
-            <div class="card-header">
-              <h3 class="mb-0">Change password</h3>
-            </div>
-            <div class="card-body">
-              <form [formGroup]="changePasswordForm" class="form" role="form" autocomplete="off" (ngSubmit)="onPasswordChangeSubmit()">
-                <div class="form-group">
-                  <h6 *ngIf="oldPassword && oldPassword.touched && oldPassword.invalid" class="validation-message">Old password is required</h6>
-                  <label for="inputPasswordOld">Current Password</label>
-                  <input formControlName="oldPassword" type="password" class="form-control" id="inputPasswordOld" required="">
-                </div>
-                <div class="form-group">
-                  <h6 *ngIf="newPassword && newPassword.touched && newPassword.invalid" class="validation-message mt-3">New password doesn't meet the strength requirements</h6>
-                  <label for="inputPasswordNew">New Password</label>
-                  <input formControlName="newPassword" type="password" class="form-control" id="inputPasswordNew" required="">
-                  <span class="form-text small text-muted">
+  <ngb-alert (closed)="passwordChangeStatus = 0" *ngIf="passwordChangeStatus == 1" [dismissible]="true"
+             class="alert alert-success fade show m-3" role="alert" type="success">
+    <span><strong>Password changed successfully.</strong> Now you can force log out on all devices.</span>
+  </ngb-alert>
+  <ngb-alert (closed)="passwordChangeStatus = 0" *ngIf="passwordChangeStatus == 2" [dismissible]="true"
+             class="alert alert-danger fade show m-3" role="alert" type="danger">
+    <span><strong>Error during changing password.</strong> You should check your password.</span>
+  </ngb-alert>
+  <ngb-alert (closed)="passwordChangeStatus = 0" *ngIf="passwordChangeStatus == 3" [dismissible]="true"
+             class="alert alert-danger fade show m-3" role="alert" type="danger">
+    <strong>Repeated new password doesn't match new password.</strong>
+  </ngb-alert>
+  <div class="page-content page-container m-3">
+    <div class="justify-content-center">
+      <div class="row d-flex justify-content-center">
+        <div class="w-100">
+          <div class="card p-3">
+            <div class="card card-outline-secondary">
+              <div class="card-header">
+                <h3 class="mb-0">Change password</h3>
+              </div>
+              <div class="card-body">
+                <form (ngSubmit)="onPasswordChangeSubmit()" [formGroup]="changePasswordForm" autocomplete="off"
+                      class="form"
+                      role="form">
+                  <div class="form-group">
+                    <h6 *ngIf="oldPassword && oldPassword.touched && oldPassword.invalid" class="validation-message">Old
+                      password is required</h6>
+                    <label for="inputPasswordOld">Current Password</label>
+                    <input class="form-control" formControlName="oldPassword" id="inputPasswordOld" required=""
+                           type="password">
+                  </div>
+                  <div class="form-group">
+                    <h6 *ngIf="newPassword && newPassword.touched && newPassword.invalid"
+                        class="validation-message mt-3">
+                      New password doesn't meet the strength requirements</h6>
+                    <label for="inputPasswordNew">New Password</label>
+                    <input class="form-control" formControlName="newPassword" id="inputPasswordNew" required=""
+                           type="password">
+                    <span class="form-text small text-muted">
                                             The password must be 8-20 characters, and must <em>not</em> contain spaces.
                                         </span>
-                </div>
-                <div class="form-group">
-                  <label for="inputPasswordNewVerify">Verify</label>
-                  <input formControlName="repeatedPassword" type="password" class="form-control" id="inputPasswordNewVerify" required="">
-                  <span class="form-text small text-muted">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputPasswordNewVerify">Verify</label>
+                    <input class="form-control" formControlName="repeatedPassword" id="inputPasswordNewVerify"
+                           required="" type="password">
+                    <span class="form-text small text-muted">
                                             To confirm, type the new password again.
                                         </span>
-                </div>
-                <div class="form-group">
-                  <button type="submit" class="btn btn-success btn-lg float-right">Save</button>
-                </div>
-              </form>
+                  </div>
+                  <div class="form-group">
+                    <button class="btn btn-success btn-lg float-right" type="submit">Save</button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>

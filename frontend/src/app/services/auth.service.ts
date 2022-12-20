@@ -31,25 +31,32 @@ export class AuthService {
   logout() {
     this.http.delete(environment.apiUrl + "/signout?token=" + localStorage.getItem("refreshToken"))
       .subscribe((result) => {
-        localStorage.removeItem("role")
-        localStorage.removeItem("email")
-        localStorage.removeItem("jwt")
-        localStorage.removeItem("refreshToken")
+        this.clearUserData();
         this.authenticated.next(false);
-        this.router.navigate(['/']).then(() => {
-          window.location.reload();
-        });
+        this.router.navigate(['/login'], {queryParams: {'logout-success': true}});
     })
   }
 
   logoutFromAllDevices() {
     this.http.delete(environment.apiUrl + "/signout/force").subscribe((result) => {
-      localStorage.removeItem("role")
-      localStorage.removeItem("email")
-      localStorage.removeItem("jwt")
-      localStorage.removeItem("refreshToken")
+      this.clearUserData();
       this.authenticated.next(false);
-      this.router.navigate(['/'])
+      this.router.navigate(['/login'], {queryParams: {'logout-success': true}});
     })
+  }
+
+  getRole() {
+    return localStorage.getItem("role");
+  }
+
+  getEmail() {
+    return localStorage.getItem("email");
+  }
+
+  clearUserData() {
+    localStorage.removeItem("role")
+    localStorage.removeItem("email")
+    localStorage.removeItem("jwt")
+    localStorage.removeItem("refreshToken")
   }
 }
