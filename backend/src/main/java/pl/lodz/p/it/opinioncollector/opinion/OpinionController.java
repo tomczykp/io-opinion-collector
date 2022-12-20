@@ -21,6 +21,7 @@ import pl.lodz.p.it.opinioncollector.eventHandling.EventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
 import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundException;
+import pl.lodz.p.it.opinioncollector.opinion.model.Opinion;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 @CrossOrigin
