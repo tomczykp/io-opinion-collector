@@ -65,7 +65,7 @@ VALUES ('4811913c-b953-4856-979b-838488049d07', 'value1', 'key1'),
 
 INSERT INTO OPINION (OPINION_ID, PRODUCT_ID, DESCRIPTION, LIKES, RATE, AUTHOR_ID)
 VALUES ('6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07', 'Test desc 1', 0, 2, '12208864-7b61-4e6e-8573-53863bd93b35'),
-       ('dc0dac8a-797b-11ed-a1eb-0242ac120002', '4811913c-b953-4856-979b-838488049d07', 'desc 2', 0, 3, '66208864-7b61-4e6e-8573-53863bd93b35');
+       ('dc0dac8a-797b-11ed-a1eb-0242ac120002', '4811913c-b953-4856-979b-838488049d07', 'desc 2', 1, 3, '66208864-7b61-4e6e-8573-53863bd93b35');
 
 INSERT INTO ADVANTAGE (ID, VALUE, OPINION_OPINION_ID, OPINION_PRODUCT_ID)
 VALUES ('29e8cfb6-7995-11ed-a1eb-0242ac120002', 'Lorem Ipsum', '6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07'),
@@ -77,4 +77,3 @@ VALUES ('43ddbb7a-7995-11ed-a1eb-0242ac120002', 'Lorem Ipsum', '6c3a61be-955c-41
 INSERT INTO public.field (fieldid, name, type) VALUES ('e65b1f71-f3d8-4e16-ba55-df16a316f051', 'Numer', 'Int');
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'Category_2', null);
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'e65b1f71-f3d8-4e16-ba55-df16a316f051');
-
