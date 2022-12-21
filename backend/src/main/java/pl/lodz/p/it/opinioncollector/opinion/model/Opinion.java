@@ -42,14 +42,12 @@ public class Opinion implements Serializable {
     @Column(name = "LIKES", nullable = false)
     private int likesCounter;
 
-    // TODO add eager fetching
     @OneToMany(mappedBy = "opinion",
                orphanRemoval = true,
                cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE })
     @Builder.Default
     private Set<Advantage> pros = new LinkedHashSet<>();
 
-    // TODO add eager fetching
     @OneToMany(orphanRemoval = true,
                cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE },
                mappedBy = "opinion")
