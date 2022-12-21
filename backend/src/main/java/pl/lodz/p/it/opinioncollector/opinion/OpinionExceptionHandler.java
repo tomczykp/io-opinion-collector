@@ -25,7 +25,7 @@ public class OpinionExceptionHandler {
         OpinionOperationAccessForbiddenException.class
     })
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public String handleAccessForbidenException(BaseApplicationException e) {
+    public String handleAccessForbiddenException(BaseApplicationException e) {
         return e.getMessage();
     }
 }

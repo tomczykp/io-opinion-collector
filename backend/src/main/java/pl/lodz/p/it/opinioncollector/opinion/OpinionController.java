@@ -3,8 +3,10 @@ package pl.lodz.p.it.opinioncollector.opinion;
 import java.util.List;
 import java.util.UUID;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -58,7 +60,7 @@ public class OpinionController {
 
     @DeleteMapping("/{opinionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletyById(@PathVariable UUID productId,
+    public void deleteById(@PathVariable UUID productId,
                            @PathVariable UUID opinionId)
         throws OpinionOperationAccessForbiddenException {
         opinionManager.deleteOpinion(productId, opinionId);
@@ -73,12 +75,19 @@ public class OpinionController {
         return opinionManager.update(productId, opinionId, dto);
     }
 
-    @PostMapping("/{opinionId}/report")
+    @PostMapping(value = "/{opinionId}/report",
+                 consumes = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void reportOpinion(@PathVariable UUID productId,
                               @PathVariable UUID opinionId,
-                              @RequestBody String reason) {
+                              @RequestBody @NotBlank String reason)
+        throws OpinionNotFoundException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!opinionManager.existsById(productId, opinionId)) {
+            throw new OpinionNotFoundException();
+        }
+
         eventManager.createOpinionReportEvent(user.getId(), reason, opinionId);
     }
 }
