@@ -16,7 +16,6 @@ import pl.lodz.p.it.opinioncollector.userModule.token.Token;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenRepository;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenType;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Transactional
 public class UserManager implements UserDetailsService {
+    //TODO validate tokens expiration date and create cron to clear expired tokens + delete account if verification token expired and user is not active
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
@@ -42,11 +42,7 @@ public class UserManager implements UserDetailsService {
     }
 
     private Token generateAndSaveToken(User user, TokenType tokenType) {
-        Token token = new Token();
-        token.setUser(user);
-        token.setToken(UUID.randomUUID().toString());
-        token.setType(tokenType);
-        token.setCreatedAt(Instant.now());
+        Token token = new Token(UUID.randomUUID().toString(), tokenType, user);
         return tokenRepository.save(token);
     }
 

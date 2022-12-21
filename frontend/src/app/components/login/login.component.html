@@ -5,6 +5,9 @@
   <ngb-alert *ngIf="logoutSuccessful" [dismissible]="true" type="success" (closed)="logoutSuccessful = false" class="alert alert-success alert-dismissible fade show" role="alert">
     <strong>You have successfully logged out.</strong>
   </ngb-alert>
+  <ngb-alert *ngIf="sessionExpired" [dismissible]="true" type="danger" (closed)="sessionExpired = false" class="alert alert-dismissible fade show" role="alert">
+    <strong>Your session has expired. Please log in again.</strong>
+  </ngb-alert>
   <ngb-alert *ngIf="wrongCredentials" [dismissible]="true" (closed)="wrongCredentials = false" class="alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Error during login.</strong> You should check your credentials or use option of resetting password.
   </ngb-alert>

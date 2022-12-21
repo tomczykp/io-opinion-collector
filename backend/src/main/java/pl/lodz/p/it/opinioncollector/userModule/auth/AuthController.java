@@ -54,8 +54,8 @@ public class AuthController {
     }
 
     @GetMapping("/refresh")
-    public String refreshToken(@Param("token") String token) {
-        return authManager.validateAndRenewRefreshToken(token);
+    public SuccessfulLoginDTO refreshToken(@Param("token") String token) {
+        return authManager.refresh(token);
     }
 
     @DeleteMapping("/signout")

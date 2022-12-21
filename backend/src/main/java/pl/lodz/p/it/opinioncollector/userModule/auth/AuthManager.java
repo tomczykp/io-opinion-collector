@@ -9,6 +9,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,6 @@ import pl.lodz.p.it.opinioncollector.userModule.token.TokenType;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserRepository;
 
-import java.time.Instant;
 import java.util.UUID;
 
 
@@ -51,6 +51,8 @@ public class AuthManager {
                     authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
         } catch (LockedException | DisabledException e) {
             throw new ResponseStatusException(HttpStatus.LOCKED);
+        } catch (AuthenticationException ae) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
         User user = (User) authentication.getPrincipal();
@@ -74,12 +76,8 @@ public class AuthManager {
     }
 
     private Token generateAndSaveToken(User user, TokenType tokenType) {
-        Token verificationToken = new Token();
-        verificationToken.setUser(user);
-        verificationToken.setToken(UUID.randomUUID().toString());
-        verificationToken.setType(tokenType);
-        verificationToken.setCreatedAt(Instant.now());
-        return tokenRepository.save(verificationToken);
+        Token token = new Token(UUID.randomUUID().toString(), tokenType, user);
+        return tokenRepository.save(token);
     }
 
     public void confirmRegistration(String token) {
@@ -93,12 +91,17 @@ public class AuthManager {
         tokenRepository.delete(verificationToken);
     }
 
-    public String validateAndRenewRefreshToken(String token) {
+    public SuccessfulLoginDTO refresh(String token) {
         Token t = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         User user = t.getUser();
-        return jwtProvider.generateJWT(user.getEmail(), user.getRole());
+
+        String newJWT = jwtProvider.generateJWT(user.getEmail(), user.getRole());
+        Token newRefreshToken = generateAndSaveToken(user, TokenType.REFRESH_TOKEN);
+        tokenRepository.deleteByToken(token);
+        tokenRepository.save(newRefreshToken);
+        return new SuccessfulLoginDTO(user.getRole(), newJWT, newRefreshToken.getToken(), user.getEmail());
     }
 
     public void confirmDeletion(String token) {

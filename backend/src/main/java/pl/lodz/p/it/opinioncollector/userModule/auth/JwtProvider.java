@@ -46,6 +46,8 @@ public class JwtProvider {
         try {
             parseJWT(jwt);
             return true;
+        } catch (ExpiredJwtException e) {
+            throw e;
         } catch (Exception e) {
             return false;
         }

@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   accountLocked = false;
   registerSuccessful = false;
   logoutSuccessful = false;
+  sessionExpired = false;
 
   get email() {
     return this.loginForm.get('email');
@@ -37,6 +38,7 @@ export class LoginComponent implements OnInit {
     let params = this.route.snapshot.queryParamMap;
     this.logoutSuccessful = params.has('logout-success');
     this.registerSuccessful = params.has('register-success');
+    this.sessionExpired = params.has('session-expired');
   }
 
   clearPassword() {
@@ -51,27 +53,22 @@ export class LoginComponent implements OnInit {
       this.authService.login(email!.toString(), password!.toString())
         .subscribe((result) => {
           if (result.status == 200) {
-            localStorage.setItem("email", result.body!.email)
-            localStorage.setItem("jwt", result.body!.jwt)
-            localStorage.setItem("refreshToken", result.body!.refreshToken)
-            localStorage.setItem("role", result.body!.role)
+            this.authService.saveUserData(result)
             this.authService.authenticated.next(true);
             this.router.navigate(['/']);
           }
       }, (error) => {
           this.authService.clearUserData();
           this.authService.authenticated.next(false);
-          console.log(error);
           this.clearPassword();
-          if (error.status === 403) {
+          if (error.status === 401) {
             this.wrongCredentials = true;
-          }
-
-          if (error.status === 423) {
+          } else if (error.status === 423) {
             this.accountLocked = true;
           }
           this.registerSuccessful = false;
           this.logoutSuccessful = false;
+          this.sessionExpired = false;
         });
     }
   }

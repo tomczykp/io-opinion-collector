@@ -24,6 +24,17 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${environment.apiUrl}/login`, {email, password}, {observe: 'response'})
   }
 
+  refresh() {
+    return this.http.get<LoginResponse>(`${environment.apiUrl}/refresh?token=${this.getRefreshToken()}`, {observe: 'response'})
+  }
+
+  saveUserData(result: any) {
+    localStorage.setItem("email", result.body.email)
+    localStorage.setItem("jwt", result.body.jwt)
+    localStorage.setItem("refreshToken", result.body.refreshToken)
+    localStorage.setItem("role", result.body.role)
+  }
+
   register(email: string, username: string, password: string) {
     return this.http.post(`${environment.apiUrl}/register`, {email, username, password}, {observe: 'response'})
   }
@@ -51,6 +62,10 @@ export class AuthService {
 
   getEmail() {
     return localStorage.getItem("email");
+  }
+
+  getRefreshToken() {
+    return localStorage.getItem("refreshToken");
   }
 
   clearUserData() {
