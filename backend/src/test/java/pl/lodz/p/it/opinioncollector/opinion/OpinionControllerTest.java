@@ -7,7 +7,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -15,11 +14,7 @@ import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-@TestMethodOrder(OrderAnnotation.class)
 class OpinionControllerTest {
 
     private static final MessageFormat BASE_OPINIONS_URL = new MessageFormat("/products/{0}/opinions");
@@ -54,7 +48,7 @@ class OpinionControllerTest {
 
     // region GET /products/{productId}/opinions
     @Test
-    void shouldGetAllOpinonsWithStatusCode200Test() {
+    void shouldGetAllOpinionsWithStatusCode200Test() {
         String url = BASE_OPINIONS_URL.format(new Object[] { PRODUCT_ID });
         when().get(url)
               .then()
@@ -133,7 +127,6 @@ class OpinionControllerTest {
 
     // region POST /products/{productId}/opinions
     @Test
-    @Order(1)
     @WithUserDetails("user3")
     void shouldCreateOpinionSuccessWithStatusCode201Test() {
         String productId = "4950d349-1127-4690-82a0-94fdc81b019b";
@@ -349,6 +342,8 @@ class OpinionControllerTest {
 
         dto.setRate(5);
         dto.setDescription("updated description 1");
+        dto.setPros(List.of("updated p1", "updated p2"));
+        dto.setCons(List.of("updated c1", "updated c2", "updated c3"));
 
         given().contentType(MediaType.APPLICATION_JSON)
                .body(dto)
@@ -360,15 +355,11 @@ class OpinionControllerTest {
                .body("id.opinionId", is(opinionId),
                      "id.productId", is(PRODUCT_ID),
                      "rate", is(5),
-                     "description", is("updated description 1"));
-
-        // "pros.size()", is(2),
-        // "cons.size()", is(3),
-        // "pros[0].value", is("updated p1"),
-        // "pros[1].value", is("updated p2"),
-        // "cons[0].value", is("updated c1"),
-        // "cons[1].value", is("updated c2"),
-        // "cons[2].value", is("updated c3"));
+                     "description", is("updated description 1"),
+                     "pros.size()", is(2),
+                     "cons.size()", is(3),
+                     "pros.value", hasItems("updated p1", "updated p2"),
+                     "cons.value", hasItems("updated c1", "updated c2", "updated c3"));
 
         when().get(url)
               .then()
@@ -377,8 +368,11 @@ class OpinionControllerTest {
               .body("id.opinionId", is(opinionId),
                     "id.productId", is(PRODUCT_ID),
                     "rate", is(5),
-                    "description", is("updated description 1"));
-
+                    "description", is("updated description 1"),
+                    "pros.size()", is(2),
+                    "cons.size()", is(3),
+                    "pros.value", hasItems("updated p1", "updated p2"),
+                    "cons.value", hasItems("updated c1", "updated c2", "updated c3"));
     }
 
     @Test
@@ -484,24 +478,146 @@ class OpinionControllerTest {
     }
 
     @Test
-    @Disabled
-    @WithUserDetails("user")
-    void shouldUpdateOpinionsWithProsAndConsWithStatusCode200Test() {
-        fail();
+    @WithUserDetails("user1")
+    void shouldUpdateOpinionsWithoutProsNorConsWithStatusCode200Test() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        String url = SPECIFIC_OPINION_URL.format(new Object[] { PRODUCT_ID, opinionId });
+
+        dto.setRate(0);
+        dto.setDescription("Updated description");
+
+        given().contentType(MediaType.APPLICATION_JSON)
+               .body(dto)
+               .when()
+               .put(url)
+               .then()
+               .status(HttpStatus.OK)
+               .contentType(ContentType.JSON)
+               .body("id.opinionId", is(opinionId),
+                     "id.productId", is(PRODUCT_ID),
+                     "rate", is(0),
+                     "description", is("Updated description"),
+                     "pros.size()", is(0),
+                     "cons.size()", is(0));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "rate", is(0),
+                    "description", is("Updated description"),
+                    "pros.size()", is(0),
+                    "cons.size()", is(0));
     }
 
     @Test
-    @Disabled
-    @WithUserDetails("user")
+    @WithUserDetails("user1")
     void shouldUpdateOpinionsWithoutProsWithStatusCode200Test() {
-        fail();
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        String url = SPECIFIC_OPINION_URL.format(new Object[] { PRODUCT_ID, opinionId });
+
+        dto.setRate(1);
+        dto.setDescription("Update");
+        dto.setCons(List.of("c1", "c2", "c3", "c4", "c5"));
+
+        given().contentType(MediaType.APPLICATION_JSON)
+               .body(dto)
+               .when()
+               .put(url)
+               .then()
+               .status(HttpStatus.OK)
+               .contentType(ContentType.JSON)
+               .body("id.opinionId", is(opinionId),
+                     "id.productId", is(PRODUCT_ID),
+                     "rate", is(1),
+                     "description", is("Update"),
+                     "pros.size()", is(0),
+                     "cons.size()", is(5));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "rate", is(1),
+                    "description", is("Update"),
+                    "pros.size()", is(0),
+                    "cons.size()", is(5));
     }
 
     @Test
-    @Disabled
-    @WithUserDetails("user")
+    @WithUserDetails("user1")
     void shouldUpdateOpinionsWithoutConsWithStatusCode200Test() {
-        fail();
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        String url = SPECIFIC_OPINION_URL.format(new Object[] { PRODUCT_ID, opinionId });
+
+        dto.setRate(2);
+        dto.setDescription("Updated description");
+        dto.setPros(List.of("p1", "p2"));
+
+        given().contentType(MediaType.APPLICATION_JSON)
+               .body(dto)
+               .when()
+               .put(url)
+               .then()
+               .status(HttpStatus.OK)
+               .contentType(ContentType.JSON)
+               .body("id.opinionId", is(opinionId),
+                     "id.productId", is(PRODUCT_ID),
+                     "rate", is(2),
+                     "description", is("Updated description"),
+                     "pros.size()", is(2),
+                     "cons.size()", is(0));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "rate", is(2),
+                    "description", is("Updated description"),
+                    "pros.size()", is(2),
+                    "cons.size()", is(0));
+    }
+
+    @Test
+    @WithUserDetails("user1")
+    void shouldUpdateOpinionsFailWithStatusCode400WhenAnyOfProsIsBlankTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        String url = SPECIFIC_OPINION_URL.format(new Object[] { PRODUCT_ID, opinionId });
+
+        dto.setRate(2);
+        dto.setDescription("Updated description");
+        dto.setPros(List.of("p1", ""));
+
+        given().contentType(MediaType.APPLICATION_JSON)
+               .body(dto)
+               .when()
+               .put(url)
+               .then()
+               .status(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @WithUserDetails("user1")
+    void shouldUpdateOpinionsFailWithStatusCode400WhenAnyOfConsIsBlankTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        String url = SPECIFIC_OPINION_URL.format(new Object[] { PRODUCT_ID, opinionId });
+
+        dto.setRate(2);
+        dto.setDescription("Updated description");
+        dto.setCons(List.of(" ", "c1", "c2"));
+
+        given().contentType(MediaType.APPLICATION_JSON)
+               .body(dto)
+               .when()
+               .put(url)
+               .then()
+               .status(HttpStatus.BAD_REQUEST);
     }
     // endregion
 

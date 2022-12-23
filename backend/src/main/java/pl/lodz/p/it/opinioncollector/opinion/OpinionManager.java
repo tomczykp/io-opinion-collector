@@ -18,7 +18,6 @@ import pl.lodz.p.it.opinioncollector.opinion.model.Opinion;
 import pl.lodz.p.it.opinioncollector.opinion.model.OpinionId;
 import pl.lodz.p.it.opinioncollector.productManagment.ProductRepository;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
-import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserType;
 
 @Service
@@ -41,7 +40,9 @@ public class OpinionManager {
     public Opinion create(UUID productId, CreateOpinionDto createOpinionDto) throws ProductNotFoundException {
         return productRepository.findById(productId)
                                 .map(product -> {
-                                    User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                                    User user = (User) SecurityContextHolder.getContext()
+                                                                            .getAuthentication()
+                                                                            .getPrincipal();
 
                                     Opinion opinion = mapDtoToEntity(createOpinionDto);
 
@@ -78,23 +79,28 @@ public class OpinionManager {
     public Opinion update(UUID productId, UUID opinionId, CreateOpinionDto dto)
         throws OpinionNotFoundException, OpinionOperationAccessForbiddenException {
 
-        Optional<Opinion> opinionOptional = opinionRepository.findOne(productId, opinionId);
+        Opinion opinion = opinionRepository.findOne(productId, opinionId)
+                                           .orElseThrow(OpinionNotFoundException::new);
 
-        if (opinionOptional.isPresent()) {
-            Opinion opinion = opinionOptional.get();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            if (!Objects.equals(opinion.getAuthor().getId(), user.getId())) {
-                throw new OpinionOperationAccessForbiddenException();
-            }
-
-            opinion.setDescription(dto.getDescription());
-            opinion.setRate(dto.getRate());
-            return opinionRepository.save(opinion);
-        } else {
-            throw new OpinionNotFoundException();
+        if (!Objects.equals(opinion.getAuthor().getId(), user.getId())) {
+            throw new OpinionOperationAccessForbiddenException();
         }
+
+        opinion.setDescription(dto.getDescription());
+        opinion.setRate(dto.getRate());
+
+        opinion.getPros().clear();
+        opinion.getPros().addAll(dto.getPros().stream()
+                                    .map(value -> new Advantage(value, opinion))
+                                    .collect(Collectors.toSet()));
+
+        opinion.getCons().clear();
+        opinion.getCons().addAll(dto.getCons().stream()
+                                    .map(value -> new Disadvantage(value, opinion))
+                                    .collect(Collectors.toSet()));
+        return opinionRepository.save(opinion);
     }
 
     public boolean existsById(UUID productId, UUID opinionId) {
