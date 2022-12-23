@@ -11,10 +11,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
-import pl.lodz.p.it.opinioncollector.productManagment.ProductRepository;
 import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundException;
+import pl.lodz.p.it.opinioncollector.opinion.model.Advantage;
+import pl.lodz.p.it.opinioncollector.opinion.model.Disadvantage;
+import pl.lodz.p.it.opinioncollector.opinion.model.Opinion;
+import pl.lodz.p.it.opinioncollector.opinion.model.OpinionId;
+import pl.lodz.p.it.opinioncollector.productManagment.ProductRepository;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
+import pl.lodz.p.it.opinioncollector.userModule.user.UserType;
 
 @Service
 @RequiredArgsConstructor
@@ -61,6 +66,8 @@ public class OpinionManager {
             UUID userId = user.getId();
             if (Objects.equals(opinion.getAuthor().getId(), userId)) {
                 opinionRepository.deleteById_ProductIdAndId_OpinionId(productId, opinionId);
+            } else if (user.getRole() == UserType.ADMIN) {
+                opinionRepository.deleteById_ProductIdAndId_OpinionId(productId, opinionId);
             } else {
                 throw new OpinionOperationAccessForbiddenException();
             }
@@ -88,6 +95,10 @@ public class OpinionManager {
         } else {
             throw new OpinionNotFoundException();
         }
+    }
+
+    public boolean existsById(UUID productId, UUID opinionId) {
+        return opinionRepository.existsById(new OpinionId(productId, opinionId));
     }
 
 

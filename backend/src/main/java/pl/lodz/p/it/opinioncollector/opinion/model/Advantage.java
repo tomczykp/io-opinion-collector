@@ -1,4 +1,4 @@
-package pl.lodz.p.it.opinioncollector.opinion;
+package pl.lodz.p.it.opinioncollector.opinion.model;
 
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
