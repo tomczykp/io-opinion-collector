@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {User} from "../../model/User";
 
 @Component({
@@ -10,7 +10,8 @@ export class DashboardComponent implements OnInit {
   users: User[];
   email = "";
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
     this.email = localStorage.getItem("email")!;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../services/user.service";
 import {User} from "../../model/User";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -20,6 +20,14 @@ export class ProfileComponent implements OnInit {
   newUsername = "";
 
   deletionStatus = 0;
+  user: User | undefined;
+  passwordChangeStatus = 0;
+  usernameChangeStatus = 0;
+
+  constructor(
+    private userService: UserService,
+    private authService: AuthService) {
+  }
 
   get oldPassword() {
     return this.changePasswordForm.get('oldPassword');
@@ -28,22 +36,14 @@ export class ProfileComponent implements OnInit {
   get newPassword() {
     return this.changePasswordForm.get('newPassword');
   }
-
-  get repeatedPassword() {
-    return this.changePasswordForm.get('repeatedPassword');
-  }
-
-  user: User | undefined;
-  passwordChangeStatus = 0;
-  usernameChangeStatus = 0;
   // 0 if no display message
   // 1 if successful password change
   // 2 if failed password change
   // 3 if newPassword and repeatedPassword not match
 
-  constructor(
-    private userService: UserService,
-    private authService: AuthService) { }
+  get repeatedPassword() {
+    return this.changePasswordForm.get('repeatedPassword');
+  }
 
   ngOnInit(): void {
     this.getUser();

@@ -1,7 +1,16 @@
 package pl.lodz.p.it.opinioncollector.userModule.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -18,7 +28,6 @@ import java.util.UUID;
 @Table(name = "app_user")
 @Access(AccessType.FIELD)
 public class User implements UserDetails {
-    //TODO cascade delete on user's events, opinions when deleting user.
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,8 +40,10 @@ public class User implements UserDetails {
     private String visibleName;
 
     @JsonIgnore
-    @Column(nullable = false)
+    @Column
     private String password;
+
+    private boolean deleted = false;
 
     private boolean locked = false;
 
@@ -41,12 +52,16 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserType role;
 
+    @Enumerated(EnumType.STRING)
+    private UserProvider provider;
+
 
     public User(String email, String visibleName, String password) {
         this.email = email;
         this.visibleName = visibleName;
         this.password = password;
         this.role = UserType.USER;
+        this.provider = UserProvider.LOCAL;
     }
 
     public User(String email, String visibleName, String password, UserType role) {
@@ -54,7 +69,9 @@ public class User implements UserDetails {
         this.visibleName = visibleName;
         this.password = password;
         this.role = role;
+        this.provider = UserProvider.LOCAL;
     }
+
 
     @Override
     @JsonIgnore

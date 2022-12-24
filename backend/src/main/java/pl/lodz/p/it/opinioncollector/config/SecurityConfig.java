@@ -1,5 +1,6 @@
 package pl.lodz.p.it.opinioncollector.config;
 
+import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import pl.lodz.p.it.opinioncollector.userModule.auth.JwtFilter;
 
 
@@ -35,27 +39,51 @@ public class SecurityConfig {
                 .build();
     }
 
+    @Bean
+    public Filter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
-                .csrf().disable().cors().and()
-                .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(HttpMethod.DELETE, "/users/remove/admin").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/users/lock").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/users/unlock").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/users/remove/user").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/users/password").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/signout/force").authenticated()
-                        // opinion endpoints
-                        .requestMatchers(HttpMethod.GET, "/products/{productId}/opinions/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/products/{productId}/opinions/{opinionId}").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/products/{productId}/opinions/**").hasRole("USER")
-                        // Place for your secured endpoints
-                        .anyRequest().permitAll()
-                ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .cors().and().csrf().disable()
+                .authorizeHttpRequests((auth) -> {
+                            try {
+                                auth
+                                        .requestMatchers(HttpMethod.DELETE, "/users/remove/admin").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/users/lock").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/users/unlock").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE, "/users/remove/user").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/users/password").authenticated()
+                                        .requestMatchers(HttpMethod.DELETE, "/signout/force").authenticated()
+                                        // opinion endpoints
+                                        .requestMatchers(HttpMethod.GET, "/products/{productId}/opinions/**").permitAll()
+                                        .requestMatchers(HttpMethod.DELETE, "/products/{productId}/opinions/{opinionId}").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers("/products/{productId}/opinions/**").hasRole("USER")
+                                        // Place for your secured endpoints
+                                        .anyRequest().permitAll()
+                                        .and()
+                                        .oauth2Login().permitAll()
+                                        .authorizationEndpoint()
+                                        .baseUri("/oauth2/authorize")
+                                        .and()
+                                        .redirectionEndpoint()
+                                        .baseUri("/oauth2/code/google/*");
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
-        //If you add paths here, remember to add it also in JwtFilter
     }
 }

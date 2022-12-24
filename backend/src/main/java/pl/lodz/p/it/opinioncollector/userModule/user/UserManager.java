@@ -60,6 +60,10 @@ public class UserManager implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
+        if (user.getProvider() != UserProvider.LOCAL) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+        }
+
         if (tokenRepository.findTokenByUserAndType(user, TokenType.PASSWORD_RESET_TOKEN).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
@@ -108,8 +112,8 @@ public class UserManager implements UserDetailsService {
     public void removeUserByAdmin(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        user.setDeleted(true);
 
-        userRepository.deleteUserByEmail(user.getEmail());
         tokenRepository.deleteAllByUser(user);
         mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "deleted");
     }
@@ -119,9 +123,7 @@ public class UserManager implements UserDetailsService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         user.setLocked(true);
 
-        userRepository.save(user);
         tokenRepository.deleteAllByUserAndType(user, TokenType.REFRESH_TOKEN);
-
         mailManager.adminActionEmail(user.getEmail(), user.getUsername(), "blocked");
     }
 
@@ -130,7 +132,6 @@ public class UserManager implements UserDetailsService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         user.setLocked(false);
 
-        userRepository.save(user);
         mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "unlocked");
     }
 

@@ -1,24 +1,20 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor, HttpErrorResponse
-} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {catchError, Observable, switchMap, throwError} from 'rxjs';
 import {environment} from "../../environments/environment";
 import {AuthService} from "../services/auth.service";
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
 
+  refresh = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
-  ) {}
-
-  refresh = false;
+  ) {
+  }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     this.refresh = false;
@@ -29,7 +25,8 @@ export class JwtInterceptor implements HttpInterceptor {
         if (err.status === 403) {
           this.logout();
         }
-        return throwError(() => err)}));
+        return throwError(() => err)
+      }));
     }
 
     const cloned = request.clone({
@@ -59,15 +56,15 @@ export class JwtInterceptor implements HttpInterceptor {
       this.logout();
       return throwError(err);
     })).pipe(switchMap((res) => {
-        this.authService.saveUserData(res);
-        const token = res.body?.jwt;
+      this.authService.saveUserData(res);
+      const token = res.body?.jwt;
 
-        return next.handle(request.clone({
-          setHeaders: {
-            Authorization: `Bearer ${token}`
-          }
-        }));
+      return next.handle(request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
       }));
+    }));
   }
 
   logout() {

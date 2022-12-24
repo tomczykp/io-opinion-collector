@@ -16,6 +16,8 @@ export class RegisterComponent implements OnInit {
   })
 
   failedRegister = false;
+  accountLocked = false;
+  googleLoginFailed = false;
 
   constructor(
     private authService: AuthService,
@@ -61,4 +63,7 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  loginWithGoogle() {
+    this.authService.loginWithGoogle()
+  }
 }

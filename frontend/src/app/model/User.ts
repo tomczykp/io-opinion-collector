@@ -5,4 +5,5 @@ export interface User {
   locked: boolean;
   active: boolean;
   role: string;
+  provider: string;
 }

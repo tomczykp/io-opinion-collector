@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {LoginResponse} from "../model/LoginResponse";
 import {environment} from "../../environments/environment";
@@ -33,6 +33,7 @@ export class AuthService {
     localStorage.setItem("jwt", result.body.jwt)
     localStorage.setItem("refreshToken", result.body.refreshToken)
     localStorage.setItem("role", result.body.role)
+    localStorage.setItem("provider", result.body.provider)
   }
 
   register(email: string, username: string, password: string) {
@@ -45,7 +46,7 @@ export class AuthService {
         this.clearUserData();
         this.authenticated.next(false);
         this.router.navigate(['/login'], {queryParams: {'logout-success': true}});
-    })
+      })
   }
 
   logoutFromAllDevices() {
@@ -68,10 +69,23 @@ export class AuthService {
     return localStorage.getItem("refreshToken");
   }
 
+  getProvider() {
+    return localStorage.getItem("provider");
+  }
+
   clearUserData() {
     localStorage.removeItem("role")
     localStorage.removeItem("email")
     localStorage.removeItem("jwt")
     localStorage.removeItem("refreshToken")
+    localStorage.removeItem("provider")
+  }
+
+  loginWithGoogle() {
+    window.location.href = `${environment.apiUrl}/oauth2/authorize/google`
+  }
+
+  getTokensByCode(code: string) {
+    return this.http.get(`${environment.apiUrl}/token/google?code=${code}`, {observe: "response"})
   }
 }

@@ -40,8 +40,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
         } catch (ExpiredJwtException exp) {
-            if (Objects.equals(request.getRequestURI(), "/api/refresh") ||
-                    Objects.equals(request.getRequestURI(), "/api/signout")) {
+            if (Objects.equals(request.getRequestURI(), "/api/refresh")
+                    || Objects.equals(request.getRequestURI(), "/api/signout")) {
                 filterChain.doFilter(request, response);
                 return;
             }

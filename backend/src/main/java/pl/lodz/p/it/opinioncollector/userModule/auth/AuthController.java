@@ -7,19 +7,25 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.opinioncollector.exceptions.user.EmailAlreadyRegisteredException;
 import pl.lodz.p.it.opinioncollector.userModule.dto.LoginDTO;
 import pl.lodz.p.it.opinioncollector.userModule.dto.RegisterUserDTO;
 import pl.lodz.p.it.opinioncollector.userModule.dto.SuccessfulLoginDTO;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
+import java.io.IOException;
 import java.net.URI;
+import java.security.GeneralSecurityException;
 
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin
 public class AuthController {
 
     private final AuthManager authManager;
@@ -40,17 +46,28 @@ public class AuthController {
         return authManager.login(dto);
     }
 
+    @GetMapping("/login/oauth2/code/google")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Void> authenticateByGoogle(@Param("code") String code) {
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?code=" + code)).build();
+    }
+
+    @GetMapping("/token/google")
+    @ResponseStatus(HttpStatus.OK)
+    public SuccessfulLoginDTO getTokenByCode(@Param("code") String code) throws GeneralSecurityException, IOException, IllegalAccessException {
+        return authManager.authenticateWithGoogle(code);
+    }
+
     @GetMapping("/confirm/register")
     public ResponseEntity<Void> confirmRegistration(@Param("token") String token) {
         authManager.confirmRegistration(token);
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login")).build();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?confirmed=true")).build();
     }
 
     @GetMapping("/confirm/remove")
     public ResponseEntity<Void> confirmDeletion(@Param("token") String token) {
         authManager.confirmDeletion(token);
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login")).build();
-        //TODO somehow log out user on frontend
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?deleted=true")).build();
     }
 
     @GetMapping("/refresh")
