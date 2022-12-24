@@ -16,6 +16,9 @@ import pl.lodz.p.it.opinioncollector.opinion.model.Advantage;
 import pl.lodz.p.it.opinioncollector.opinion.model.Disadvantage;
 import pl.lodz.p.it.opinioncollector.opinion.model.Opinion;
 import pl.lodz.p.it.opinioncollector.opinion.model.OpinionId;
+import pl.lodz.p.it.opinioncollector.opinion.model.Reaction;
+import pl.lodz.p.it.opinioncollector.opinion.repositories.OpinionRepository;
+import pl.lodz.p.it.opinioncollector.opinion.repositories.ReactionRepository;
 import pl.lodz.p.it.opinioncollector.productManagment.ProductRepository;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserType;
@@ -26,6 +29,7 @@ public class OpinionManager {
 
     private final OpinionRepository opinionRepository;
     private final ProductRepository productRepository;
+    private final ReactionRepository reactionRepository;
 
     public List<Opinion> getOpinions(UUID productId) {
         return opinionRepository.findById_ProductId(productId);
@@ -107,6 +111,27 @@ public class OpinionManager {
         return opinionRepository.existsById(new OpinionId(productId, opinionId));
     }
 
+    @Transactional
+    public Opinion addReaction(UUID productId, UUID opinionId, boolean positive)
+        throws OpinionNotFoundException {
+        return opinionRepository.findOne(productId, opinionId)
+                                .map(opinion -> {
+                                    User author = (User) SecurityContextHolder.getContext()
+                                                                              .getAuthentication()
+                                                                              .getPrincipal();
+
+                                    Reaction r = new Reaction(author, opinion, positive);
+                                    Reaction saved = reactionRepository.save(r);
+
+                                    if (!opinion.getReactions().add(saved)) {
+                                        opinion.getReactions().remove(saved);
+                                        opinion.getReactions().add(saved);
+                                    }
+                                    opinion.setLikesCounter(reactionRepository.calculateLikesCounter(opinion.getId()));
+                                    return opinion;
+                                })
+                                .orElseThrow(OpinionNotFoundException::new);
+    }
 
     private Opinion mapDtoToEntity(CreateOpinionDto createOpinionDto) {
         Opinion built = Opinion.builder()

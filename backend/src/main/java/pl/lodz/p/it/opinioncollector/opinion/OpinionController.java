@@ -75,6 +75,20 @@ public class OpinionController {
         return opinionManager.update(productId, opinionId, dto);
     }
 
+    @PutMapping("/{opinionId}/like")
+    public Opinion like(@PathVariable UUID productId,
+                        @PathVariable UUID opinionId)
+        throws OpinionNotFoundException {
+        return opinionManager.addReaction(productId, opinionId, true);
+    }
+
+    @PutMapping("/{opinionId}/dislike")
+    public Opinion dislike(@PathVariable UUID productId,
+                           @PathVariable UUID opinionId)
+        throws OpinionNotFoundException {
+        return opinionManager.addReaction(productId, opinionId, false);
+    }
+
     @PostMapping(value = "/{opinionId}/report",
                  consumes = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)

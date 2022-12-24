@@ -1,10 +1,10 @@
 package pl.lodz.p.it.opinioncollector.opinion.model;
 
+import java.io.Serializable;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Advantage {
+public class Advantage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -25,7 +25,7 @@ public class Advantage {
     @Column(nullable = false, name = "VALUE")
     private String value;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JsonIgnore
     private Opinion opinion;
 

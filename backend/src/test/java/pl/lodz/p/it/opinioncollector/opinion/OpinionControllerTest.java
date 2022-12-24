@@ -32,6 +32,8 @@ class OpinionControllerTest {
     private static final MessageFormat BASE_OPINIONS_URL = new MessageFormat("/products/{0}/opinions");
     private static final MessageFormat SPECIFIC_OPINION_URL = new MessageFormat("/products/{0}/opinions/{1}");
     private static final MessageFormat OPINION_REPORT_URL = new MessageFormat("/products/{0}/opinions/{1}/report");
+    private static final MessageFormat LIKE_OPINION_URL = new MessageFormat("/products/{0}/opinions/{1}/like");
+    private static final MessageFormat DISLIKE_OPINION_URL = new MessageFormat("/products/{0}/opinions/{1}/dislike");
 
     private static final String PRODUCT_ID = "4811913c-b953-4856-979b-838488049d07";
 
@@ -58,7 +60,7 @@ class OpinionControllerTest {
               .body("[0].id.opinionId", equalTo("6c3a61be-955c-411b-9942-e746cfd0e75b"),
                     "[0].id.productId", equalTo(PRODUCT_ID),
                     "[0].description", equalTo("Test desc 1"),
-                    "[0].likesCounter", equalTo(0),
+                    "[0].likesCounter", equalTo(1),
                     "[0].rate", equalTo(2),
                     "[0].pros", hasSize(2),
                     "[0].cons", hasSize(1),
@@ -66,7 +68,7 @@ class OpinionControllerTest {
               .body("[1].id.opinionId", equalTo("dc0dac8a-797b-11ed-a1eb-0242ac120002"),
                     "[1].id.productId", equalTo(PRODUCT_ID),
                     "[1].description", equalTo("desc 2"),
-                    "[1].likesCounter", equalTo(1),
+                    "[1].likesCounter", equalTo(0),
                     "[1].rate", equalTo(3),
                     "[1].pros", empty(),
                     "[1].cons", empty(),
@@ -106,7 +108,7 @@ class OpinionControllerTest {
               .body("id.opinionId", is("6c3a61be-955c-411b-9942-e746cfd0e75b"),
                     "id.productId", is(PRODUCT_ID),
                     "description", equalTo("Test desc 1"),
-                    "likesCounter", equalTo(0),
+                    "likesCounter", equalTo(1),
                     "rate", equalTo(2),
                     "pros", hasSize(2),
                     "cons", hasSize(1),
@@ -768,6 +770,256 @@ class OpinionControllerTest {
                .post(url)
                .then()
                .status(HttpStatus.FORBIDDEN);
+    }
+    // endregion
+
+    // region PUT /products/{productId}/opinions/{opinionId}/like
+    @Test
+    @WithUserDetails("user1")
+    void shouldLikeOpinionWithStatusCode200WhenUserIsAuthenticatedTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String likeUrl = LIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().put(likeUrl)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(2));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(2));
+
+        // liking again should not change like counter
+        when().put(likeUrl)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(2));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(2));
+    }
+
+    @Test
+    void shouldLikeOpinionFailWithStatusCode403WhenUserIsUnauthenticatedTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String likeUrl = LIKE_OPINION_URL.format(formatObject);
+
+        when().put(likeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    @WithUserDetails("admin")
+    void shouldLikeOpinionFailWithStatusCode403WhenUserIsAdminTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String likeUrl = LIKE_OPINION_URL.format(formatObject);
+
+        when().put(likeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    @WithUserDetails("user10")
+    void shouldChangeReactionToLikeFromDislikeWithStatusCode200Test() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String likeUrl = LIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().put(likeUrl)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(3));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(3));
+    }
+    // endregion
+
+    // region PUT /products/{productId}/opinions/{opinionId}/dislike
+    @WithUserDetails("user1")
+    @Test
+    void shouldDislikeOpinionWithStatusCode200Test() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String dislikeUrl = DISLIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().put(dislikeUrl)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(0));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(0));
+
+        // disliking again should not change like counter
+        when().put(dislikeUrl)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(0));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(0));
+    }
+
+    @Test
+    void shouldDislikeOpinionFailWithStatusCode403WhenUserIsUnauthenticatedTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String dislikeUrl = DISLIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().put(dislikeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+    }
+
+    @Test
+    @WithUserDetails("admin")
+    void shouldDislikeOpinionFailWithStatusCode403WhenUserIsAdminTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String dislikeUrl = DISLIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().put(dislikeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+    }
+
+    @WithUserDetails("user15")
+    @Test
+    void shouldChangeReactionToDislikeWithStatusCode200Test() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String dislikeUrl = DISLIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().put(dislikeUrl)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(-1));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(-1));
     }
     // endregion
 }
