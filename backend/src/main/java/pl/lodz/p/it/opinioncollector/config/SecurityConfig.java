@@ -77,7 +77,7 @@ public class SecurityConfig {
                                         .baseUri("/oauth2/authorize")
                                         .and()
                                         .redirectionEndpoint()
-                                        .baseUri("/oauth2/code/google/*");
+                                        .baseUri("/oauth2/code/*");
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }

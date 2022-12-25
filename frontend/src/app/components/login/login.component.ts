@@ -53,8 +53,13 @@ export class LoginComponent implements OnInit {
     this.passwordResetSuccessful = params.has('password-reset-success');
     this.accountDeleted = params.has('account-deleted');
 
-    if (params.has("code")) {
-      this.exchangeCode(params.get('code')!);
+    if (params.has("google_code")) {
+      this.exchangeGoogleCode(params.get('google_code')!);
+      this.router.navigate(['/']);
+    }
+
+    if (params.has("facebook_code")) {
+      this.exchangeFacebookCode(params.get('facebook_code')!);
       this.router.navigate(['/']);
     }
 
@@ -103,8 +108,12 @@ export class LoginComponent implements OnInit {
     this.authService.loginWithGoogle()
   }
 
-  exchangeCode(code: string) {
-    this.authService.getTokensByCode(code).subscribe((result) => {
+  loginWithFacebook() {
+    this.authService.loginWithFacebook()
+  }
+
+  exchangeGoogleCode(code: string) {
+    this.authService.authByGoogleCode(code).subscribe((result) => {
       if (result.status == 200) {
         this.authService.saveUserData(result)
         this.authService.authenticated.next(true);
@@ -120,4 +129,21 @@ export class LoginComponent implements OnInit {
     })
   }
 
+  private exchangeFacebookCode(code: string) {
+
+    this.authService.authByFacebookCode(code).subscribe((result) => {
+      if (result.status == 200) {
+        this.authService.saveUserData(result)
+        this.authService.authenticated.next(true);
+      }
+    }, error => {
+      if (error.status === 423) {
+        this.router.navigate(['/login'], {queryParams: {'account-locked': true}});
+      } else if (error.status === 404) {
+        this.router.navigate(['/login'], {queryParams: {'account-deleted': true}})
+      } else {
+        this.router.navigate(['/login'], {queryParams: {'facebook_auth-failed': true}})
+      }
+    })
+  }
 }

@@ -60,12 +60,17 @@ public class AuthManager {
     private final HttpTransport transport = new NetHttpTransport();
     private final JsonFactory factory = new GsonFactory();
     private final RestTemplate restTemplate = new RestTemplate();
+
     @Value("${backend.url}")
     private String apiUrl;
     @Value("${spring.security.oauth2.client.registration.google.clientId}")
     private String googleClientId;
     @Value("${spring.security.oauth2.client.registration.google.clientSecret}")
     private String googleClientSecret;
+    @Value("${spring.security.oauth2.client.registration.facebook.clientId}")
+    private String facebookClientId;
+    @Value("${spring.security.oauth2.client.registration.facebook.clientSecret}")
+    private String facebookClientSecret;
 
     public SuccessfulLoginDTO login(LoginDTO dto) {
         Authentication authentication;
@@ -154,44 +159,28 @@ public class AuthManager {
         tokenRepository.deleteAllByUserAndType(user, TokenType.REFRESH_TOKEN);
     }
 
-    public SuccessfulLoginDTO authenticateWithGoogle(String code) throws GeneralSecurityException, IOException, IllegalAccessException {
+    public SuccessfulLoginDTO authenticateWithGoogle(String code) {
 
-        String id_token = exchangeCodeForIdToken(code);
+        String id_token = exchangeGoogleCodeForIdToken(code);
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, factory).setAudience(Collections.singleton(googleClientId)).build();
 
-        GoogleIdToken idToken = verifier.verify(id_token);
+        GoogleIdToken idToken;
+        try {
+            idToken = verifier.verify(id_token);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
         if (idToken == null) {
-            throw new IllegalAccessException("Invalid id_token");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-
-        Optional<User> optionalUser = userRepository.findByEmail(idToken.getPayload().getEmail());
-        User user;
-        if (optionalUser.isEmpty()) {
-            user = new User();
-            user.setEmail(idToken.getPayload().getEmail());
-            user.setVisibleName(idToken.getPayload().getEmail());
-            user.setRole(UserType.USER);
-            user.setProvider(UserProvider.GOOGLE);
-            user.setActive(true);
-            userRepository.save(user);
-        } else {
-            user = optionalUser.get();
-        }
-
-        if (user.isDeleted()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
-        if (user.isLocked()) {
-            throw new ResponseStatusException(HttpStatus.LOCKED);
-        }
+        User user = getExistingOrRegisterUser(idToken.getPayload().getEmail(), UserProvider.GOOGLE);
 
         String jwt = jwtProvider.generateJWT(user.getEmail(), user.getRole());
         Token refreshToken = generateAndSaveToken(user, TokenType.REFRESH_TOKEN);
         return new SuccessfulLoginDTO(user.getRole(), jwt, refreshToken.getToken(), user.getEmail(), user.getProvider());
     }
 
-    private String exchangeCodeForIdToken(String code) {
+    private String exchangeGoogleCodeForIdToken(String code) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("grant_type", "authorization_code");
         jsonObject.addProperty("code", code);
@@ -208,5 +197,94 @@ public class AuthManager {
         JsonObject resultJson = new Gson().fromJson(result, JsonObject.class);
 
         return resultJson.get("id_token").getAsString();
+    }
+
+    public SuccessfulLoginDTO authenticateWithFacebook(String code) {
+        String email;
+        try {
+            String accessToken = exchangeFacebookCodeForAccessToken(code);
+            String id = getFacebookUserId(accessToken);
+            email = getFacebookUserEmail(id, accessToken);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        User user = getExistingOrRegisterUser(email, UserProvider.FACEBOOK);
+
+        String jwt = jwtProvider.generateJWT(user.getEmail(), user.getRole());
+        Token refreshToken = generateAndSaveToken(user, TokenType.REFRESH_TOKEN);
+        return new SuccessfulLoginDTO(user.getRole(), jwt, refreshToken.getToken(), user.getEmail(), user.getProvider());
+    }
+
+    private String exchangeFacebookCodeForAccessToken(String code) {
+        String url = new StringBuilder()
+                .append("https://graph.facebook.com/oauth/access_token?grant_type=authorization_code&client_id=")
+                .append(facebookClientId)
+                .append("&client_secret=")
+                .append(facebookClientSecret)
+                .append("&code=")
+                .append(code)
+                .append("&redirect_uri=")
+                .append(apiUrl)
+                .append("/login/oauth2/code/facebook")
+                .toString();
+
+        String result = restTemplate.getForObject(url, String.class);
+        JsonObject resultJson = new Gson().fromJson(result, JsonObject.class);
+
+        return resultJson.get("access_token").getAsString();
+    }
+
+    private String getFacebookUserId(String accessToken) {
+
+        String url = "https://graph.facebook.com/me?access_token=" +
+                accessToken;
+
+        String result = restTemplate.getForObject(url, String.class);
+        JsonObject resultJson = new Gson().fromJson(result, JsonObject.class);
+
+        return resultJson.get("id").getAsString();
+    }
+
+    private String getFacebookUserEmail(String id, String accessToken) {
+
+        String url = new StringBuilder()
+                .append("https://graph.facebook.com/")
+                .append(id)
+                .append("?fields=email&access_token=")
+                .append(accessToken)
+                .toString();
+
+        String result = restTemplate.getForObject(url, String.class);
+        JsonObject resultJson = new Gson().fromJson(result, JsonObject.class);
+
+        return resultJson.get("email").getAsString();
+    }
+
+    private User getExistingOrRegisterUser(String email, UserProvider provider) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User user;
+        if (optionalUser.isEmpty()) {
+            user = new User();
+            user.setEmail(email);
+            user.setVisibleName(email);
+            user.setRole(UserType.USER);
+            user.setProvider(provider);
+            user.setActive(true);
+            return userRepository.save(user);
+        } else {
+            user = optionalUser.get();
+            if (user.getProvider() != provider) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+
+            if (user.isDeleted()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+
+            if (user.isLocked()) {
+                throw new ResponseStatusException(HttpStatus.LOCKED);
+            }
+            return user;
+        }
     }
 }

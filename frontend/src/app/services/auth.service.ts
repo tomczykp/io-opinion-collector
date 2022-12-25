@@ -85,7 +85,15 @@ export class AuthService {
     window.location.href = `${environment.apiUrl}/oauth2/authorize/google`
   }
 
-  getTokensByCode(code: string) {
+  loginWithFacebook() {
+    window.location.href = `${environment.apiUrl}/oauth2/authorize/facebook`
+  }
+
+  authByGoogleCode(code: string) {
     return this.http.get(`${environment.apiUrl}/token/google?code=${code}`, {observe: "response"})
+  }
+
+  authByFacebookCode(code: string) {
+    return this.http.get(`${environment.apiUrl}/token/facebook?code=${code}`, {observe: "response"})
   }
 }

@@ -49,13 +49,25 @@ public class AuthController {
     @GetMapping("/login/oauth2/code/google")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Void> authenticateByGoogle(@Param("code") String code) {
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?code=" + code)).build();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?google_code=" + code)).build();
+    }
+
+    @GetMapping("/login/oauth2/code/facebook")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Void> authenticateByFacebook(@Param("code") String code) {
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?facebook_code=" + code)).build();
     }
 
     @GetMapping("/token/google")
     @ResponseStatus(HttpStatus.OK)
-    public SuccessfulLoginDTO getTokenByCode(@Param("code") String code) throws GeneralSecurityException, IOException, IllegalAccessException {
+    public SuccessfulLoginDTO getTokenByGoogleCode(@Param("code") String code) throws GeneralSecurityException, IOException, IllegalAccessException {
         return authManager.authenticateWithGoogle(code);
+    }
+
+    @GetMapping("/token/facebook")
+    @ResponseStatus(HttpStatus.OK)
+    public SuccessfulLoginDTO getTokenByFacebookCode(@Param("code") String code) {
+        return authManager.authenticateWithFacebook(code);
     }
 
     @GetMapping("/confirm/register")
