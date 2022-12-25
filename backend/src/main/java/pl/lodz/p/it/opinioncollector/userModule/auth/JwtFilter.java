@@ -10,15 +10,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ResponseStatusException;
+import pl.lodz.p.it.opinioncollector.userModule.user.User;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Objects;
 
 @Component
@@ -36,6 +38,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             if (jwt == null || !jwtProvider.validateToken(jwt)) {
+                if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(
+                            null,
+                            null,
+                            Collections.singleton(new SimpleGrantedAuthority("ANONYMOUS")));
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -50,23 +60,31 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         Claims claims = jwtProvider.parseJWT(jwt).getBody();
-        UserDetails userDetails;
+        User user;
 
         try {
-            userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+            user = userDetailsService.loadUserByUsername(claims.getSubject());
         } catch (UsernameNotFoundException enfe) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        if (!userDetails.isEnabled()) {
+        if (user.isDeleted()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        if (user.isLocked()) {
             throw new ResponseStatusException(HttpStatus.LOCKED);
         }
 
+        if (!user.isEnabled()) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+        }
+
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails,
+                user,
                 null,
-                userDetails.getAuthorities());
+                user.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);

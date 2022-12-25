@@ -63,8 +63,8 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.PUT, "/users/lock").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.PUT, "/users/unlock").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.DELETE, "/users/remove/user").hasAnyRole("USER", "ADMIN")
-                                        .requestMatchers(HttpMethod.PUT, "/users/password").authenticated()
-                                        .requestMatchers(HttpMethod.DELETE, "/signout/force").authenticated()
+                                        .requestMatchers(HttpMethod.PUT, "/users/password").hasRole("USER")
+                                        .requestMatchers(HttpMethod.DELETE, "/signout/force").hasRole("USER")
                                         // opinion endpoints
                                         .requestMatchers(HttpMethod.GET, "/products/{productId}/opinions/**").permitAll()
                                         .requestMatchers(HttpMethod.DELETE, "/products/{productId}/opinions/{opinionId}").hasAnyRole("USER", "ADMIN")
