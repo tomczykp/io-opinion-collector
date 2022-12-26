@@ -96,7 +96,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="user!.provider! === 'LOCAL'">
+  <div *ngIf="user?.provider === 'LOCAL'">
     <ngb-alert (closed)="passwordChangeStatus = 0" *ngIf="passwordChangeStatus == 1" [dismissible]="true"
                class="alert alert-success fade show m-3" role="alert" type="success">
       <span><strong>Password changed successfully.</strong> Now you can force log out on all devices.</span>
