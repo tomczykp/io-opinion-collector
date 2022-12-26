@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   passwordResetSuccessful = false;
   accountDisabled = false;
   accountDeleted = false;
+  differentProvider = false;
 
   constructor(
     private authService: AuthService,
@@ -52,6 +53,7 @@ export class LoginComponent implements OnInit {
     this.accountConfirmed = params.has('confirmed');
     this.passwordResetSuccessful = params.has('password-reset-success');
     this.accountDeleted = params.has('account-deleted');
+    this.differentProvider = params.has('different-provider');
 
     if (params.has("google_code")) {
       this.exchangeGoogleCode(params.get('google_code')!);
@@ -123,6 +125,8 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/login'], {queryParams: {'account-locked': true}});
       } else if (error.status === 404) {
         this.router.navigate(['/login'], {queryParams: {'account-deleted': true}})
+      } else if (error.status === 409) {
+        this.router.navigate(['/login'], {queryParams: {'different-provider': true}})
       } else {
         this.router.navigate(['/login'], {queryParams: {'google_auth-failed': true}})
       }
@@ -141,6 +145,8 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/login'], {queryParams: {'account-locked': true}});
       } else if (error.status === 404) {
         this.router.navigate(['/login'], {queryParams: {'account-deleted': true}})
+      } else if (error.status === 409) {
+        this.router.navigate(['/login'], {queryParams: {'different-provider': true}})
       } else {
         this.router.navigate(['/login'], {queryParams: {'facebook_auth-failed': true}})
       }

@@ -28,6 +28,10 @@
              class="alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Something went wrong with google authentication</strong>
   </ngb-alert>
+  <ngb-alert (closed)="differentProvider = false" *ngIf="differentProvider" [dismissible]="true"
+             class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>This account has different provider. </strong>(Google, Facebook or Local)
+  </ngb-alert>
   <ngb-alert (closed)="accountDeleted = false" *ngIf="accountDeleted" [dismissible]="true"
              class="alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Your account was deleted.</strong>
