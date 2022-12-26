@@ -1,9 +1,9 @@
-<div *ngIf="passwordChangeStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+<ngb-alert (closed)="passwordChangeStatus = 0" [dismissible]="true" *ngIf="passwordChangeStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
   <strong>Error during changing password</strong>
-</div>
-<div *ngIf="passwordChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+</ngb-alert>
+<ngb-alert (closed)="passwordChangeStatus = 0" [dismissible]="true" *ngIf="passwordChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
   <strong>Repeated password doesn't match password</strong>
-</div>
+</ngb-alert>
 <div class="container">
   <div class="justify-content-center align-middle d-flex">
     <div class="panel-body">
