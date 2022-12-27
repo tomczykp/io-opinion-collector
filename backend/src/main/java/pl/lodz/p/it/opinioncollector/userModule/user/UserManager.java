@@ -11,12 +11,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import pl.lodz.p.it.opinioncollector.exceptions.user.PasswordNotMatchesException;
+import pl.lodz.p.it.opinioncollector.exceptions.user.TokenExpiredException;
 import pl.lodz.p.it.opinioncollector.userModule.auth.MailManager;
 import pl.lodz.p.it.opinioncollector.userModule.token.Token;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenRepository;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenType;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -56,9 +59,19 @@ public class UserManager implements UserDetailsService {
         }
     }
 
-    public void sendResetPassword(String email) {
+    public void sendResetPassword(String email) throws Exception {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        Optional<Token> token = tokenRepository.findTokenByUserAndType(user, TokenType.PASSWORD_RESET_TOKEN);
+
+        if (token.isPresent()) {
+            if (token.get().getExpiresAt().isAfter(Instant.now())) {
+                throw new Exception("Token already exists!");
+            } else {
+                this.tokenRepository.deleteByToken(token.get().getToken());
+            }
+        }
 
         if (user.getProvider() != UserProvider.LOCAL) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
@@ -74,10 +87,13 @@ public class UserManager implements UserDetailsService {
 
     }
 
-    public void resetPassword(String newPassword, String resetToken) {
+    public void resetPassword(String newPassword, String resetToken) throws TokenExpiredException {
         Token token = tokenRepository.findByToken(resetToken)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
+        if (token.getExpiresAt().isBefore(Instant.now())) {
+            throw new TokenExpiredException();
+        }
         User user = token.getUser();
         user.setPassword(encoder.encode(newPassword));
 
@@ -97,11 +113,17 @@ public class UserManager implements UserDetailsService {
         }
     }
 
-    public void deleteOwnAccount() {
+    public void deleteOwnAccount() throws Exception {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (tokenRepository.findTokenByUserAndType(user, TokenType.DELETION_TOKEN).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        Optional<Token> token = tokenRepository.findTokenByUserAndType(user, TokenType.DELETION_TOKEN);
+
+        if (token.isPresent()) {
+            if (token.get().getExpiresAt().isAfter(Instant.now())) {
+                throw new Exception("Token already exists!");
+            } else {
+                this.tokenRepository.deleteByToken(token.get().getToken());
+            }
         }
 
         String deletionToken = generateAndSaveToken(user, TokenType.DELETION_TOKEN).getToken();

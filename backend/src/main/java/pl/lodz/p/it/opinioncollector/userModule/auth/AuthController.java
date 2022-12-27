@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.opinioncollector.exceptions.user.EmailAlreadyRegisteredException;
+import pl.lodz.p.it.opinioncollector.exceptions.user.TokenExpiredException;
 import pl.lodz.p.it.opinioncollector.userModule.dto.LoginDTO;
 import pl.lodz.p.it.opinioncollector.userModule.dto.RegisterUserDTO;
 import pl.lodz.p.it.opinioncollector.userModule.dto.SuccessfulLoginDTO;
@@ -36,7 +37,7 @@ public class AuthController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    public User register(@Valid @RequestBody RegisterUserDTO dto) throws EmailAlreadyRegisteredException {
+    public User register(@Valid @RequestBody RegisterUserDTO dto) throws Exception {
         return authManager.register(dto);
     }
 
@@ -72,12 +73,16 @@ public class AuthController {
 
     @GetMapping("/confirm/register")
     public ResponseEntity<Void> confirmRegistration(@Param("token") String token) {
-        authManager.confirmRegistration(token);
+        try {
+            authManager.confirmRegistration(token);
+        } catch (TokenExpiredException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?confirmed=true")).build();
     }
 
     @GetMapping("/confirm/remove")
-    public ResponseEntity<Void> confirmDeletion(@Param("token") String token) {
+    public ResponseEntity<Void> confirmDeletion(@Param("token") String token) throws TokenExpiredException {
         authManager.confirmDeletion(token);
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?deleted=true")).build();
     }

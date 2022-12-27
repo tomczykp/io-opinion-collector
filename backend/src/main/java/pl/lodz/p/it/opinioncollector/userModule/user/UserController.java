@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.it.opinioncollector.exceptions.user.PasswordNotMatchesException;
+import pl.lodz.p.it.opinioncollector.exceptions.user.TokenExpiredException;
 import pl.lodz.p.it.opinioncollector.userModule.dto.ChangePasswordDTO;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class UserController {
 
     @DeleteMapping("/remove/user")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteOwnAccount() {
+    public void deleteOwnAccount() throws Exception {
         userManager.deleteOwnAccount();
     }
 
@@ -77,13 +78,13 @@ public class UserController {
 
     @PutMapping("/reset")
     @ResponseStatus(HttpStatus.OK)
-    public void resetPassword(@Param("email") String email) {
+    public void resetPassword(@Param("email") String email) throws Exception{
         userManager.sendResetPassword(email);
     }
 
     @PutMapping("/confirm/reset")
     @ResponseStatus(HttpStatus.OK)
-    public void confirmReset(@Param("password") String password, @Param("token") String token) {
+    public void confirmReset(@Param("password") String password, @Param("token") String token) throws TokenExpiredException {
         userManager.resetPassword(password, token);
     }
 }
