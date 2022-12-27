@@ -8,7 +8,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -18,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 import pl.lodz.p.it.opinioncollector.productManagment.Product;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
@@ -30,7 +31,6 @@ import pl.lodz.p.it.opinioncollector.userModule.user.User;
 public class Opinion implements Serializable {
 
     @EmbeddedId
-    @GeneratedValue
     private OpinionId id;
 
     @Column(name = "RATE", nullable = false)
@@ -39,7 +39,16 @@ public class Opinion implements Serializable {
     @Column(name = "DESCRIPTION", nullable = false)
     private String description;
 
-    @Column(name = "LIKES", nullable = false)
+    @Formula("""
+        (SELECT COALESCE(
+            SUM(CASE
+                    WHEN R.POSITIVE THEN 1
+                    ELSE -1
+                END), 0)
+        FROM REACTION R
+        WHERE R.PRODUCT_ID = PRODUCT_ID
+              AND R.OPINION_ID = OPINION_ID)
+        """)
     private int likesCounter;
 
     @OneToMany(mappedBy = "opinion",
@@ -60,6 +69,12 @@ public class Opinion implements Serializable {
     @JsonIgnore
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User author;
+
+    @OneToMany(orphanRemoval = true,
+               cascade = CascadeType.ALL,
+               mappedBy = "opinion",
+               fetch = FetchType.LAZY)
+    private Set<Reaction> reactions;
 }

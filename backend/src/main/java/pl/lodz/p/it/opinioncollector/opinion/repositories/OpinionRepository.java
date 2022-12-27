@@ -1,4 +1,4 @@
-package pl.lodz.p.it.opinioncollector.opinion;
+package pl.lodz.p.it.opinioncollector.opinion.repositories;
 
 import java.util.List;
 import java.util.Optional;

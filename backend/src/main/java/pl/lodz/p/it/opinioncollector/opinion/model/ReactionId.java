@@ -9,20 +9,20 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-/**
- * Composite primary key for opinions.
- */
 @Embeddable
 @Getter
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class OpinionId implements Serializable {
-    @Column(name = "PRODUCT_ID", nullable = false)
-    private UUID productId;
+@ToString
+public class ReactionId implements Serializable {
 
-    @Column(name = "OPINION_ID", nullable = false)
-    private UUID opinionId;
+    @Column
+    private OpinionId opinionId = new OpinionId();
+
+    @Column(name = "AUTHOR_ID")
+    private UUID authorId;
 }

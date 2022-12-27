@@ -26,7 +26,7 @@ public class Disadvantage implements Serializable {
     @Column(nullable = false, name = "VALUE")
     private String value;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JsonIgnore
     private Opinion opinion;
 

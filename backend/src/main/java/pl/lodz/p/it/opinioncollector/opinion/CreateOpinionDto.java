@@ -20,8 +20,8 @@ public class CreateOpinionDto implements Serializable {
     private String description;
 
     @NotNull
-    private List<String> pros = new ArrayList<>();
+    private List<@NotBlank String> pros = new ArrayList<>();
 
     @NotNull
-    private List<String> cons = new ArrayList<>();
+    private List<@NotBlank String> cons = new ArrayList<>();
 }
