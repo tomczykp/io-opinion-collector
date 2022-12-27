@@ -20,7 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -156,7 +155,6 @@ class OpinionControllerTest {
     }
 
     @Test
-    @WithAnonymousUser
     void shouldCreateOpinionFailWithStatusCode403WhenUserIsUnauthenticatedTest() {
         String productId = "4950d349-1127-4690-82a0-94fdc81b019b";
         String url = BASE_OPINIONS_URL.format(new Object[] { productId });
@@ -395,7 +393,6 @@ class OpinionControllerTest {
     }
 
     @Test
-    @WithAnonymousUser
     void shouldUpdateOpinionFailWithStatusCode401WhenUserIsNotAuthenticatedTest() {
         String opinionId = "dc0dac8a-797b-11ed-a1eb-0242ac120002";
         String url = SPECIFIC_OPINION_URL.format(new Object[] { PRODUCT_ID, opinionId });

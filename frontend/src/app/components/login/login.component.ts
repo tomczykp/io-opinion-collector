@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -18,6 +18,21 @@ export class LoginComponent implements OnInit {
   accountLocked = false;
   registerSuccessful = false;
   logoutSuccessful = false;
+  sessionExpired = false;
+  googleLoginFailed = false;
+  accountDeletedSuccessful = false;
+  accountConfirmed = false;
+  passwordResetSuccessful = false;
+  accountDisabled = false;
+  accountDeleted = false;
+  differentProvider = false;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+  }
 
   get email() {
     return this.loginForm.get('email');
@@ -27,16 +42,33 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) { }
-
   ngOnInit(): void {
     let params = this.route.snapshot.queryParamMap;
     this.logoutSuccessful = params.has('logout-success');
     this.registerSuccessful = params.has('register-success');
+    this.sessionExpired = params.has('session-expired');
+    this.accountLocked = params.has('account-locked');
+    this.googleLoginFailed = params.has('google_auth-failed');
+    this.accountDeletedSuccessful = params.has('deleted');
+    this.accountConfirmed = params.has('confirmed');
+    this.passwordResetSuccessful = params.has('password-reset-success');
+    this.accountDeleted = params.has('account-deleted');
+    this.differentProvider = params.has('different-provider');
+
+    if (params.has("google_code")) {
+      this.exchangeGoogleCode(params.get('google_code')!);
+      this.router.navigate(['/']);
+    }
+
+    if (params.has("facebook_code")) {
+      this.exchangeFacebookCode(params.get('facebook_code')!);
+      this.router.navigate(['/']);
+    }
+
+    if (this.accountDeletedSuccessful) {
+      this.authService.clearUserData();
+      this.authService.authenticated.next(false);
+    }
   }
 
   clearPassword() {
@@ -51,29 +83,73 @@ export class LoginComponent implements OnInit {
       this.authService.login(email!.toString(), password!.toString())
         .subscribe((result) => {
           if (result.status == 200) {
-            localStorage.setItem("email", result.body!.email)
-            localStorage.setItem("jwt", result.body!.jwt)
-            localStorage.setItem("refreshToken", result.body!.refreshToken)
-            localStorage.setItem("role", result.body!.role)
+            this.authService.saveUserData(result)
             this.authService.authenticated.next(true);
             this.router.navigate(['/']);
           }
-      }, (error) => {
+        }, (error) => {
           this.authService.clearUserData();
           this.authService.authenticated.next(false);
-          console.log(error);
           this.clearPassword();
-          if (error.status === 403) {
+          if (error.status === 401) {
             this.wrongCredentials = true;
-          }
-
-          if (error.status === 423) {
+          } else if (error.status === 423) {
             this.accountLocked = true;
+          } else if (error.status === 406) {
+            this.accountDisabled = true;
           }
           this.registerSuccessful = false;
           this.logoutSuccessful = false;
+          this.sessionExpired = false;
         });
     }
   }
 
+
+  loginWithGoogle() {
+    this.authService.loginWithGoogle()
+  }
+
+  loginWithFacebook() {
+    this.authService.loginWithFacebook()
+  }
+
+  exchangeGoogleCode(code: string) {
+    this.authService.authByGoogleCode(code).subscribe((result) => {
+      if (result.status == 200) {
+        this.authService.saveUserData(result)
+        this.authService.authenticated.next(true);
+      }
+    }, error => {
+      if (error.status === 423) {
+        this.router.navigate(['/login'], {queryParams: {'account-locked': true}});
+      } else if (error.status === 404) {
+        this.router.navigate(['/login'], {queryParams: {'account-deleted': true}})
+      } else if (error.status === 409) {
+        this.router.navigate(['/login'], {queryParams: {'different-provider': true}})
+      } else {
+        this.router.navigate(['/login'], {queryParams: {'google_auth-failed': true}})
+      }
+    })
+  }
+
+  private exchangeFacebookCode(code: string) {
+
+    this.authService.authByFacebookCode(code).subscribe((result) => {
+      if (result.status == 200) {
+        this.authService.saveUserData(result)
+        this.authService.authenticated.next(true);
+      }
+    }, error => {
+      if (error.status === 423) {
+        this.router.navigate(['/login'], {queryParams: {'account-locked': true}});
+      } else if (error.status === 404) {
+        this.router.navigate(['/login'], {queryParams: {'account-deleted': true}})
+      } else if (error.status === 409) {
+        this.router.navigate(['/login'], {queryParams: {'different-provider': true}})
+      } else {
+        this.router.navigate(['/login'], {queryParams: {'facebook_auth-failed': true}})
+      }
+    })
+  }
 }

@@ -11,6 +11,11 @@
 <ngb-alert (closed)="emailStatus = 0" *ngIf="emailStatus == 3" [dismissible]="true"
            class="alert alert-danger alert-dismissible fade show m-3"
            role="alert" type="danger">
+  <strong>User of given email is an external user, you can't use this option.</strong>
+</ngb-alert>
+<ngb-alert (closed)="emailStatus = 0" *ngIf="emailStatus == 4" [dismissible]="true"
+           class="alert alert-danger alert-dismissible fade show m-3"
+           role="alert" type="danger">
   <strong>Link for password reset was already sent.</strong>
 </ngb-alert>
 <div class="container">

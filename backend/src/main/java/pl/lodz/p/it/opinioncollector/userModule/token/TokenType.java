@@ -4,6 +4,5 @@ public enum TokenType {
     VERIFICATION_TOKEN,
     REFRESH_TOKEN,
     DELETION_TOKEN,
-
     PASSWORD_RESET_TOKEN
 }
