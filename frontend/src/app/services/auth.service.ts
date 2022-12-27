@@ -18,6 +18,15 @@ export class AuthService {
     if (localStorage.getItem("email") != null) {
       this.authenticated.next(true);
     }
+
+    window.addEventListener('storage', (event) => {
+      if (event.storageArea == localStorage) {
+        let token = localStorage.getItem('jwt');
+        if(token == undefined) {
+          window.location.href = '/login';
+        }
+      }
+    }, false);
   }
 
   login(email: string, password: string) {
