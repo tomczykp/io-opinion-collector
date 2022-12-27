@@ -10,14 +10,13 @@ import {Router} from "@angular/router";
 export class RegisterComponent implements OnInit {
 
   registerForm = new FormGroup({
-    email: new FormControl('', [Validators.required]), //Validators.email]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     username: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required])
+    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
   })
 
   failedRegister = false;
-  accountLocked = false;
-  googleLoginFailed = false;
+  passwordInputTextType: boolean;
 
   constructor(
     private authService: AuthService,

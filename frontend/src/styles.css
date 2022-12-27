@@ -8,11 +8,20 @@
 }
 
 body {
-  background-color: whitesmoke;
+  background: url("src/assets/bg.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 html, body {
   height: 100%;
+}
+
+ngb-alert {
+  box-shadow: 0 0 5px 5px #0000002a;
+  opacity: 90%;
 }
 
 .validation-message {

@@ -42,7 +42,7 @@ export class ResetConfirmComponent implements OnInit {
       let repeat = this.confirmPassword.getRawValue().repeatPassword;
 
       if (pass !== repeat) {
-        this.passwordChangeStatus = 3;
+        this.repeatPassword?.setErrors({notSame: true})
         return;
       }
 

@@ -13,11 +13,15 @@ export class ProfileComponent implements OnInit {
   changePasswordForm = new FormGroup({
     oldPassword: new FormControl('', [Validators.required]),
     repeatedPassword: new FormControl('', [Validators.required]),
-    newPassword: new FormControl('', [Validators.required])
+    newPassword: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
   })
 
   showUsernameChangeInput = false;
   newUsername = "";
+
+  oldPasswordInputTextType = false;
+  newPasswordInputTextType = false;
+  repeatPasswordInputTextType = false;
 
   deletionStatus = 0;
   user: User | undefined;
@@ -40,6 +44,8 @@ export class ProfileComponent implements OnInit {
   // 1 if successful password change
   // 2 if failed password change
   // 3 if newPassword and repeatedPassword not match
+
+
 
   get repeatedPassword() {
     return this.changePasswordForm.get('repeatedPassword');
@@ -68,6 +74,7 @@ export class ProfileComponent implements OnInit {
 
       if (newP !== repeatedP) {
         this.passwordChangeStatus = 3;
+        this.repeatedPassword?.setErrors({notSame: true});
         return;
       }
 
@@ -79,6 +86,7 @@ export class ProfileComponent implements OnInit {
           }
         }, (error) => {
           this.oldPassword?.reset()
+          this.oldPassword?.setErrors({wrongPassword: true});
           this.passwordChangeStatus = 2
         });
     }
@@ -126,4 +134,5 @@ export class ProfileComponent implements OnInit {
       this.deletionStatus = 2;
     })
   }
+
 }

@@ -1,6 +1,5 @@
 package pl.lodz.p.it.opinioncollector.userModule.auth;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,11 +47,8 @@ public class MailManager {
             helper.setSubject(subject);
             helper.setFrom("io.opinioncollector@gmail.com");
             mailSender.send(mimeMessage);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             log.error("Failed to send email", e);
-            throw new IllegalStateException("Failed to send email");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

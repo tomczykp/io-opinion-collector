@@ -1,4 +1,4 @@
-<section class="align-middle justify-content-center m-sm-5 m-2">
+<section class="align-middle justify-content-center m-sm-5 m-2" style="">
   <ngb-alert (closed)="registerSuccessful = false" *ngIf="registerSuccessful" [dismissible]="true" class="alert alert-success alert-dismissible fade show"
              role="alert" type="success">
     <strong>You have successfully registered.</strong> In order to login, you have to confirm your account by clicking
@@ -55,25 +55,33 @@
              class="img-fluid " src="assets/logo.svg">
       </div>
       <div
-        class="col-md-11 col-lg-8 col-xl-5 offset-xl-1 border-dark border-opacity-50 border p-3 pt-5 p-sm-5 rounded-4"
-        style="background-color: ghostwhite;">
+        class="col-md-11 col-lg-8 col-xl-5 offset-xl-1 p-3 pt-5 p-sm-5 rounded-4"
+        style="background: #ffffff80; border-radius: 10px; box-shadow: 0 4px 30px #0000001a;backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);">
         <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
           <!-- Email input -->
           <div class="form-outline mb-4">
+            <span class="form-label">Email address</span>
+            <input class="form-control form-control-lg" [ngClass]="{'is-invalid': email && email.touched && email.invalid}" formControlName="email" id="email" required type="email"/>
             <span *ngIf="email && email.touched && email.invalid" class="validation-message">Enter a valid email</span>
-            <input class="form-control form-control-lg" formControlName="email" id="email" required type="email"/>
-            <label class="form-label" for="email">Email address</label>
           </div>
 
           <!-- Password input -->
-          <div class="form-outline mb-4">
-            <span *ngIf="password && password.touched && password.invalid" class="validation-message">Password is required</span>
+          <span class="form-label">Password</span>
+          <div class="form-outline input-group">
             <input class="form-control form-control-lg" formControlName="password" id="password" required
-                   type="password"/>
-            <label class="form-label" for="password">Password</label>
+                   [type]="passwordInputTextType ? 'text' : 'password'"
+                   [ngClass]="{'is-invalid': password && password.touched && password.invalid}"/>
+            <i class="hover-icon input-group-text bi" [ngClass]="{
+                       'bi-eye-slash': !passwordInputTextType,
+                       'bi-eye': passwordInputTextType}"
+               (click)="passwordInputTextType = !passwordInputTextType">
+            </i>
           </div>
+          <span *ngIf="password && password.touched && password.invalid" class="validation-message">Password is required</span>
 
-          <div class="d-flex justify-content-around align-items-center mb-4">
+
+
+          <div class="d-flex justify-content-around align-items-center mt-4 mb-4">
             <a href="/reset">Forgot password?</a>
           </div>
 
@@ -95,6 +103,9 @@
                role="button"
                style="background-color: #e8545f">
               <i class="bi bi-google" style="font-size: 20px"></i></a>
+          </div>
+          <div class="mx-auto mt-4">
+            <span>Don't have an account yet? </span> <a routerLink="/register">Sign up</a>
           </div>
         </form>
       </div>
