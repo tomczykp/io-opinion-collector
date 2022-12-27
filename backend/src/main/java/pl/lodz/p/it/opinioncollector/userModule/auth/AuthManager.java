@@ -213,7 +213,7 @@ public class AuthManager {
         jsonObject.addProperty("code", code);
         jsonObject.addProperty("client_id", googleClientId);
         jsonObject.addProperty("client_secret", googleClientSecret);
-        jsonObject.addProperty("redirect_uri", "http://localhost:8080/api/login/oauth2/code/google");
+        jsonObject.addProperty("redirect_uri", apiUrl + "/login/oauth2/code/google");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
   accountDisabled = false;
   accountDeleted = false;
   differentProvider = false;
+  passwordInputTextType = false;
 
   constructor(
     private authService: AuthService,
