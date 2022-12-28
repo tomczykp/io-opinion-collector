@@ -98,9 +98,10 @@
             "development": {
               "browserTarget": "frontend:build:development",
               "ssl": true,
-              "sslCert": "src/ssl/localhost.crt",
-              "sslKey": "src/ssl/localhost.key",
-              "port": 443
+              "sslCert": "src/ssl/opinioncollector.crt",
+              "sslKey": "src/ssl/opinioncollector.key",
+              "port": 443,
+              "host": "opinioncollector.com"
             }
           },
           "defaultConfiguration": "development"
