@@ -32,8 +32,8 @@ public class Token {
         this.user = user;
         switch (type) {
             case REFRESH_TOKEN, VERIFICATION_TOKEN -> this.expiresAt = Instant.now().plus(7, ChronoUnit.DAYS);
-            case PASSWORD_RESET_TOKEN -> this.expiresAt = Instant.now().plus(1, ChronoUnit.SECONDS);
-            case DELETION_TOKEN -> this.expiresAt = Instant.now().plus(1, ChronoUnit.SECONDS);
+            case PASSWORD_RESET_TOKEN -> this.expiresAt = Instant.now().plus(1, ChronoUnit.DAYS);
+            case DELETION_TOKEN -> this.expiresAt = Instant.now().plus(30, ChronoUnit.MINUTES);
         }
     }
 }

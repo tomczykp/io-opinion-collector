@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import pl.lodz.p.it.opinioncollector.exceptions.user.EmailAlreadyRegisteredException;
 import pl.lodz.p.it.opinioncollector.exceptions.user.TokenExpiredException;
 import pl.lodz.p.it.opinioncollector.userModule.dto.LoginDTO;
 import pl.lodz.p.it.opinioncollector.userModule.dto.RegisterUserDTO;
