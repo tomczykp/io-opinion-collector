@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import pl.lodz.p.it.opinioncollector.exceptions.user.EmailAlreadyRegisteredException;
+import pl.lodz.p.it.opinioncollector.exceptions.user.TokenExpiredException;
 import pl.lodz.p.it.opinioncollector.userModule.dto.LoginDTO;
 import pl.lodz.p.it.opinioncollector.userModule.dto.RegisterUserDTO;
 import pl.lodz.p.it.opinioncollector.userModule.dto.SuccessfulLoginDTO;
@@ -41,6 +42,7 @@ import pl.lodz.p.it.opinioncollector.userModule.user.UserType;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -96,10 +98,29 @@ public class AuthManager {
         return new SuccessfulLoginDTO(user.getRole(), jwt, refreshToken.getToken(), user.getEmail(), user.getProvider());
     }
 
-    public User register(RegisterUserDTO dto) throws EmailAlreadyRegisteredException {
-        String hashedPassword = encoder.encode(dto.getPassword());
+    public User register(RegisterUserDTO dto) throws Exception {
+        User user;
+        Optional<User> u = userRepository.findByEmail(dto.getEmail());
+        if (u.isPresent()) {
+            user = u.get();
+            Optional<Token> t = tokenRepository.findTokenByUserAndType(u.get(), TokenType.VERIFICATION_TOKEN);
+            if (t.isPresent()) {
+                if (t.get().getExpiresAt().isAfter(Instant.now())) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                }
+                tokenRepository.delete(t.get());
 
-        User user = new User(dto.getEmail(), dto.getUsername(), hashedPassword);
+                String hashedPassword = encoder.encode(dto.getPassword());
+                user.setVisibleName(dto.getUsername());
+                user.setPassword(hashedPassword);
+            } else if (u.get().isActive()) {
+                throw new EmailAlreadyRegisteredException();
+            }
+        } else {
+            String hashedPassword = encoder.encode(dto.getPassword());
+            user = new User(dto.getEmail(), dto.getUsername(), hashedPassword);
+        }
+
         try {
             userRepository.save(user);
             String verificationToken = generateAndSaveToken(user, TokenType.VERIFICATION_TOKEN).getToken();
@@ -116,10 +137,13 @@ public class AuthManager {
         return tokenRepository.save(token);
     }
 
-    public void confirmRegistration(String token) {
+    public void confirmRegistration(String token) throws TokenExpiredException {
         Token verificationToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
+        if (verificationToken.getExpiresAt().isBefore(Instant.now())) {
+            throw new TokenExpiredException();
+        }
         User user = verificationToken.getUser();
         user.setActive(true);
 
@@ -131,6 +155,10 @@ public class AuthManager {
         Token t = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
+        if (t.getExpiresAt().isBefore(Instant.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token has expired!");
+        }
+
         User user = t.getUser();
 
         String newJWT = jwtProvider.generateJWT(user.getEmail(), user.getRole());
@@ -140,9 +168,13 @@ public class AuthManager {
         return new SuccessfulLoginDTO(user.getRole(), newJWT, newRefreshToken.getToken(), user.getEmail(), user.getProvider());
     }
 
-    public void confirmDeletion(String token) {
+    public void confirmDeletion(String token) throws TokenExpiredException {
         Token deletionToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        if (deletionToken.getExpiresAt().isBefore(Instant.now())) {
+            throw new TokenExpiredException();
+        }
 
         tokenRepository.deleteAllByUser(deletionToken.getUser());
         User user = userRepository.findByEmail(deletionToken.getUser().getEmail())
@@ -186,7 +218,7 @@ public class AuthManager {
         jsonObject.addProperty("code", code);
         jsonObject.addProperty("client_id", googleClientId);
         jsonObject.addProperty("client_secret", googleClientSecret);
-        jsonObject.addProperty("redirect_uri", "http://localhost:8080/api/login/oauth2/code/google");
+        jsonObject.addProperty("redirect_uri", apiUrl + "/login/oauth2/code/google");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

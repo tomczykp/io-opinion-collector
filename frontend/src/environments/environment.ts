@@ -4,8 +4,9 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080/api'
+  apiUrl: 'https://opinioncollector.com:8443/api'
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file
