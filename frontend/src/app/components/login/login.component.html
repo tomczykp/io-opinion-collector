@@ -48,6 +48,18 @@
              class="alert alert-success alert-dismissible fade show" role="alert" type="success">
     <strong>Your password has been changed. You can log in now using new password.</strong>
   </ngb-alert>
+  <ngb-alert (closed)="tokenExpired = false" *ngIf="tokenExpired" [dismissible]="true"
+            class="alert alert-danger alert-dimissible fade show" role="alert">
+          <strong>Confirmation link expired, please register again.</strong></ngb-alert>
+  <ngb-alert (closed)="deletionExpired = false" *ngIf="deletionExpired" [dismissible]="true"
+    class="alert alert-danger alert-dimissible fade show" role="alert">
+  <strong>Could not delete account, deletion link expired.</strong></ngb-alert>
+  <ngb-alert (closed)="resetExpired = false" *ngIf="resetExpired" [dismissible]="true"
+            class="alert alert-danger alert-dimissible fade show" role="alert">
+          <strong>Could not reset password, reset password link expired.</strong></ngb-alert>
+  <ngb-alert (closed)="tokenDeleted = false" *ngIf="tokenDeleted" [dismissible]="true"
+    class="alert alert-danger alert-dimissible fade show" role="alert">
+  <strong>Used token has been deleted, cannot perform action.</strong></ngb-alert>
   <div class="container pt-xl-5 h-100 w-100">
     <div class="row d-flex align-items-center justify-content-center h-100">
       <div class="col-md-8 col-lg-7 col-xl-6">

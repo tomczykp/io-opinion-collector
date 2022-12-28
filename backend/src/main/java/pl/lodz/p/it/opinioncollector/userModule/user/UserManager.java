@@ -59,7 +59,7 @@ public class UserManager implements UserDetailsService {
         }
     }
 
-    public void sendResetPassword(String email) throws Exception {
+    public void sendResetPassword(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
@@ -67,7 +67,7 @@ public class UserManager implements UserDetailsService {
 
         if (token.isPresent()) {
             if (token.get().getExpiresAt().isAfter(Instant.now())) {
-                throw new Exception("Token already exists!");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             } else {
                 this.tokenRepository.deleteByToken(token.get().getToken());
             }
@@ -113,14 +113,14 @@ public class UserManager implements UserDetailsService {
         }
     }
 
-    public void deleteOwnAccount() throws Exception {
+    public void deleteOwnAccount() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Optional<Token> token = tokenRepository.findTokenByUserAndType(user, TokenType.DELETION_TOKEN);
 
         if (token.isPresent()) {
             if (token.get().getExpiresAt().isAfter(Instant.now())) {
-                throw new Exception("Token already exists!");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             } else {
                 this.tokenRepository.deleteByToken(token.get().getToken());
             }

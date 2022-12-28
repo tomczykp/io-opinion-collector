@@ -53,7 +53,13 @@ export class ResetConfirmComponent implements OnInit {
             this.router.navigate(['/login'], {queryParams: {'password-reset-success': true}});
           }
         }, (error) => {
-          this.passwordChangeStatus = 2;
+          if (error.status = 401) {
+            this.router.navigate(['/login'], {queryParams: {'reset-expired': true}});
+          } else if (error.status = 400) {
+            this.router.navigate(['/login'], {queryParams: {'token-deleted': true}});
+          }else {
+            this.passwordChangeStatus = 2;
+          }
           this.password?.reset();
           this.repeatPassword?.reset();
         });

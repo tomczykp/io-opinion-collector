@@ -1,16 +1,10 @@
 package pl.lodz.p.it.opinioncollector.userModule.token;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 import java.time.Instant;
@@ -37,9 +31,9 @@ public class Token {
         this.type = type;
         this.user = user;
         switch (type) {
-            case REFRESH_TOKEN, VERIFICATION_TOKEN -> this.expiresAt = Instant.now().plus(1, ChronoUnit.MINUTES);
-            case PASSWORD_RESET_TOKEN -> this.expiresAt = Instant.now().plus(1, ChronoUnit.DAYS);
-            case DELETION_TOKEN -> this.expiresAt = Instant.now().plus(30, ChronoUnit.MINUTES);
+            case REFRESH_TOKEN, VERIFICATION_TOKEN -> this.expiresAt = Instant.now().plus(7, ChronoUnit.DAYS);
+            case PASSWORD_RESET_TOKEN -> this.expiresAt = Instant.now().plus(1, ChronoUnit.SECONDS);
+            case DELETION_TOKEN -> this.expiresAt = Instant.now().plus(1, ChronoUnit.SECONDS);
         }
     }
 }

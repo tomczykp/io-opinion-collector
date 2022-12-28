@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import pl.lodz.p.it.opinioncollector.exceptions.user.EmailAlreadyRegisteredException;
 import pl.lodz.p.it.opinioncollector.exceptions.user.TokenExpiredException;
 import pl.lodz.p.it.opinioncollector.userModule.dto.LoginDTO;
@@ -76,14 +77,22 @@ public class AuthController {
         try {
             authManager.confirmRegistration(token);
         } catch (TokenExpiredException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?token-expired=true")).build();
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?token-deleted=true")).build();
         }
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?confirmed=true")).build();
     }
 
     @GetMapping("/confirm/remove")
-    public ResponseEntity<Void> confirmDeletion(@Param("token") String token) throws TokenExpiredException {
-        authManager.confirmDeletion(token);
+    public ResponseEntity<Void> confirmDeletion(@Param("token") String token) {
+        try {
+            authManager.confirmDeletion(token);
+        } catch (TokenExpiredException e) {
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?deletion-expired=true")).build();
+        }  catch (ResponseStatusException e) {
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?token-deleted=true")).build();
+        }
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(frontendUrl + "/login?deleted=true")).build();
     }
 

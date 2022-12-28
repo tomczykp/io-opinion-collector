@@ -99,25 +99,24 @@ public class AuthManager {
     }
 
     public User register(RegisterUserDTO dto) throws Exception {
-
+        User user;
         Optional<User> u = userRepository.findByEmail(dto.getEmail());
         if (u.isPresent()) {
             Optional<Token> t = tokenRepository.findTokenByUserAndType(u.get(), TokenType.VERIFICATION_TOKEN);
             if (t.isPresent()) {
                 if (t.get().getExpiresAt().isAfter(Instant.now())) {
-                    throw new Exception("Token already exists");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
                 }
-                this.tokenRepository.deleteByToken(t.get().getToken());
+                this.tokenRepository.delete(t.get());
             }
+            user = u.get();
+        } else {
+            String hashedPassword = encoder.encode(dto.getPassword());
+            user = new User(dto.getEmail(), dto.getUsername(), hashedPassword);
         }
 
-        String hashedPassword = encoder.encode(dto.getPassword());
-        User user = new User(dto.getEmail(), dto.getUsername(), hashedPassword);
-
         try {
-            if (!u.isPresent()) {
-                userRepository.save(user);
-            }
+            userRepository.save(user);
             String verificationToken = generateAndSaveToken(user, TokenType.VERIFICATION_TOKEN).getToken();
             String link = apiUrl + "/confirm/register?token=" + verificationToken;
             mailManager.registrationEmail(user.getEmail(), user.getVisibleName(), link);
