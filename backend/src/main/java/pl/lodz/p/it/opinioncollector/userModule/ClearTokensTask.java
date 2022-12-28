@@ -19,7 +19,7 @@ public class ClearTokensTask {
 
     private final TokenRepository repository;
 
-    private Logger logger = Logger.getLogger("pl.lodz.p.it.opinioncollector.userModule.ClearTokensTask");
+    private final Logger logger = Logger.getLogger("pl.lodz.p.it.opinioncollector.userModule.ClearTokensTask");
 
     @Scheduled(cron = "0 0 3 * * *")
     protected void task() {

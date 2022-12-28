@@ -102,14 +102,20 @@ public class AuthManager {
         User user;
         Optional<User> u = userRepository.findByEmail(dto.getEmail());
         if (u.isPresent()) {
+            user = u.get();
             Optional<Token> t = tokenRepository.findTokenByUserAndType(u.get(), TokenType.VERIFICATION_TOKEN);
             if (t.isPresent()) {
                 if (t.get().getExpiresAt().isAfter(Instant.now())) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
                 }
-                this.tokenRepository.delete(t.get());
+                tokenRepository.delete(t.get());
+
+                String hashedPassword = encoder.encode(dto.getPassword());
+                user.setVisibleName(dto.getUsername());
+                user.setPassword(hashedPassword);
+            } else if (u.get().isActive()) {
+                throw new EmailAlreadyRegisteredException();
             }
-            user = u.get();
         } else {
             String hashedPassword = encoder.encode(dto.getPassword());
             user = new User(dto.getEmail(), dto.getUsername(), hashedPassword);
