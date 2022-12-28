@@ -40,7 +40,7 @@
                      [type]="passwordInputTextType ? 'text' : 'password'"
                      [ngClass]="{
                      'is-valid': password?.valid,
-                     'is-invalid': (password && password.touched && password.getRawValue().length === 0) || ((password && password.touched) && password?.getRawValue().length < 8) || (password?.getRawValue().length > 20) }"/>
+                     'is-invalid': (password && password.touched && password.getRawValue().length === 0) || ((password && password.touched) && password.getRawValue().length < 8) || (password?.getRawValue().length > 20) }"/>
               <i class="hover-icon input-group-text bi" [ngClass]="{
                        'bi-eye-slash': !passwordInputTextType,
                        'bi-eye': passwordInputTextType

@@ -156,7 +156,7 @@ public class AuthManager {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         if (t.getExpiresAt().isBefore(Instant.now())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token has expired!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token has expired!");
         }
 
         User user = t.getUser();

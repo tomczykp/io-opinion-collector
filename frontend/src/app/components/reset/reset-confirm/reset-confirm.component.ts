@@ -13,8 +13,8 @@ export class ResetConfirmComponent implements OnInit {
   passwordChangeStatus = 0;
 
   confirmPassword = new FormGroup({
-    password: new FormControl('', [Validators.required]),
-    repeatPassword: new FormControl('', [Validators.required])
+    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]),
+    repeatPassword: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
   })
 
   constructor(private route: ActivatedRoute,

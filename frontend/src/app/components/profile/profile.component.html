@@ -40,17 +40,17 @@
                         <div>
                           <img *ngIf="user?.role == 'USER' && user?.provider === 'LOCAL'" alt="avatar"
                                class="card-img mb-4 mb-md-0"
-                               src="assets/user.png"
+                               src="../../../assets/avatars/user.png"
                                style="max-width: 200px; min-width: 70px">
                           <img *ngIf="user?.role == 'ADMIN' && user?.provider === 'LOCAL'" alt="avatar"
                                class="card-img mb-4 mb-md-0"
                                src="assets/admin.png"
                                style="max-width: 200px; min-width: 70px">
                           <img *ngIf="user?.provider === 'GOOGLE'" alt="avatar" class="card-img mb-4 mb-md-0"
-                               src="assets/google-user.png"
+                               src="../../../assets/avatars/google-user.png"
                                style="max-width: 200px; min-width: 70px">
                           <img *ngIf="user?.provider === 'FACEBOOK'" alt="avatar" class="card-img mb-4 mb-md-0"
-                               src="assets/facebook-user.png"
+                               src="../../../assets/avatars/facebook-user.png"
                                style="max-width: 200px; min-width: 70px">
                         </div>
                       </div>
@@ -153,7 +153,7 @@
                           <input class="form-control" formControlName="newPassword" id="newPassword" required placeholder="New password"
                                  [type]="newPasswordInputTextType ? 'text' : 'password'"
                                  [ngClass]="{
-                                 'is-invalid': (newPassword && newPassword.touched && newPassword.getRawValue().length === 0),
+                                 'is-invalid': (newPassword && newPassword.touched && newPassword.invalid),
                                  'is-valid': newPassword?.valid}"/>
                           <i class="hover-icon input-group-text bi" [ngClass]="{
                        'bi-eye-slash': !newPasswordInputTextType,

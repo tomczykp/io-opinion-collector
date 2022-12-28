@@ -26,6 +26,11 @@ export class ProfileComponent implements OnInit {
   deletionStatus = 0;
   user: User | undefined;
   passwordChangeStatus = 0;
+  // 0 if no display message
+  // 1 if successful password change
+  // 2 if failed password change
+  // 3 if newPassword and repeatedPassword not match
+
   usernameChangeStatus = 0;
 
   constructor(
@@ -40,12 +45,6 @@ export class ProfileComponent implements OnInit {
   get newPassword() {
     return this.changePasswordForm.get('newPassword');
   }
-  // 0 if no display message
-  // 1 if successful password change
-  // 2 if failed password change
-  // 3 if newPassword and repeatedPassword not match
-
-
 
   get repeatedPassword() {
     return this.changePasswordForm.get('repeatedPassword');
@@ -81,8 +80,8 @@ export class ProfileComponent implements OnInit {
       this.userService.changePassword(oldP!.toString(), newP!.toString())
         .subscribe((result) => {
           if (result.status == 200) {
-            this.passwordChangeStatus = 1;
             this.changePasswordForm.reset();
+            this.passwordChangeStatus = 1;
           }
         }, (error) => {
           this.oldPassword?.reset()
