@@ -9,7 +9,7 @@ import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundExceptio
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController()
 @RequestMapping("/products")
 public class ProductController {
@@ -87,8 +87,16 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    //DeleteMapping
+    @PutMapping("/{uuid}/delete")
+    public ResponseEntity<?> makeDeleteFormProduct(@PathVariable("uuid") UUID uuid,
+                                                   @Valid @RequestBody ProductDeleteForm productDF) throws ProductNotFoundException {
+        if (!productManager.makeDeleteFormProduct(uuid, productDF)) {
+            throw new ProductNotFoundException();
+        }
+        return ResponseEntity.noContent().build();
+    }
 
+    //DeleteMapping
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Product> deleteProduct(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
         if (productManager.deleteProduct(uuid)) {

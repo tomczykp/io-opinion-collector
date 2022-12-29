@@ -29,6 +29,8 @@ import { AnswersComponent } from './components/answers/answers.component';
 import { OpinionsComponent } from './components/opinions/opinions.component';
 import { CategoriesComponent } from './components/categories/categories.component';
 import { AddProductComponent } from './components/products/add-product/add-product.component';
+import {UpdateProductComponent} from "./components/products/update-product/update-product.component";
+import { DeleteProductFormComponent } from './components/products/delete-product-form/delete-product-form.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { AddProductComponent } from './components/products/add-product/add-produ
     AnswersComponent,
     OpinionsComponent,
     CategoriesComponent,
-    AddProductComponent
+    AddProductComponent,
+    UpdateProductComponent,
+    DeleteProductFormComponent,
   ],
   imports: [
     BrowserModule,

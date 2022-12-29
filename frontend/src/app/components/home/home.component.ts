@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import {ProductsService } from 'src/app/services/products.service';
 import {AuthService} from "../../services/auth.service";
 import {Product} from "../../model/Product";
+import {DeleteProductFormComponent} from "../products/delete-product-form/delete-product-form.component";
 
 @Component({
   selector: 'app-home',
@@ -14,19 +15,20 @@ import {Product} from "../../model/Product";
 export class HomeComponent implements OnInit {
 
   adminColumns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId', 'action'];
-  columns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId'];
+  columns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId', 'makeUpdateForm', 'makeDeleteForm'];
   data: MatTableDataSource<Product>;
   authenticated = false;
   products: Product[];
   text: string;
   role: string;
 
+  @Inject(DeleteProductFormComponent) productFormComponent: DeleteProductFormComponent
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
 
   constructor(public productsService: ProductsService,
-              public authService: AuthService ) { }
+              public authService: AuthService) { }
 
   ngOnInit(): void {
 
@@ -59,6 +61,10 @@ export class HomeComponent implements OnInit {
   deleteProduct(id: string): void {
     this.productsService.deleteProduct(id);
     location.reload();
+  }
+
+  makeDeleteForm(id: string) {
+    this.productFormComponent.deleteProduct();
   }
 
 }

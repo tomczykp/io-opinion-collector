@@ -52,7 +52,7 @@ export class AddProductComponent implements OnInit {
         "properties": {
           "test": "test"
         }
-    }
+      }
       console.log(ProductDTO);
       this.productService.addProduct(ProductDTO)
         .subscribe((result) => {
