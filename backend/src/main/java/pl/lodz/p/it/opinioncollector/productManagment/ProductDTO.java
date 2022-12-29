@@ -36,4 +36,14 @@ public class ProductDTO {
         this.description = description;
         this.properties = properties;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("categoryId=").append(categoryId);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", properties=").append(properties);
+        return sb.toString();
+    }
 }

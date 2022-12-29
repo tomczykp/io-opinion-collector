@@ -30,6 +30,26 @@
           <td mat-cell *matCellDef="let element">{{element.categoryId}}</td>
         </ng-container>
 
+        <div *ngIf="role == 'USER'">
+          <ng-container matColumnDef="makeUpdateForm" >
+            <th mat-header-cell *matHeaderCellDef>Update</th>
+            <td mat-cell *matCellDef="let element">
+              <button type="button" *ngIf="!element.deleted" class="btn btn-danger"
+                      [routerLink]="['products', element.productId, 'update']">Update</button>
+            </td>
+          </ng-container>
+        </div>
+
+        <div *ngIf="role == 'USER'">
+          <ng-container matColumnDef="makeDeleteForm" >
+            <th mat-header-cell *matHeaderCellDef>Delete</th>
+            <td mat-cell *matCellDef="let element">
+              <button type="button" *ngIf="!element.deleted" class="btn btn-danger"
+                      [routerLink]="['products', element.productId, 'delete']">Delete</button>
+            </td>
+          </ng-container>
+        </div>
+
         <div *ngIf="role == 'ADMIN'">
           <ng-container matColumnDef="action" >
               <th mat-header-cell *matHeaderCellDef>Action</th>

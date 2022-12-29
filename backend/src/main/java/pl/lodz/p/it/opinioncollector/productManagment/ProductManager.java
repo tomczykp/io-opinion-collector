@@ -50,8 +50,8 @@ public class ProductManager implements IProductManager {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             productOptional.get().mergeProduct(productDTO); //FIXME
-            eventManager.createProductReportEvent(user.getId(),
-                    "some words about update", productOptional.get().getProductId());
+            eventManager.createProductReportEvent(user.getId(), //FIXME VERY TEMPORARY
+                    "User requested update of product: " + productDTO, productOptional.get().getProductId());
             productRepository.save(productOptional.get()); //FIXME New object with reference to the old
             return productOptional.get();
         }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ProductsService} from "../../../services/products.service";
 
 @Component({
@@ -23,16 +23,19 @@ export class DeleteProductFormComponent implements OnInit {
 
   constructor(
     private productService: ProductsService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    let href = this.router.url;
-    this.match = href.match(this.regexGet);
-    this.uuid = this.match![0].toString();
+    // let href = this.router.url;
+    // this.match = href.match(this.regexGet);
+    // this.uuid = this.match![0].toString();
+    this.route.paramMap.subscribe((params) =>
+    {this.uuid = params.get('uuid')!.toString()});
   }
 
-  deleteProduct() {
+  public deleteProduct() {
     if (this.deleteProductForm.valid) {
       const productDF: object = {
         "description": this.deleteProductForm.getRawValue().description,

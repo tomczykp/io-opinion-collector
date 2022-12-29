@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Product} from "../../../model/Product";
 import {ProductsService} from "../../../services/products.service";
 import {HttpResponse} from "@angular/common/http";
@@ -28,14 +28,14 @@ export class UpdateProductComponent implements OnInit {
   })
 
   constructor(private productService: ProductsService,
-              private router: Router) {
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    let href = this.router.url;
-    this.match = href.match(this.regexGet);
-    this.uuid = this.match![0].toString();
-    this.productService.getProduct(this.match![0]).subscribe((data: HttpResponse<Product>) => {
+    this.route.paramMap.subscribe((params) =>
+    {this.uuid = params.get('uuid')!.toString()});
+    this.productService.getProduct(this.uuid).subscribe((data: HttpResponse<Product>) => {
       console.log(data);
       this.product = data.body!;
       this.updateProductForm.setValue({
