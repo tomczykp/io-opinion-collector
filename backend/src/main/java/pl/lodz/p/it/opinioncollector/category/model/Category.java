@@ -30,7 +30,7 @@ public class Category {
 
     private String name;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(name = "category_fields",
             joinColumns = @JoinColumn(name = "category_categoryid"),
             inverseJoinColumns = @JoinColumn(name = "fields_fieldid"))
@@ -51,7 +51,7 @@ public class Category {
 
     public Category(CategoryDTO categoryDTO) throws UnsupportedTypeException {
         this.name = categoryDTO.getName();
-        for(int i=0; i<categoryDTO.getFields().size(); i++){
+        for (int i = 0; i < categoryDTO.getFields().size(); i++) {
             fields.add(new Field(categoryDTO.getFields().get(i)));
         }
     }

@@ -13,12 +13,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
+
 @Service
 public class FieldManager {
-    private FieldRepository fieldRepository;
+    private final FieldRepository fieldRepository;
+
     @Autowired
-    public FieldManager(FieldRepository fieldRepository)
-    {
+    public FieldManager(FieldRepository fieldRepository) {
         this.fieldRepository = fieldRepository;
     }
 
@@ -28,30 +29,27 @@ public class FieldManager {
         return f;
     }
 
-    public Field getField(UUID fieldID)
-    {
+    public Field getField(UUID fieldID) {
         return fieldRepository.getById(fieldID);
     }
 
-    public List<Field> getFields(Predicate<Field> Predicate)
-    {
+    public List<Field> getFields(Predicate<Field> Predicate) {
         List<Field> allFields = fieldRepository.findAll();
         List<Field> result = new ArrayList<Field>();
-        for(Field f: allFields){
-            if(Predicate.test(f))
+        for (Field f : allFields) {
+            if (Predicate.test(f))
                 result.add(f);
         }
         return result;
     }
 
-    public void deleteField(String name)
-    {
+    public void deleteField(String name) {
         deleteField(name);
     }
 
     public Field updateField(UUID uuid, FieldDTO fieldDTO) throws FieldNotFoundException, UnsupportedTypeException {
         Optional<Field> fieldOptional = fieldRepository.findById(uuid);
-        if(fieldOptional.isPresent()){
+        if (fieldOptional.isPresent()) {
             fieldOptional.get().setName(fieldDTO.getName());
             fieldOptional.get().setType(fieldDTO.getType());
             fieldRepository.save(fieldOptional.get());

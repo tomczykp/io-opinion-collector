@@ -76,6 +76,7 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.POST, "/category").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.GET, "/category/{uuid}").permitAll()
                                         .requestMatchers(HttpMethod.PUT, "/category/{uuid}").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE, "/category/{uuid}").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.GET, "/category/{uuid}/fields").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.DELETE, "/category/fields/{uuid}").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.PUT, "/category/fields/{uuid}").hasRole("ADMIN")

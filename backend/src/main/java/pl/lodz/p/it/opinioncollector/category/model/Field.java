@@ -46,7 +46,7 @@ public class Field {
 
     public void setType(String type) throws UnsupportedTypeException {
         List<String> supportedTypes = List.of(new String[]{"String", "Double", "Int"});
-        if(supportedTypes.contains(type)){
+        if (supportedTypes.contains(type)) {
             this.type = type;
         } else {
             throw new UnsupportedTypeException();

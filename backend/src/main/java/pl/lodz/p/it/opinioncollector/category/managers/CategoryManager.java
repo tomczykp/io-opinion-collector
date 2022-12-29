@@ -2,6 +2,7 @@ package pl.lodz.p.it.opinioncollector.category.managers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.category.model.Category;
 import pl.lodz.p.it.opinioncollector.category.model.Field;
@@ -10,10 +11,7 @@ import pl.lodz.p.it.opinioncollector.category.model.dto.FieldDTO;
 import pl.lodz.p.it.opinioncollector.category.model.dto.UpdateCategoryDTO;
 import pl.lodz.p.it.opinioncollector.category.repositories.CategoryRepository;
 import pl.lodz.p.it.opinioncollector.category.repositories.FieldRepository;
-import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
-import pl.lodz.p.it.opinioncollector.exceptions.category.FieldNotFoundException;
-import pl.lodz.p.it.opinioncollector.exceptions.category.ParentCategoryNotFoundException;
-import pl.lodz.p.it.opinioncollector.exceptions.category.UnsupportedTypeException;
+import pl.lodz.p.it.opinioncollector.exceptions.category.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,10 +83,10 @@ public class CategoryManager {
                     throw new ParentCategoryNotFoundException();
                 }
 
-                if(category.getParentCategory() == null
+                if (category.getParentCategory() == null
                         || !parentUUID.equals(
-                                category.getParentCategory().getCategoryID())){
-                    if(parentUUID.equals(category.getCategoryID())) {
+                        category.getParentCategory().getCategoryID())) {
+                    if (parentUUID.equals(category.getCategoryID())) {
                         throw new ParentCategoryNotFoundException(); //możnaby dać inny wyjątek, ale i tak by był zmapowany do 400 BAD_REQUEST
                     }
 
@@ -115,10 +113,21 @@ public class CategoryManager {
         }
     }
 
-    public boolean deleteCategory(UUID uuid) throws CategoryNotFoundException {
+    public boolean deleteCategory(UUID uuid) throws CategoryNotFoundException, ConstraintException {
         Optional<Category> category = categoryRepository.findById(uuid);
         if (category.isPresent()) {
-            categoryRepository.deleteById(uuid);
+            List<Category> children = categoryRepository.findChildrenCategories(uuid);
+            if (!children.isEmpty()) {
+                for (Category c : children) {
+                    c.setParentCategory(category.get().getParentCategory());
+                    categoryRepository.save(c);
+                }
+            }
+            try {
+                categoryRepository.deleteById(uuid);
+            } catch (DataIntegrityViolationException e) {
+                throw new ConstraintException();
+            }
             return true;
         } else {
             throw new CategoryNotFoundException(uuid.toString());

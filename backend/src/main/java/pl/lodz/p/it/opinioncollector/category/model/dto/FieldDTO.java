@@ -14,11 +14,11 @@ public class FieldDTO {
     @NotBlank
     String type;
 
-    public String getName () {
+    public String getName() {
         return name;
     }
 
-    public String getType () {
+    public String getType() {
         return type;
     }
 
