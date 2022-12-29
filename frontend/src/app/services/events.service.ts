@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {BehaviorSubject, Observable} from "rxjs";
 import * as url from "url";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,11 @@ export class EventsService {
   }
 
   public getEvents(): Observable<OC.Event[]> {
-    return this.httpClient.get<OC.Event[]>('http://localhost:8080/api/events');
+    return this.httpClient.get<OC.Event[]>(environment.apiUrl + '/events');
   }
 
   public closeEvent(id: string): void {
-    let url = 'http://localhost:8080/api/events/' + id + '/close';
+    let url = environment.apiUrl + '/events/' + id + '/close';
     this.httpClient.post(url, null).subscribe(value => {
       console.log(value);
     })

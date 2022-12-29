@@ -13,15 +13,24 @@ export class ProfileComponent implements OnInit {
   changePasswordForm = new FormGroup({
     oldPassword: new FormControl('', [Validators.required]),
     repeatedPassword: new FormControl('', [Validators.required]),
-    newPassword: new FormControl('', [Validators.required])
+    newPassword: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
   })
 
   showUsernameChangeInput = false;
   newUsername = "";
 
+  oldPasswordInputTextType = false;
+  newPasswordInputTextType = false;
+  repeatPasswordInputTextType = false;
+
   deletionStatus = 0;
   user: User | undefined;
   passwordChangeStatus = 0;
+  // 0 if no display message
+  // 1 if successful password change
+  // 2 if failed password change
+  // 3 if newPassword and repeatedPassword not match
+
   usernameChangeStatus = 0;
 
   constructor(
@@ -36,10 +45,6 @@ export class ProfileComponent implements OnInit {
   get newPassword() {
     return this.changePasswordForm.get('newPassword');
   }
-  // 0 if no display message
-  // 1 if successful password change
-  // 2 if failed password change
-  // 3 if newPassword and repeatedPassword not match
 
   get repeatedPassword() {
     return this.changePasswordForm.get('repeatedPassword');
@@ -68,17 +73,19 @@ export class ProfileComponent implements OnInit {
 
       if (newP !== repeatedP) {
         this.passwordChangeStatus = 3;
+        this.repeatedPassword?.setErrors({notSame: true});
         return;
       }
 
       this.userService.changePassword(oldP!.toString(), newP!.toString())
         .subscribe((result) => {
           if (result.status == 200) {
-            this.passwordChangeStatus = 1;
             this.changePasswordForm.reset();
+            this.passwordChangeStatus = 1;
           }
         }, (error) => {
           this.oldPassword?.reset()
+          this.oldPassword?.setErrors({wrongPassword: true});
           this.passwordChangeStatus = 2
         });
     }
@@ -126,4 +133,5 @@ export class ProfileComponent implements OnInit {
       this.deletionStatus = 2;
     })
   }
+
 }

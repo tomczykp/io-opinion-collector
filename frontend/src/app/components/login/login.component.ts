@@ -26,6 +26,11 @@ export class LoginComponent implements OnInit {
   accountDisabled = false;
   accountDeleted = false;
   differentProvider = false;
+  passwordInputTextType = false;
+  tokenExpired = false;
+  deletionExpired = false;
+  resetExpired = false;
+  tokenDeleted = false;
 
   constructor(
     private authService: AuthService,
@@ -54,6 +59,10 @@ export class LoginComponent implements OnInit {
     this.passwordResetSuccessful = params.has('password-reset-success');
     this.accountDeleted = params.has('account-deleted');
     this.differentProvider = params.has('different-provider');
+    this.tokenExpired = params.has('token-expired');
+    this.deletionExpired = params.has('deletion-expired');
+    this.resetExpired = params.has('reset-expired');
+    this.tokenDeleted = params.has('token-deleted');
 
     if (params.has("google_code")) {
       this.exchangeGoogleCode(params.get('google_code')!);

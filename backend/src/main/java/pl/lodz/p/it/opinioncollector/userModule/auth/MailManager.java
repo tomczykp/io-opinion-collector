@@ -1,6 +1,5 @@
 package pl.lodz.p.it.opinioncollector.userModule.auth;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,7 @@ public class MailManager {
     private final JavaMailSender mailSender;
 
     @Async
-    void send(String to, String name, String message, String last, String action, String link, String subject) {
+    void send(String to, String name, String message, String last, String action, String link, String subject, String title) {
         try {
             ResourceLoader resourceLoader = new DefaultResourceLoader();
             Resource resource = resourceLoader.getResource("classpath:html/template.html");
@@ -38,7 +37,8 @@ public class MailManager {
                     .replace("$link", link)
                     .replace("$message", message)
                     .replace("$last", last)
-                    .replace("$action", action);
+                    .replace("$action", action)
+                    .replace("$title", title);
 
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper =
@@ -48,11 +48,8 @@ public class MailManager {
             helper.setSubject(subject);
             helper.setFrom("io.opinioncollector@gmail.com");
             mailSender.send(mimeMessage);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             log.error("Failed to send email", e);
-            throw new IllegalStateException("Failed to send email");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -64,6 +61,7 @@ public class MailManager {
                 "See you soon",
                 "Activate Now",
                 link,
+                "Confirm your email",
                 "Confirm your email");
     }
 
@@ -75,6 +73,7 @@ public class MailManager {
                 "Hope to see you soon",
                 "Delete Account",
                 link,
+                "Confirm account deletion",
                 "Confirm account deletion");
     }
 
@@ -86,6 +85,7 @@ public class MailManager {
                 "Opinion Collector team.",
                 "",
                 "",
+                "Administrator action",
                 "Administrator action");
     }
 
@@ -97,6 +97,7 @@ public class MailManager {
                 "Opinion Collector team.",
                 "Reset your password",
                 link,
+                "Reset password",
                 "Reset password");
     }
 }
