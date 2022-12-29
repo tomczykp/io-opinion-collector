@@ -64,10 +64,22 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.DELETE, "/users/remove/user").hasAnyRole("USER", "ADMIN")
                                         .requestMatchers(HttpMethod.PUT, "/users/password").hasAnyRole("USER", "ADMIN")
                                         .requestMatchers(HttpMethod.DELETE, "/signout/force").hasAnyRole("USER", "ADMIN")
+
                                         // opinion endpoints
                                         .requestMatchers(HttpMethod.GET, "/products/{productId}/opinions/**").permitAll()
                                         .requestMatchers(HttpMethod.DELETE, "/products/{productId}/opinions/{opinionId}").hasAnyRole("USER", "ADMIN")
                                         .requestMatchers("/products/{productId}/opinions/**").hasRole("USER")
+
+                                        // category and field endpoints
+                                        .requestMatchers(HttpMethod.GET, "/category").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/category").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.GET, "/category/{uuid}").permitAll()
+                                        .requestMatchers(HttpMethod.PUT, "/category/{uuid}").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE, "/category/{uuid}").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.GET, "/category/{uuid}/fields").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE, "/category/fields/{uuid}").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/category/fields/{uuid}").hasRole("ADMIN")
+
                                         // product endpoints..?
                                         .requestMatchers(HttpMethod.GET, "/products").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/products/{productId}").permitAll()
@@ -79,6 +91,7 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.PUT, "/products/{productId}/unconfirm").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.PUT, "/products/{productId}/delete").hasAnyRole("USER", "ADMIN")
                                         .requestMatchers(HttpMethod.DELETE, "/products/{productId}").hasAnyRole("USER", "ADMIN")
+
                                         // Place for your secured endpoints
                                         .anyRequest().permitAll()
                                         .and()
