@@ -87,8 +87,16 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    //DeleteMapping
+    @PutMapping("/{uuid}/delete")
+    public ResponseEntity<?> makeDeleteFormProduct(@PathVariable("uuid") UUID uuid,
+                                                   @Valid @RequestBody ProductDeleteForm productDF) throws ProductNotFoundException {
+        if (!productManager.makeDeleteFormProduct(uuid, productDF)) {
+            throw new ProductNotFoundException();
+        }
+        return ResponseEntity.noContent().build();
+    }
 
+    //DeleteMapping
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Product> deleteProduct(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
         if (productManager.deleteProduct(uuid)) {

@@ -7,3 +7,7 @@ export interface Product {
   confirmed: boolean,
   properties: Array<string> [];
 }
+
+export interface ProductDF {
+  description: string;
+}

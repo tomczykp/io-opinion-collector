@@ -56,7 +56,7 @@ export class UpdateProductComponent implements OnInit {
         "name": this.updateProductForm.getRawValue().name,
         "description": this.updateProductForm.getRawValue().description,
         "properties": {
-          "test": "test"
+          "test": "test" //fixme
         }
       }
       console.log(ProductDTO);
@@ -68,7 +68,6 @@ export class UpdateProductComponent implements OnInit {
           }
         )
     }
-
   }
 
   get categoryId() {

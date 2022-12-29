@@ -68,6 +68,17 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.GET, "/products/{productId}/opinions/**").permitAll()
                                         .requestMatchers(HttpMethod.DELETE, "/products/{productId}/opinions/{opinionId}").hasAnyRole("USER", "ADMIN")
                                         .requestMatchers("/products/{productId}/opinions/**").hasRole("USER")
+                                        // product endpoints..?
+                                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/products/{productId}").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/products/category/{categoryId}").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/products/suggestion").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/products/{productId}").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/products/{productId}/confirm").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/products/{productId}/unconfirm").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/products/{productId}/delete").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE, "/products/{productId}").hasAnyRole("USER", "ADMIN")
                                         // Place for your secured endpoints
                                         .anyRequest().permitAll()
                                         .and()

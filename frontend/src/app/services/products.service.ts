@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
-import { environment } from 'src/environments/environment';
-import {Product} from "../model/Product";
+import {environment} from 'src/environments/environment';
+import {Product, ProductDF} from "../model/Product";
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +33,13 @@ export class ProductsService {
   }
 
   public deleteProduct(id: string): void {
-    this.httpClient.delete(environment.apiUrl + '/products/' + id).subscribe(data => {
+    this.httpClient.delete(this.baseUrl + '/' + id).subscribe(data => {
       console.log(data);
     });
+  }
+
+  public makeDeleteForm(id: string, formDF: object): Observable<HttpResponse<ProductDF>> {
+    return this.httpClient.put<ProductDF>(this.baseUrl + '/' + id + '/' + 'delete', formDF,
+      {'headers': {'content-type': 'application/json'}, observe: 'response'})
   }
 }
