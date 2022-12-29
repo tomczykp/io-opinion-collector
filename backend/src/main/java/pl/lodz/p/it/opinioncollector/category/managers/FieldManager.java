@@ -1,4 +1,4 @@
-package pl.lodz.p.it.opinioncollector.category;
+package pl.lodz.p.it.opinioncollector.category.managers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

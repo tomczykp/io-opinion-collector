@@ -1,4 +1,4 @@
-package pl.lodz.p.it.opinioncollector.category;
+package pl.lodz.p.it.opinioncollector.category.managers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +34,14 @@ public class CategoryManager {
         this.fieldRepository = fieldRepository;
     }
 
-    public Category createCategory(CategoryDTO categoryDTO) throws CategoryNotFoundException, UnsupportedTypeException {
+    public Category createCategory(CategoryDTO categoryDTO) throws ParentCategoryNotFoundException, UnsupportedTypeException {
         Category category = new Category(categoryDTO);
         if (categoryDTO.getParentCategoryID() != null) {
             Optional<Category> parent = categoryRepository.findById(categoryDTO.getParentCategoryID());
             if (parent.isPresent()) {
                 category.setParentCategory(parent.get());
             } else {
-                throw new CategoryNotFoundException();
+                throw new ParentCategoryNotFoundException();
             }
         }
         categoryRepository.save(category);
@@ -88,6 +88,10 @@ public class CategoryManager {
                 if(category.getParentCategory() == null
                         || !parentUUID.equals(
                                 category.getParentCategory().getCategoryID())){
+                    if(parentUUID.equals(category.getCategoryID())) {
+                        throw new ParentCategoryNotFoundException(); //możnaby dać inny wyjątek, ale i tak by był zmapowany do 400 BAD_REQUEST
+                    }
+
                     Optional<Category> parent = categoryRepository.findById(parentUUID);
                     if (parent.isPresent()) {
                         category.setParentCategory(parent.get());
