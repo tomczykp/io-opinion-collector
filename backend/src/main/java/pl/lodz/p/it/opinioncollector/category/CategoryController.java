@@ -2,11 +2,17 @@ package pl.lodz.p.it.opinioncollector.category;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.lodz.p.it.opinioncollector.category.model.Category;
+import pl.lodz.p.it.opinioncollector.category.model.Field;
+import pl.lodz.p.it.opinioncollector.category.model.dto.CategoryDTO;
+import pl.lodz.p.it.opinioncollector.category.model.dto.FieldDTO;
+import pl.lodz.p.it.opinioncollector.category.model.dto.UpdateCategoryDTO;
 import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.category.FieldNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.category.ParentCategoryNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.category.UnsupportedTypeException;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,12 +37,14 @@ public class CategoryController {
     }
 
     @GetMapping("/{uuid}")
-
-    public ResponseEntity<Category> getCategoryById(@PathVariable("uuid")UUID uuid) throws CategoryNotFoundException {
-        Category category = categoryManager.getCategory(uuid);
-        if(category == null){
-            throw new CategoryNotFoundException(uuid.toString());
+    public ResponseEntity<Category> getCategoryById(@PathVariable("uuid")UUID uuid) {
+        Category category = null;
+        try {
+            category = categoryManager.getCategory(uuid);
+        } catch (CategoryNotFoundException cnfe) {
+            return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.ok(category);
     }
 
@@ -45,8 +53,8 @@ public class CategoryController {
         Category category = null;
         try {
             category = categoryManager.createCategory(categoryDTO);
-        } catch (CategoryNotFoundException cnfe){
-            return ResponseEntity.notFound().build();
+        } catch (UnsupportedTypeException | CategoryNotFoundException cnfe){
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(category);
     }
@@ -59,6 +67,8 @@ public class CategoryController {
             category = categoryManager.updateCategory(uuid, categoryDTO);
         } catch (CategoryNotFoundException cnfe){
             return ResponseEntity.notFound().build();
+        } catch (ParentCategoryNotFoundException pcnfe){
+            return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok(category);
@@ -84,19 +94,20 @@ public class CategoryController {
             field = fieldManager.updateField(uuid, fieldDTO);
         } catch (FieldNotFoundException fnfe) {
             return ResponseEntity.notFound().build();
+        } catch (UnsupportedTypeException ute){
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(field);
     }
 
     @PutMapping("/{uuid}/fields")
-    public ResponseEntity<Category> addField(@PathVariable("uuid") UUID uuid, @RequestBody FieldDTO fieldDTO) throws ClassNotFoundException, NoSuchMethodException, CategoryNotFoundException {
-        Field field = new Field(fieldDTO);
+    public ResponseEntity<Category> addField(@PathVariable("uuid") UUID uuid, @RequestBody @Valid FieldDTO fieldDTO) throws ClassNotFoundException, NoSuchMethodException, CategoryNotFoundException {
         Category category = null;
         try {
-            category = categoryManager.addField(uuid,field);
+            category = categoryManager.addField(uuid,fieldDTO);
 
-        } catch (CategoryNotFoundException e){
-            return ResponseEntity.notFound().build();
+        } catch ( UnsupportedTypeException | CategoryNotFoundException e){
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(category);
     }
@@ -109,7 +120,5 @@ public class CategoryController {
 
         }
     }
-
-
 
 }

@@ -1,7 +1,5 @@
 package pl.lodz.p.it.opinioncollector.exceptions.category;
 
-import pl.lodz.p.it.opinioncollector.productManagment.exceptions.ProductNotFoundException;
-
 public class CategoryNotFoundException extends Exception {
     public CategoryNotFoundException(){
 

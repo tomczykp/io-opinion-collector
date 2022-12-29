@@ -1,16 +1,18 @@
-package pl.lodz.p.it.opinioncollector.category;
+package pl.lodz.p.it.opinioncollector.category.model.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.lang.reflect.Type;
 
 @Data
 @AllArgsConstructor
 public class FieldDTO {
+
+    @NotBlank
     String name;
 
-    String  type;
+    @NotBlank
+    String type;
 
     public String getName () {
         return name;

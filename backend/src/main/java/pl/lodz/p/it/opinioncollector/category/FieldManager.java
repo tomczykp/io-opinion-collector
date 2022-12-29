@@ -1,11 +1,12 @@
 package pl.lodz.p.it.opinioncollector.category;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.server.ResponseStatusException;
+import pl.lodz.p.it.opinioncollector.category.model.Field;
+import pl.lodz.p.it.opinioncollector.category.model.dto.FieldDTO;
+import pl.lodz.p.it.opinioncollector.category.repositories.FieldRepository;
 import pl.lodz.p.it.opinioncollector.exceptions.category.FieldNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.category.UnsupportedTypeException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class FieldManager {
         this.fieldRepository = fieldRepository;
     }
 
-    public Field createField(FieldDTO fieldDTO){
+    public Field createField(FieldDTO fieldDTO) throws UnsupportedTypeException {
         Field f = new Field(fieldDTO);
         fieldRepository.save(f);
         return f;
@@ -48,7 +49,7 @@ public class FieldManager {
         deleteField(name);
     }
 
-    public Field updateField(UUID uuid, FieldDTO fieldDTO) throws FieldNotFoundException {
+    public Field updateField(UUID uuid, FieldDTO fieldDTO) throws FieldNotFoundException, UnsupportedTypeException {
         Optional<Field> fieldOptional = fieldRepository.findById(uuid);
         if(fieldOptional.isPresent()){
             fieldOptional.get().setName(fieldDTO.getName());

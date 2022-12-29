@@ -1,4 +1,4 @@
-package pl.lodz.p.it.opinioncollector.category;
+package pl.lodz.p.it.opinioncollector.category.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -6,11 +6,14 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.lodz.p.it.opinioncollector.category.model.dto.FieldDTO;
+import pl.lodz.p.it.opinioncollector.exceptions.category.UnsupportedTypeException;
 
-import java.lang.reflect.Constructor;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
 @Data
 @Entity
 @Valid
@@ -36,26 +39,17 @@ public class Field {
         this.categories = categories;
     }
 
-    public Field(FieldDTO dto){
-        //this.fieldID = UUID.randomUUID();
-        try {
-            this.name = dto.getName();
-            this.type = dto.getType();//Class.forName(dto.getType());
-        }catch(Exception e){
-            System.out.println(e);
+    public Field(FieldDTO dto) throws UnsupportedTypeException {
+        this.name = dto.getName();
+        this.setType(dto.getType());
+    }
+
+    public void setType(String type) throws UnsupportedTypeException {
+        List<String> supportedTypes = List.of(new String[]{"String", "Double", "Int"});
+        if(supportedTypes.contains(type)){
+            this.type = type;
+        } else {
+            throw new UnsupportedTypeException();
         }
     }
-    public UUID getFieldID() {
-        return fieldID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-
 }

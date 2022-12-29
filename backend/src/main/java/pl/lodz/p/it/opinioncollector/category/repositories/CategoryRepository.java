@@ -1,10 +1,9 @@
-package pl.lodz.p.it.opinioncollector.category;
+package pl.lodz.p.it.opinioncollector.category.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import pl.lodz.p.it.opinioncollector.productManagment.Product;
+import pl.lodz.p.it.opinioncollector.category.model.Category;
 
-import java.util.List;
 import java.util.UUID;
 
 @Repository

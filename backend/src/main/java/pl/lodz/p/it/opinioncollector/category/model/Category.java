@@ -1,13 +1,12 @@
-package pl.lodz.p.it.opinioncollector.category;
+package pl.lodz.p.it.opinioncollector.category.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import pl.lodz.p.it.opinioncollector.category.model.dto.CategoryDTO;
+import pl.lodz.p.it.opinioncollector.exceptions.category.UnsupportedTypeException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +24,10 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID categoryID;
 
-    @OneToOne(orphanRemoval = true, optional = true)
+    @OneToOne(orphanRemoval = false, optional = true)
     @JoinColumn(name = "parent_category_category_id")
     private Category parentCategory;
 
-    //private UUID parentCategoryID;
     private String name;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
@@ -51,17 +49,11 @@ public class Category {
         this.fields = fields;
     }
 
-    public Category(CategoryDTO categoryDTO) {
+    public Category(CategoryDTO categoryDTO) throws UnsupportedTypeException {
         this.name = categoryDTO.getName();
         for(int i=0; i<categoryDTO.getFields().size(); i++){
             fields.add(new Field(categoryDTO.getFields().get(i)));
         }
-        //this.parentCategoryID = categoryDTO.getParentCategoryID();
-    }
-
-    public void mergeCategory(UpdateCategoryDTO categoryDTO)  {
-        this.name = categoryDTO.getName();
-        //this.parentCategoryID = categoryDTO.getParentCategoryID();
     }
 
 }

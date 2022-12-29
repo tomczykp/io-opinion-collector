@@ -2,11 +2,18 @@ package pl.lodz.p.it.opinioncollector.category;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import pl.lodz.p.it.opinioncollector.category.model.Category;
+import pl.lodz.p.it.opinioncollector.category.model.Field;
+import pl.lodz.p.it.opinioncollector.category.model.dto.CategoryDTO;
+import pl.lodz.p.it.opinioncollector.category.model.dto.FieldDTO;
+import pl.lodz.p.it.opinioncollector.category.model.dto.UpdateCategoryDTO;
+import pl.lodz.p.it.opinioncollector.category.repositories.CategoryRepository;
+import pl.lodz.p.it.opinioncollector.category.repositories.FieldRepository;
 import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.category.FieldNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.category.ParentCategoryNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.category.UnsupportedTypeException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,19 +29,18 @@ public class CategoryManager {
 
     @Autowired
     public CategoryManager(CategoryRepository categoryRepository,
-                           FieldRepository fieldRepository)
-    {
+                           FieldRepository fieldRepository) {
         this.categoryRepository = categoryRepository;
         this.fieldRepository = fieldRepository;
     }
 
-    public Category createCategory(CategoryDTO categoryDTO) throws CategoryNotFoundException {
+    public Category createCategory(CategoryDTO categoryDTO) throws CategoryNotFoundException, UnsupportedTypeException {
         Category category = new Category(categoryDTO);
-        if(categoryDTO.getParentCategoryID() != null){
-            Optional<Category>  parent = categoryRepository.findById(categoryDTO.getParentCategoryID());
-            if(parent.isPresent()){
+        if (categoryDTO.getParentCategoryID() != null) {
+            Optional<Category> parent = categoryRepository.findById(categoryDTO.getParentCategoryID());
+            if (parent.isPresent()) {
                 category.setParentCategory(parent.get());
-            }else{
+            } else {
                 throw new CategoryNotFoundException();
             }
         }
@@ -42,45 +48,63 @@ public class CategoryManager {
         return category;
     }
 
-    public Category getCategory(UUID uuid)
-    {
+    public Category getCategory(UUID uuid) throws CategoryNotFoundException {
         Optional<Category> category = categoryRepository.findById(uuid);
-        if(category.isPresent()){
+        if (category.isPresent()) {
             return category.get();
         }
-        return null;
+        throw new CategoryNotFoundException(uuid.toString());
     }
 
-    public List<Category> getAllCategories(){
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
-    public List<Category> getCategories(Predicate<Category> Predicate)
-    {
-        List<Category> allCategories  = categoryRepository.findAll();
-        List<Category> result = new ArrayList<Category> ();
-        for(Category c: allCategories){
-            if(Predicate.test(c)) {
+    public List<Category> getCategories(Predicate<Category> Predicate) {
+        List<Category> allCategories = categoryRepository.findAll();
+        List<Category> result = new ArrayList<Category>();
+        for (Category c : allCategories) {
+            if (Predicate.test(c)) {
                 result.add(c);
             }
         }
         return result;
     }
 
-    public Category updateCategory(UUID uuid, UpdateCategoryDTO categoryDTO) throws CategoryNotFoundException {
+    public Category updateCategory(UUID uuid, UpdateCategoryDTO categoryDTO) throws CategoryNotFoundException, ParentCategoryNotFoundException {
         Optional<Category> categoryOptional = categoryRepository.findById(uuid);
 
-        if(categoryOptional.isPresent()){
-            if(categoryDTO.getParentCategoryID() != null){
-                Optional<Category>  parent = categoryRepository.findById(categoryDTO.getParentCategoryID());
-                if(parent.isPresent()){
-                    categoryOptional.get().setParentCategory(parent.get());
-                }else{
-                    throw new CategoryNotFoundException(uuid.toString());
+        if (categoryOptional.isPresent()) {
+            String parentCategoryString = categoryDTO.getParentCategoryID();
+            Category category = categoryOptional.get();
+            if (parentCategoryString != null && !parentCategoryString.isBlank()) {
+                UUID parentUUID = null;
+                try {
+                    parentUUID = UUID.fromString(parentCategoryString);
+                } catch (IllegalArgumentException e) {
+                    throw new ParentCategoryNotFoundException();
                 }
+
+                if(category.getParentCategory() == null
+                        || !parentUUID.equals(
+                                category.getParentCategory().getCategoryID())){
+                    Optional<Category> parent = categoryRepository.findById(parentUUID);
+                    if (parent.isPresent()) {
+                        category.setParentCategory(parent.get());
+                    } else {
+                        throw new ParentCategoryNotFoundException();
+                    }
+                }
+            } else {
+                category.setParentCategory(null);
             }
-            categoryOptional.get().mergeCategory(categoryDTO);
-            categoryRepository.save(categoryOptional.get());
+
+            String newName = categoryDTO.getName();
+            if (!newName.equals(category.getName())) {
+                category.setName(newName);
+            }
+
+            categoryRepository.save(category);
             return categoryOptional.get();
         } else {
             throw new CategoryNotFoundException(uuid.toString());
@@ -89,7 +113,7 @@ public class CategoryManager {
 
     public boolean deleteCategory(UUID uuid) throws CategoryNotFoundException {
         Optional<Category> category = categoryRepository.findById(uuid);
-        if(category.isPresent()){
+        if (category.isPresent()) {
             categoryRepository.deleteById(uuid);
             return true;
         } else {
@@ -97,12 +121,14 @@ public class CategoryManager {
         }
     }
 
-    public Category addField(UUID categoryId, Field field) throws CategoryNotFoundException {
-        Optional<Category> category = categoryRepository.findById(categoryId);
-        if(category.isPresent()){
-            category.get().getFields().add(field);
-            categoryRepository.save(category.get());
-            return category.get();
+    public Category addField(UUID categoryId, FieldDTO fieldDTO) throws CategoryNotFoundException, UnsupportedTypeException {
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            Field field = new Field(fieldDTO);
+            category.getFields().add(field);
+            categoryRepository.save(category);
+            return category;
         } else {
             throw new CategoryNotFoundException();
         }
@@ -110,7 +136,7 @@ public class CategoryManager {
 
     public void removeField(UUID fieldId) throws FieldNotFoundException {
         Optional<Field> field = fieldRepository.findById(fieldId);
-        if(field.isPresent()){
+        if (field.isPresent()) {
             field.get().getCategories().forEach((category -> {
                 category.getFields().remove(field.get());
                 categoryRepository.save(category);
