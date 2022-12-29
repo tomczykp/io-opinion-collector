@@ -12,18 +12,19 @@ import * as _ from "underscore";
 })
 export class UsersComponent implements OnInit {
 
-  @ViewChild('paginator') paginator:MatPaginator;
+  @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort
   dataSource: MatTableDataSource<User>;
   displayedColumns: string[] = ['username', 'email', 'active', 'role', 'ban', 'delete'];
 
   users: User[];
   email = "";
-  filteremail = "";
+  emailFilter = "";
 
   constructor(
     private userService: UserService,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.email = localStorage.getItem("email")!;
@@ -35,7 +36,8 @@ export class UsersComponent implements OnInit {
 
 
   getUsers() {
-    this.userService.getUsers(this.filteremail).subscribe((users) => {
+    console.log(this.emailFilter)
+    this.userService.getUsers(this.emailFilter).subscribe((users) => {
       this.users = users.filter(function (user) {
         return user.role != 'ADMIN';
       });
@@ -46,9 +48,11 @@ export class UsersComponent implements OnInit {
   }
 
   removeUser(email: String) {
-    this.userService.removeByAdmin(email).subscribe((result) => {
-      this.getUsers();
-    });
+    if (confirm("Do you really want to delete user with email: " + email + "? This action can't be undone")) {
+      this.userService.removeByAdmin(email).subscribe((result) => {
+        this.getUsers();
+      });
+    }
   }
 
   lockUser(email: String) {
@@ -63,4 +67,8 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  clearFilter() {
+    this.emailFilter = "";
+    this.getUsers();
+  }
 }

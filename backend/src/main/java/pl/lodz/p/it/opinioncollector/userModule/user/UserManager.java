@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import pl.lodz.p.it.opinioncollector.exceptions.user.PasswordNotMatchesException;
+import pl.lodz.p.it.opinioncollector.exceptions.user.TokenExpiredException;
 import pl.lodz.p.it.opinioncollector.userModule.auth.MailManager;
 import pl.lodz.p.it.opinioncollector.userModule.token.Token;
 import pl.lodz.p.it.opinioncollector.userModule.token.TokenRepository;
@@ -18,12 +19,14 @@ import pl.lodz.p.it.opinioncollector.userModule.token.TokenType;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UserManager implements UserDetailsService {
+    //TODO validate tokens expiration date and create cron to clear expired tokens + delete account if verification token expired and user is not active
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
@@ -42,18 +45,13 @@ public class UserManager implements UserDetailsService {
     }
 
     private Token generateAndSaveToken(User user, TokenType tokenType) {
-        Token token = new Token();
-        token.setUser(user);
-        token.setToken(UUID.randomUUID().toString());
-        token.setType(tokenType);
-        token.setCreatedAt(Instant.now());
+        Token token = new Token(UUID.randomUUID().toString(), tokenType, user);
         return tokenRepository.save(token);
     }
 
     public void changeUsername(String newUsername) {
         try {
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = loadUserByUsername(email);
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             user.setVisibleName(newUsername);
             userRepository.save(user);
         } catch (Exception e) {
@@ -65,6 +63,20 @@ public class UserManager implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
+        Optional<Token> token = tokenRepository.findTokenByUserAndType(user, TokenType.PASSWORD_RESET_TOKEN);
+
+        if (token.isPresent()) {
+            if (token.get().getExpiresAt().isAfter(Instant.now())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            } else {
+                this.tokenRepository.deleteByToken(token.get().getToken());
+            }
+        }
+
+        if (user.getProvider() != UserProvider.LOCAL) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+        }
+
         if (tokenRepository.findTokenByUserAndType(user, TokenType.PASSWORD_RESET_TOKEN).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
@@ -75,10 +87,13 @@ public class UserManager implements UserDetailsService {
 
     }
 
-    public void resetPassword(String newPassword, String resetToken) {
+    public void resetPassword(String newPassword, String resetToken) throws TokenExpiredException {
         Token token = tokenRepository.findByToken(resetToken)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
+        if (token.getExpiresAt().isBefore(Instant.now())) {
+            throw new TokenExpiredException();
+        }
         User user = token.getUser();
         user.setPassword(encoder.encode(newPassword));
 
@@ -88,8 +103,7 @@ public class UserManager implements UserDetailsService {
 
     public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchesException {
         //TODO check if password is strong enough
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = loadUserByUsername(email);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (encoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(encoder.encode(newPassword));
@@ -100,11 +114,16 @@ public class UserManager implements UserDetailsService {
     }
 
     public void deleteOwnAccount() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = loadUserByUsername(email);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (tokenRepository.findTokenByUserAndType(user, TokenType.DELETION_TOKEN).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        Optional<Token> token = tokenRepository.findTokenByUserAndType(user, TokenType.DELETION_TOKEN);
+
+        if (token.isPresent()) {
+            if (token.get().getExpiresAt().isAfter(Instant.now())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            } else {
+                this.tokenRepository.deleteByToken(token.get().getToken());
+            }
         }
 
         String deletionToken = generateAndSaveToken(user, TokenType.DELETION_TOKEN).getToken();
@@ -115,8 +134,8 @@ public class UserManager implements UserDetailsService {
     public void removeUserByAdmin(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        user.setDeleted(true);
 
-        userRepository.deleteUserByEmail(user.getEmail());
         tokenRepository.deleteAllByUser(user);
         mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "deleted");
     }
@@ -126,9 +145,7 @@ public class UserManager implements UserDetailsService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         user.setLocked(true);
 
-        userRepository.save(user);
         tokenRepository.deleteAllByUserAndType(user, TokenType.REFRESH_TOKEN);
-
         mailManager.adminActionEmail(user.getEmail(), user.getUsername(), "blocked");
     }
 
@@ -137,7 +154,6 @@ public class UserManager implements UserDetailsService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         user.setLocked(false);
 
-        userRepository.save(user);
         mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "unlocked");
     }
 

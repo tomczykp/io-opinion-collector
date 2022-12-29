@@ -1,52 +1,123 @@
-<section class="align-middle justify-content-center m-5">
-  <div *ngIf="wrongCredentials" class="alert alert-danger alert-dismissible fade show" role="alert">
-    <strong>Error during login</strong> You should check your credentials or use option of resetting password.
-  </div>
-  <div *ngIf="accountLocked" class="alert alert-danger alert-dismissible fade show" role="alert">
-    <strong>Your account is locked or you did not activate your account via email</strong>
-  </div>
-  <div class="container py-5 h-100 w-100">
+<section class="align-middle justify-content-center m-sm-5 m-2" style="">
+  <ngb-alert (closed)="registerSuccessful = false" *ngIf="registerSuccessful" [dismissible]="true" class="alert alert-success alert-dismissible fade show"
+             role="alert" type="success">
+    <strong>You have successfully registered.</strong> In order to login, you have to confirm your account by clicking
+    link we sent to your email.
+  </ngb-alert>
+  <ngb-alert (closed)="logoutSuccessful = false" *ngIf="logoutSuccessful" [dismissible]="true" class="alert alert-success alert-dismissible fade show"
+             role="alert" type="success">
+    <strong>You have successfully logged out.</strong>
+  </ngb-alert>
+  <ngb-alert (closed)="sessionExpired = false" *ngIf="sessionExpired" [dismissible]="true" class="alert alert-dismissible fade show"
+             role="alert" type="danger">
+    <strong>Your session has expired. Please log in again.</strong>
+  </ngb-alert>
+  <ngb-alert (closed)="wrongCredentials = false" *ngIf="wrongCredentials" [dismissible]="true"
+             class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Error during login.</strong> You should check your credentials or use option of resetting password.
+  </ngb-alert>
+  <ngb-alert (closed)="accountLocked = false" *ngIf="accountLocked" [dismissible]="true"
+             class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Your account is locked.</strong> Please contact administration.
+  </ngb-alert>
+  <ngb-alert (closed)="accountDisabled = false" *ngIf="accountDisabled" [dismissible]="true"
+             class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Your account is not yet activated via email.</strong>
+  </ngb-alert>
+  <ngb-alert (closed)="googleLoginFailed = false" *ngIf="googleLoginFailed" [dismissible]="true"
+             class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Something went wrong with google authentication</strong>
+  </ngb-alert>
+  <ngb-alert (closed)="differentProvider = false" *ngIf="differentProvider" [dismissible]="true"
+             class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>This account has different provider. </strong>(Google, Facebook or Local)
+  </ngb-alert>
+  <ngb-alert (closed)="accountDeleted = false" *ngIf="accountDeleted" [dismissible]="true"
+             class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Your account was deleted.</strong>
+  </ngb-alert>
+  <ngb-alert (closed)="accountDeletedSuccessful = false" *ngIf="accountDeletedSuccessful" [dismissible]="true"
+             class="alert alert-success alert-dismissible fade show" role="alert" type="info">
+    <strong>Your account has been successfully deleted</strong>
+  </ngb-alert>
+  <ngb-alert (closed)="accountConfirmed = false" *ngIf="accountConfirmed" [dismissible]="true"
+             class="alert alert-success alert-dismissible fade show" role="alert" type="info">
+    <strong>Your account has been confirmed. You can log in now.</strong>
+  </ngb-alert>
+  <ngb-alert (closed)="passwordResetSuccessful = false" *ngIf="passwordResetSuccessful" [dismissible]="true"
+             class="alert alert-success alert-dismissible fade show" role="alert" type="success">
+    <strong>Your password has been changed. You can log in now using new password.</strong>
+  </ngb-alert>
+  <ngb-alert (closed)="tokenExpired = false" *ngIf="tokenExpired" [dismissible]="true"
+            class="alert alert-danger alert-dimissible fade show" role="alert">
+          <strong>Confirmation link expired, please register again.</strong></ngb-alert>
+  <ngb-alert (closed)="deletionExpired = false" *ngIf="deletionExpired" [dismissible]="true"
+    class="alert alert-danger alert-dimissible fade show" role="alert">
+  <strong>Could not delete account, deletion link expired.</strong></ngb-alert>
+  <ngb-alert (closed)="resetExpired = false" *ngIf="resetExpired" [dismissible]="true"
+            class="alert alert-danger alert-dimissible fade show" role="alert">
+          <strong>Could not reset password, reset password link expired.</strong></ngb-alert>
+  <ngb-alert (closed)="tokenDeleted = false" *ngIf="tokenDeleted" [dismissible]="true"
+    class="alert alert-danger alert-dimissible fade show" role="alert">
+  <strong>Used token has been deleted, cannot perform action.</strong></ngb-alert>
+  <div class="container pt-xl-5 h-100 w-100">
     <div class="row d-flex align-items-center justify-content-center h-100">
       <div class="col-md-8 col-lg-7 col-xl-6">
-        <img src="assets/logo.svg"
-             class="img-fluid " alt="Logo">
+        <img alt="Logo"
+             class="img-fluid " src="assets/logo.svg">
       </div>
-      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 border-dark border-opacity-50 border p-5 rounded-4" style="background-color: ghostwhite;">
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div
+        class="col-md-11 col-lg-8 col-xl-5 offset-xl-1 p-3 pt-5 p-sm-5 rounded-4"
+        style="background: #ffffff80; border-radius: 10px; box-shadow: 0 4px 30px #0000001a;backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);">
+        <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
           <!-- Email input -->
           <div class="form-outline mb-4">
+            <span class="form-label">Email address</span>
+            <input class="form-control form-control-lg" [ngClass]="{'is-invalid': email && email.touched && email.invalid}" formControlName="email" id="email" required type="email"/>
             <span *ngIf="email && email.touched && email.invalid" class="validation-message">Enter a valid email</span>
-            <input required type="email" id="email" formControlName="email" class="form-control form-control-lg" />
-            <label class="form-label" for="email">Email address</label>
           </div>
 
           <!-- Password input -->
-          <div class="form-outline mb-4">
-            <span *ngIf="password && password.touched && password.invalid" class="validation-message">Password is required</span>
-            <input required type="password" id="password" formControlName="password" class="form-control form-control-lg" />
-            <label class="form-label" for="password">Password</label>
+          <span class="form-label">Password</span>
+          <div class="form-outline input-group">
+            <input class="form-control form-control-lg" formControlName="password" id="password" required
+                   [type]="passwordInputTextType ? 'text' : 'password'"
+                   [ngClass]="{'is-invalid': password && password.touched && password.invalid}"/>
+            <i class="hover-icon input-group-text bi" [ngClass]="{
+                       'bi-eye-slash': !passwordInputTextType,
+                       'bi-eye': passwordInputTextType}"
+               (click)="passwordInputTextType = !passwordInputTextType">
+            </i>
           </div>
+          <span *ngIf="password && password.touched && password.invalid" class="validation-message">Password is required</span>
 
-          <div class="d-flex justify-content-around align-items-center mb-4">
+
+
+          <div class="d-flex justify-content-around align-items-center mt-4 mb-4">
             <a href="/reset">Forgot password?</a>
           </div>
 
           <!-- Submit button -->
-          <input *ngIf="loginForm.valid" type="submit" class="btn btn-primary btn-lg btn-block w-100" value="Sign in">
-          <input *ngIf="!loginForm.valid" type="submit" class="disabled btn btn-primary btn-lg btn-block w-100" value="Sign in">
+          <input *ngIf="loginForm.valid" class="btn btn-primary btn-lg btn-block w-100" type="submit" value="Sign in">
+          <input *ngIf="!loginForm.valid" class="disabled btn btn-primary btn-lg btn-block w-100" type="submit"
+                 value="Sign in">
 
           <div class="divider d-flex align-items-center my-4 justify-content-around">
             <p class="text-center fw-bold mx-3 mb-0 text-muted">Or continue with:</p>
           </div>
 
           <div class="justify-content-around align-items-center d-flex">
-            <a class="btn btn-primary btn-lg btn-block w-50 me-2" style="background-color: #3b5998" href="#!"
-               role="button">
-              <i style="font-size: 20px" class="bi bi-facebook"></i>
+            <a (click)="loginWithFacebook()" class="btn btn-primary btn-lg btn-block w-50 me-2" role="button"
+               style="background-color: #3b5998">
+              <i class="bi bi-facebook" style="font-size: 20px"></i>
             </a>
-            <a class="btn btn-danger btn-lg btn-block w-50 ms-2" style="background-color: #e8545f" href="#!"
-               role="button">
-              <i style="font-size: 20px" class="bi bi-google"></i></a>
+            <a (click)="loginWithGoogle()" class="btn btn-danger btn-lg btn-block w-50 ms-2"
+               role="button"
+               style="background-color: #e8545f">
+              <i class="bi bi-google" style="font-size: 20px"></i></a>
+          </div>
+          <div class="mx-auto mt-4">
+            <span>Don't have an account yet? </span> <a routerLink="/register">Sign up</a>
           </div>
         </form>
       </div>

@@ -1,33 +1,47 @@
-<div *ngIf="emailStatus == 1" class="alert alert-success alert-dismissible fade show m-3" role="alert">
-  <strong>Email has been sent</strong>
-</div>
-<div *ngIf="emailStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-  <strong>Given data is not an email, or there is no user with given email</strong>
-</div>
-<div *ngIf="emailStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+<ngb-alert (closed)="emailStatus = 0" *ngIf="emailStatus == 1" [dismissible]="true"
+           class="alert alert-success alert-dismissible fade show m-3"
+           role="alert" type="success">
+  <strong>Email has been sent.</strong>
+</ngb-alert>
+<ngb-alert (closed)="emailStatus = 0" *ngIf="emailStatus == 2" [dismissible]="true"
+           class="alert alert-danger alert-dismissible fade show m-3"
+           role="alert" type="danger">
+  <strong>Given data is not an email, or there is no user with given email.</strong>
+</ngb-alert>
+<ngb-alert (closed)="emailStatus = 0" *ngIf="emailStatus == 3" [dismissible]="true"
+           class="alert alert-danger alert-dismissible fade show m-3"
+           role="alert" type="danger">
+  <strong>User of given email is an external user, you can't use this option.</strong>
+</ngb-alert>
+<ngb-alert (closed)="emailStatus = 0" *ngIf="emailStatus == 4" [dismissible]="true"
+           class="alert alert-danger alert-dismissible fade show m-3"
+           role="alert" type="danger">
   <strong>Link for password reset was already sent.</strong>
-</div>
+</ngb-alert>
 <div class="container">
-    <div style="" class="justify-content-center align-middle d-flex">
-        <div class="card p-5 mt-5 rounded-4" style="background-color: ghostwhite;">
-        <div class="text-center card-body">
-            <h3><i class="bi bi-lock bi-lock"></i></h3>
-            <h2 class="text-center">Forgot Password?</h2>
-            <p>You can reset your password here.</p>
-            <div class="panel-body">
-            <form [formGroup]="resetPasswordForm" role="form" autocomplete="off" class="form" (ngSubmit)="resetPassword()">
-                <div class="form-group" style="position: relative; margin: auto; max-width: 300px;">
-                <div class="input-group">
-                  <input formControlName="email" name="email" placeholder="email address" class="form-control"  type="email">
-                </div>
-                </div>
-                <div class="form-group">
-                <input name="recover-submit" class="btn btn-lg btn-primary btn-block mt-3" value="Send email" type="submit">
-                </div>
-                <input type="hidden" class="hide" name="token" id="token" value="">
-            </form>
+  <div class="justify-content-center align-middle d-flex" style="">
+    <div class="card p-5 mt-5 rounded-4" style="background: #ffffff80; border-radius: 10px; box-shadow: 0 4px 30px #0000001a;backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);">
+      <div class="text-center card-body">
+        <h3><i class="bi bi-lock bi-lock"></i></h3>
+        <h2 class="text-center">Forgot Password?</h2>
+        <p>You can reset your password here.</p>
+        <div class="panel-body">
+          <form (ngSubmit)="resetPassword()" [formGroup]="resetPasswordForm" autocomplete="off" class="form"
+                role="form">
+            <div class="form-group" style="position: relative; margin: auto; max-width: 300px;">
+              <div class="input-group">
+                <input class="form-control" formControlName="email" name="email" placeholder="email address"
+                       type="email">
+              </div>
             </div>
+            <div class="form-group">
+              <input class="btn btn-lg btn-primary btn-block mt-3" name="recover-submit" type="submit"
+                     value="Send email">
+            </div>
+            <input class="hide" id="token" name="token" type="hidden" value="">
+          </form>
         </div>
-        </div>
+      </div>
     </div>
+  </div>
 </div>

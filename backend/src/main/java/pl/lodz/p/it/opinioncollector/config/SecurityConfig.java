@@ -43,8 +43,7 @@ public class SecurityConfig {
     public Filter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
@@ -80,6 +79,18 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.GET, "/category/{uuid}/fields").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.DELETE, "/category/fields/{uuid}").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.PUT, "/category/fields/{uuid}").hasRole("ADMIN")
+
+                                        // product endpoints..?
+                                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/products/{productId}").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/products/category/{categoryId}").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/products/suggestion").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/products/{productId}").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/products/{productId}/confirm").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/products/{productId}/unconfirm").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/products/{productId}/delete").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE, "/products/{productId}").hasAnyRole("USER", "ADMIN")
 
                                         // Place for your secured endpoints
                                         .anyRequest().permitAll()

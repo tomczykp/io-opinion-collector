@@ -1,35 +1,43 @@
-<div *ngIf="passwordChangeStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+<ngb-alert (closed)="passwordChangeStatus = 0" [dismissible]="true" *ngIf="passwordChangeStatus == 2" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
   <strong>Error during changing password</strong>
-</div>
-<div *ngIf="passwordChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+</ngb-alert>
+<ngb-alert (closed)="passwordChangeStatus = 0" [dismissible]="true" *ngIf="passwordChangeStatus == 3" class="alert alert-danger alert-dismissible fade show m-3" role="alert">
   <strong>Repeated password doesn't match password</strong>
-</div>
+</ngb-alert>
 <div class="container">
-    <div class="justify-content-center align-middle d-flex">
+  <div class="justify-content-center align-middle d-flex">
+    <div class="panel-body">
+      <div class="text-center card p-5 rounded-4 mt-5" style="background: #ffffff80; border-radius: 10px; box-shadow: 0 4px 30px #0000001a;backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);">
+        <h3><i class="bi-lock bi-unlock fa-4x"></i></h3>
+        <h2 class="text-center">You're almost there!</h2>
+        <p>You can reset your password here.</p>
         <div class="panel-body">
-        <div class="text-center card p-5 rounded-4 mt-5" style="background-color: ghostwhite">
-            <h3><i class="bi-lock bi-unlock fa-4x"></i></h3>
-            <h2 class="text-center">You're almost there!</h2>
-            <p>You can reset your password here.</p>
-            <div class="panel-body">
-            <form [formGroup]="confirmPassword" role="form" autocomplete="off" class="form" (ngSubmit)="resetPassword()">
-                <div class="form-group" style="position: relative; margin: auto; max-width: 300px;">
-                <h6 *ngIf="password && password.touched && password.invalid" class="validation-message">Enter your password</h6>
-                <div class="input-group">
-                    <input formControlName="password" name="email" placeholder="password" class="form-control"  type="password" required="">
-                </div>
-                <div class="input-group mt-3">
-                    <input formControlName="repeatPassword" name="email" placeholder="repeat password" class="form-control"  type="password" required="">
-                </div>
-                </div>
-                <div class="form-group">
-                <input name="recover-submit" class="btn btn-lg btn-primary btn-block mt-3" value="Reset Password" type="submit">
-                </div>
-
-                <input type="hidden" class="hide" name="token" id="token" value="">
-            </form>
+          <form (ngSubmit)="resetPassword()" [formGroup]="confirmPassword" autocomplete="off" class="form" role="form">
+            <div class="form-group" style="position: relative; margin: auto; max-width: 300px;">
+              <div class="input-group">
+                <input class="form-control" formControlName="password" name="email" placeholder="password"
+                       required="" type="password"
+                       [ngClass]="{'is-invalid': password && password.touched && password.invalid}">
+              </div>
+              <h6 *ngIf="(password && password.touched) && (password?.getRawValue().length < 8) || (password?.getRawValue().length > 20)" class="validation-message small form-text w-100" style="color: red">The password must be 8-20 characters, and must <em>not</em> contain spaces.</h6>
+              <h6 *ngIf="!((password && password.touched) && (password?.getRawValue().length < 8) || (password?.getRawValue().length > 20))" class="form-text small text-muted w-100">The password must be 8-20 characters, and must <em>not</em> contain spaces.</h6>
+              <div class="input-group mt-3">
+                <input class="form-control" formControlName="repeatPassword" name="email" placeholder="repeat password"
+                       required="" type="password"
+                       [ngClass]="{'is-invalid': (repeatPassword && repeatPassword.touched) && (repeatPassword.hasError('notSame') || repeatPassword.invalid)}">
+              </div>
             </div>
+            <span *ngIf="repeatPassword?.hasError('notSame')" class="validation-message text-wrap">Repeated password doesn't match new password</span>
+
+            <div class="form-group">
+              <input class="btn btn-lg btn-primary btn-block mt-3" name="recover-submit" type="submit"
+                     value="Reset Password">
+            </div>
+
+            <input class="hide" id="token" name="token" type="hidden" value="">
+          </form>
         </div>
-        </div>
+      </div>
     </div>
+  </div>
 </div>

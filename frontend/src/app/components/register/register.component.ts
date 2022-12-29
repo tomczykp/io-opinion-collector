@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
@@ -6,17 +6,23 @@ import {Router} from "@angular/router";
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
 
   registerForm = new FormGroup({
-    email: new FormControl('', [Validators.required]), //Validators.email]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     username: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required])
+    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
   })
 
   failedRegister = false;
+  passwordInputTextType: boolean;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
+  }
 
   get email() {
     return this.registerForm.get('email');
@@ -30,12 +36,8 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.get('username');
   }
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
-
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   clearPassword() {
     this.registerForm.get('password')?.reset();
@@ -50,10 +52,8 @@ export class RegisterComponent implements OnInit {
       this.authService.register(email!.toString(), username!.toString(), password!.toString())
         .subscribe((result) => {
           if (result.status == 201) {
-            console.log("Successful register")
-            this.router.navigate(['/login']);
+            this.router.navigate(['/login'], {queryParams: {'register-success': true}});
           } else {
-            console.log("Error during register");
             this.clearPassword();
           }
         }, (error) => {
@@ -62,4 +62,11 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  loginWithGoogle() {
+    this.authService.loginWithGoogle()
+  }
+
+  loginWithFacebook() {
+    this.authService.loginWithFacebook()
+  }
 }

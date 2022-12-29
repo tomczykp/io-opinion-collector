@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {BehaviorSubject, catchError, Observable} from "rxjs";
-import {Router} from "@angular/router";
+import {BehaviorSubject} from "rxjs";
 import {User} from "../model/User";
 
 @Injectable({
@@ -32,7 +31,7 @@ export class UserService {
   }
 
   changeUsername(username: string) {
-    return this.http.put(environment.apiUrl + "/users/username?newUsername=" + username, {},{observe: 'response'})
+    return this.http.put(environment.apiUrl + "/users/username?newUsername=" + username, {}, {observe: 'response'})
   }
 
   removeByUser() {
@@ -52,7 +51,7 @@ export class UserService {
   }
 
   confirmResetPassword(newPassword: string, resetToken: string) {
-    return this.http.put(environment.apiUrl + "/users/confirm/reset?password="+ newPassword + "&token=" + resetToken, null , {observe: 'response'});
+    return this.http.put(environment.apiUrl + "/users/confirm/reset?password=" + newPassword + "&token=" + resetToken, null, {observe: 'response'});
   }
 
   resetPassword(email: string) {

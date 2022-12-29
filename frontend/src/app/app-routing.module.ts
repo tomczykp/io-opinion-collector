@@ -11,23 +11,33 @@ import { ResetConfirmComponent } from './components/reset/reset-confirm/reset-co
 import {UsersComponent} from "./components/users/users.component";
 import {ProductsComponent} from "./components/products/products.component";
 import {CategoriesComponent} from "./components/categories/categories.component";
+import {AuthGuard} from "./guards/auth.guard";
+import {AdminGuard} from "./guards/admin.guard";
+import {LoginRegisterGuard} from "./guards/login-register.guard";
+import {AddProductComponent} from "./components/products/add-product/add-product.component";
+import {UpdateProductComponent} from "./components/products/update-product/update-product.component";
+import {DeleteProductFormComponent} from "./components/products/delete-product-form/delete-product-form.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
-  {path: 'profile', component: ProfileComponent},
+  {path: 'login', component: LoginComponent, canActivate: [LoginRegisterGuard]},
+  {path: 'register', component: RegisterComponent, canActivate: [LoginRegisterGuard]},
+  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
+  //Products
   {path: 'products/:uuid', component: ProductsComponent},
+  {path: 'products/:uuid/update', component: UpdateProductComponent},
+  {path: 'products/:uuid/delete', component: DeleteProductFormComponent},
+  {path: 'suggestion', component: AddProductComponent},
   {
-    path: 'dashboard', component: DashboardComponent,
+    path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard, AdminGuard],
     children: [
       {
-        path: 'users', // child route path
-        component: UsersComponent, // child route component that the router renders
+        path: 'users',
+        component: UsersComponent,
       },
       {
         path: 'events',
-        component: EventsComponent, // another child route component that the router renders
+        component: EventsComponent,
       },
       {
         path: 'categories',

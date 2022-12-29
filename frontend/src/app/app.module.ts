@@ -9,7 +9,7 @@ import {MatSortModule} from "@angular/material/sort";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
 import {MatPaginatorModule} from "@angular/material/paginator";
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbAlertModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ProductsComponent} from './components/products/products.component';
 import {HomeComponent} from './components/home/home.component';
@@ -29,6 +29,8 @@ import { AnswersComponent } from './components/answers/answers.component';
 import { OpinionsComponent } from './components/opinions/opinions.component';
 import { CategoriesComponent } from './components/categories/categories.component';
 import { AddProductComponent } from './components/products/add-product/add-product.component';
+import {UpdateProductComponent} from "./components/products/update-product/update-product.component";
+import { DeleteProductFormComponent } from './components/products/delete-product-form/delete-product-form.component';
 
 @NgModule({
   declarations: [
@@ -48,8 +50,10 @@ import { AddProductComponent } from './components/products/add-product/add-produ
     QuestionsComponent,
     AnswersComponent,
     OpinionsComponent,
-    CategoriesComponent
-    AddProductComponent
+    CategoriesComponent,
+    AddProductComponent,
+    UpdateProductComponent,
+    DeleteProductFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,6 +66,7 @@ import { AddProductComponent } from './components/products/add-product/add-produ
     BrowserAnimationsModule,
     MatButtonModule,
     MatPaginatorModule,
+    NgbAlertModule,
 
     NgbModule,
     ReactiveFormsModule,

@@ -1,53 +1,79 @@
-<section class="align-middle justify-content-center m-5">
-  <div *ngIf="failedRegister" class="alert alert-danger alert-dismissible fade show" role="alert">
-    <strong>Error during signing up</strong> Try with different email or password
-  </div>
-  <div class="container py-5 h-100 w-100">
+<section class="align-middle justify-content-center m-sm-5 m-2">
+  <ngb-alert (closed)="failedRegister = !failedRegister" *ngIf="failedRegister" [dismissible]="true"
+             class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>There is another account which is registered on this email.</strong>
+  </ngb-alert>
+  <div class="container pt-xl-5 h-100 w-100">
     <div class="row d-flex align-items-center justify-content-center h-100">
       <div class="col-md-8 col-lg-7 col-xl-6">
-        <img src="assets/logo.svg"
-             class="img-fluid " alt="Logo">
+        <img alt="Logo"
+             class="img-fluid " src="assets/logo.svg">
       </div>
-      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 border-dark border-opacity-50 border p-5 rounded-4" id="register_form">
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div
+        class="col-md-11 col-lg-8 col-xl-5 offset-xl-1 p-3 pt-5 p-sm-5 rounded-4"
+        style="background: #ffffff80; border-radius: 10px; box-shadow: 0 4px 30px #0000001a;backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);">
+        <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
           <!-- Email input -->
           <div class="form-outline mb-4">
+            <span class="form-label">Email address</span>
+            <input class="form-control form-control-lg" formControlName="email" id="email" required type="email"
+                   [ngClass]="{
+                   'is-valid': email?.valid,
+                   'is-invalid': email && email.touched && email.invalid}"/>
             <span *ngIf="email && email.touched && email.invalid" class="validation-message">Enter a valid email</span>
-            <input required type="email" id="email" formControlName="email" class="form-control form-control-lg" />
-            <label class="form-label" for="email">Email address</label>
           </div>
 
           <!-- Username input -->
           <div class="form-outline mb-4">
+            <span class="form-label">Username</span>
+            <input class="form-control form-control-lg" formControlName="username" id="username" required type="text"
+                   [ngClass]="{
+                   'is-valid': username?.valid,
+                   'is-invalid': username && username.touched && username.invalid}"/>
             <span *ngIf="username && username.touched && username.invalid" class="validation-message">Enter a valid username</span>
-            <input required type="text" id="username" formControlName="username" class="form-control form-control-lg" />
-            <label class="form-label" for="email">Username</label>
           </div>
 
           <!-- Password input -->
-          <div class="form-outline mb-4">
-            <span *ngIf="password && password.touched && password.invalid" class="validation-message">Password is required</span>
-            <input required type="password" id="password" formControlName="password" class="form-control form-control-lg" />
-            <label class="form-label" for="password">Password</label>
+          <span class="form-label mb-4">Password</span>
+          <div class="form-outline input-group">
+              <input class="form-control form-control-lg" formControlName="password" id="password" required
+                     [type]="passwordInputTextType ? 'text' : 'password'"
+                     [ngClass]="{
+                     'is-valid': password?.valid,
+                     'is-invalid': (password && password.touched && password.getRawValue().length === 0) || ((password && password.touched) && password.getRawValue().length < 8) || (password?.getRawValue().length > 20) }"/>
+              <i class="hover-icon input-group-text bi" [ngClass]="{
+                       'bi-eye-slash': !passwordInputTextType,
+                       'bi-eye': passwordInputTextType
+                      }"
+                 (click)="passwordInputTextType = !passwordInputTextType">
+              </i>
           </div>
+          <span *ngIf="password && password.touched && password?.getRawValue().length === 0" class="validation-message">Password is required</span>
+          <h6 *ngIf="(password && password.touched) && (password?.getRawValue().length < 8) || (password?.getRawValue().length > 20)" class="validation-message small form-text w-100" style="color: red">The password must be 8-20 characters, and must <em>not</em> contain spaces.</h6>
+          <h6 *ngIf="!((password && password.touched) && (password?.getRawValue().length < 8) || (password?.getRawValue().length > 20))" class="form-text small text-muted w-100">The password must be 8-20 characters, and must <em>not</em> contain spaces.</h6>
 
 
           <!-- Submit button -->
-          <input *ngIf="registerForm.valid" type="submit" class="btn btn-primary btn-lg btn-block w-100" value="Register">
-          <input *ngIf="!registerForm.valid" type="submit" class="disabled btn btn-primary btn-lg btn-block w-100" value="Register">
+          <input *ngIf="registerForm.valid" class="btn btn-primary btn-lg btn-block w-100 mt-5" type="submit"
+                 value="Register">
+          <input *ngIf="!registerForm.valid" class="disabled btn btn-primary btn-lg btn-block w-100 mt-5" type="submit"
+                 value="Register">
 
           <div class="divider d-flex align-items-center my-4 justify-content-around">
             <p class="text-center fw-bold mx-3 mb-0 text-muted">Or continue with:</p>
           </div>
 
           <div class="justify-content-around align-items-center d-flex">
-            <a class="btn btn-primary btn-lg btn-block w-50 me-2" style="background-color: #3b5998" href="#!"
-               role="button">
-              <i style="font-size: 20px" class="bi bi-facebook"></i>
+            <a (click)="loginWithFacebook()" class="btn btn-primary btn-lg btn-block w-50 me-2" role="button"
+               style="background-color: #3b5998">
+              <i class="bi bi-facebook" style="font-size: 20px"></i>
             </a>
-            <a class="btn btn-danger btn-lg btn-block w-50 ms-2" style="background-color: #e8545f" href="#!"
-               role="button">
-              <i style="font-size: 20px" class="bi bi-google"></i></a>
+            <a (click)="loginWithGoogle()" class="btn btn-danger btn-lg btn-block w-50 ms-2" role="button"
+               style="background-color: #e8545f">
+              <i class="bi bi-google" style="font-size: 20px"></i></a>
+          </div>
+          <div class="mx-auto mt-4">
+            <span>Already have an account? </span> <a routerLink="/login">Sign in</a>
           </div>
         </form>
       </div>
