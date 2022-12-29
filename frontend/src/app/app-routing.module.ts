@@ -14,6 +14,8 @@ import {CategoriesComponent} from "./components/categories/categories.component"
 import {AuthGuard} from "./guards/auth.guard";
 import {AdminGuard} from "./guards/admin.guard";
 import {LoginRegisterGuard} from "./guards/login-register.guard";
+import {AddProductComponent} from "./components/products/add-product/add-product.component";
+import {UpdateProductComponent} from "./components/products/update-product/update-product.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -21,6 +23,8 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent, canActivate: [LoginRegisterGuard]},
   {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {path: 'products/:uuid', component: ProductsComponent},
+  {path: 'products/:uuid', component: UpdateProductComponent},
+  {path: 'suggestion', component: AddProductComponent},
   {
     path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard, AdminGuard],
     children: [

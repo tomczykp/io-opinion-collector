@@ -23,10 +23,14 @@ export class ProductsService {
   }
 
   public addProduct(ProductDTO: object): Observable<HttpResponse<Product>> {
-    return this.httpClient.post<Product>(this.baseUrl, ProductDTO,
-      {'headers': {'content-type': 'application/json'} ,observe: 'response'})
+    return this.httpClient.post<Product>(this.baseUrl + '/' + "suggestion", ProductDTO,
+      {'headers': {'content-type': 'application/json'}, observe: 'response'})
   }
 
+  public updateProduct(uuid: string, ProductDTO: object): Observable<HttpResponse<Product>> {
+    return this.httpClient.put<Product>(this.baseUrl + '/' + uuid, ProductDTO,
+      {'headers': {'content-type': 'application/json'}, observe: 'response'})
+  }
 
   public deleteProduct(id: string): void {
     this.httpClient.delete(environment.apiUrl + '/products/' + id).subscribe(data => {

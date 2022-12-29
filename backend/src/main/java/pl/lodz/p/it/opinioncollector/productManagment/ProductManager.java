@@ -1,21 +1,22 @@
 package pl.lodz.p.it.opinioncollector.productManagment;
 
-import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.lodz.p.it.opinioncollector.eventHandling.IProductEventManager;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class ProductManager {
+public class ProductManager implements IProductManager {
     private final ProductRepository productRepository;
+    private final IProductEventManager eventManager;
 
     @Autowired
-    public ProductManager(ProductRepository productRepository) {
+    public ProductManager(ProductRepository productRepository, IProductEventManager eventManager) {
         this.productRepository = productRepository;
+        this.eventManager = eventManager;
     }
 
 
@@ -27,7 +28,10 @@ public class ProductManager {
 
     public Product createSuggestion(ProductDTO productDTO) {
         Product product = new Product(productDTO);
-        product.setConfirmed(false);
+        product.setConfirmed(false);        //FIXME temp random UUID
+        eventManager.createProductReportEvent(UUID.randomUUID(), "New product suggestion with name: \""
+                        + product.getName() + "\" and description: \"" + product.getDescription() + "\"",
+                product.getProductId());
         productRepository.save(product);
         return product;
     }
@@ -40,11 +44,14 @@ public class ProductManager {
         return null;
     }
 
+    //TODO
+    // If we want to make history of changes then we need some unique name or second UUID, the first must stay the same
     public Product updateProduct(UUID uuid, ProductDTO productDTO) {
         Optional<Product> productOptional = productRepository.findById(uuid);
         if (productOptional.isPresent()) {
             productOptional.get().mergeProduct(productDTO);
-            productRepository.save(productOptional.get());
+//            eventManager.createProductReportEvent(USER_ID, "some words about update", productDTO.getProductId())
+            productRepository.save(productOptional.get()); //FIXME New object and send suggestion to events?
             return productOptional.get();
         }
         return null;

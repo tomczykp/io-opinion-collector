@@ -9,7 +9,7 @@ import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundExceptio
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController()
 @RequestMapping("/products")
 public class ProductController {

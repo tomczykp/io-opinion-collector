@@ -22,7 +22,7 @@ export class ProductsComponent implements OnInit {
     let href = this.router.url;
     let match = href.match(this.regex);
     this.getProduct(match![0]);
-    console.log(match);
+    console.log(match!.toString());
   }
 
   getProduct(uuid: string) {
