@@ -26,12 +26,14 @@ export class EventsIconComponent implements OnInit, AfterViewInit {
       if (this.authenticated) {
         this.userService.getUser().subscribe((user) => {
           this.userID = user.id.toString();
+
+          this.eventsService.getEventsCount(this.userID).subscribe((eventsCount) => {
+            this.eventsCount = eventsCount;
+          })
+
         })
       }
 
-      this.eventsService.getEventsCount(this.userID).subscribe((eventsCount) => {
-        this.eventsCount = eventsCount;
-      })
     })
 
   }
