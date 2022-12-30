@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.opinioncollector.eventHandling.dto.EventDTO;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.Event;
+import pl.lodz.p.it.opinioncollector.eventHandling.events.EventStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,22 @@ public class EventsController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(foundEvents);
+    }
+
+    @GetMapping("/users/{userID}/eventsCount")
+    public ResponseEntity<Integer> GetUserEventsCount(@PathVariable("userID") String userID) {
+        UUID userUUID = UUID.fromString(userID);
+        Predicate<Event> UserPredicate = event -> event.getUserID().equals(userUUID);
+
+        List<Event> foundEvents = eventManager.getEvents(UserPredicate);
+        int activeEvents = 0;
+
+        for (var event : foundEvents) {
+            if (event.getStatus() == EventStatus.Open)
+                activeEvents++;
+        }
+
+        return ResponseEntity.ok(activeEvents);
     }
 
     @PostMapping("/events/{eventID}/close")

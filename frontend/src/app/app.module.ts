@@ -31,6 +31,7 @@ import { CategoriesComponent } from './components/categories/categories.componen
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import {UpdateProductComponent} from "./components/products/update-product/update-product.component";
 import { DeleteProductFormComponent } from './components/products/delete-product-form/delete-product-form.component';
+import { EventsIconComponent } from './components/events-icon/events-icon.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { DeleteProductFormComponent } from './components/products/delete-product
     AddProductComponent,
     UpdateProductComponent,
     DeleteProductFormComponent,
+    EventsIconComponent,
   ],
   imports: [
     BrowserModule,
