@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {BehaviorSubject, Observable} from "rxjs";
-import * as url from "url";
 import {environment} from "../../environments/environment";
 
 @Injectable({
@@ -29,11 +28,8 @@ export class EventsService {
 export namespace OC {
   export interface Event {
     eventID: string;
-    userID: string;
+    userName: string;
     description: string;
     status: string;
-    opinionID: string;
-    questionID: string;
-    productID: string;
   }
 }

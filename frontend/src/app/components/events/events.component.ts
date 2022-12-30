@@ -2,7 +2,6 @@ import {AfterViewInit, Component, OnInit, Output, ViewChild} from '@angular/core
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {Observable} from "rxjs";
 import {EventsService, OC} from "../../services/events.service";
 
 @Component({
@@ -11,7 +10,7 @@ import {EventsService, OC} from "../../services/events.service";
   styleUrls: ['./events.component.css']
 })
 export class EventsComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['userID', 'description', 'status', 'action'];
+  displayedColumns: string[] = ['userName', 'description', 'status', 'action'];
   dataSource: MatTableDataSource<OC.Event>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

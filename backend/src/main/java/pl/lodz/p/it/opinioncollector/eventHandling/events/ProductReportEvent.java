@@ -2,6 +2,7 @@ package pl.lodz.p.it.opinioncollector.eventHandling.events;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 import java.util.UUID;
 
@@ -11,8 +12,8 @@ import java.util.UUID;
 public class ProductReportEvent extends Event {
     private UUID productID;
 
-    public ProductReportEvent(UUID eventID, UUID userID, String description, UUID productID) {
-        super(eventID, userID, description);
+    public ProductReportEvent(UUID eventID, User user, String description, UUID productID) {
+        super(eventID, user, description);
         this.productID = productID;
     }
 

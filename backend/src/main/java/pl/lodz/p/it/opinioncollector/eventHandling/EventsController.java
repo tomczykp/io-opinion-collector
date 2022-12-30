@@ -3,8 +3,10 @@ package pl.lodz.p.it.opinioncollector.eventHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.lodz.p.it.opinioncollector.eventHandling.dto.EventDTO;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -21,22 +23,31 @@ public class EventsController {
     }
 
     @GetMapping("/events")
-    public List<Event> Events() {
-        return eventManager.getEvents();
+    public List<EventDTO> Events() {
+        List<EventDTO> result = new ArrayList<>();
+
+        for(var event : eventManager.getEvents())
+        {
+            result.add(new EventDTO(event.getEventID().toString(), event.getUser().getVisibleName(), event.getDescription(), event.getStatus()));
+        }
+
+        return result;
     }
 
     @GetMapping("/events/{eventID}")
-    public ResponseEntity<Event> GetEvent(@PathVariable("eventID") String eventID) {
+    public ResponseEntity<EventDTO> GetEvent(@PathVariable("eventID") String eventID) {
         var foundEvent = eventManager.getEvent(UUID.fromString(eventID));
 
         if (!foundEvent.isPresent())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(foundEvent.get());
+        Event result = foundEvent.get();
+        EventDTO resultDTO = new EventDTO(result.getEventID().toString(), result.getUser().getVisibleName(), result.getDescription(), result.getStatus());
+
+        return ResponseEntity.ok(resultDTO);
     }
 
-    // TODO: Rename according to users module
-    @GetMapping("/users/{userID}/events/")
+    @GetMapping("/users/{userID}/events")
     public ResponseEntity<List<Event>> GetUserEvents(@PathVariable("userID") String userID) {
         UUID userUUID = UUID.fromString(userID);
         Predicate<Event> UserPredicate = event -> event.getUserID().equals(userUUID);

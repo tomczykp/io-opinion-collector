@@ -32,7 +32,7 @@ public class ProductManager implements IProductManager {
         Product product = new Product(productDTO);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         product.setConfirmed(false);
-        eventManager.createProductReportEvent(user.getId(), "New product suggestion with name: \""
+        eventManager.createProductReportEvent(user, "New product suggestion with name: \""
                         + product.getName() + "\" and description: \"" + product.getDescription() + "\"",
                 product.getProductId());
         productRepository.save(product);
@@ -50,7 +50,7 @@ public class ProductManager implements IProductManager {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             productOptional.get().mergeProduct(productDTO); //FIXME
-            eventManager.createProductReportEvent(user.getId(), //FIXME VERY TEMPORARY
+            eventManager.createProductReportEvent(user, //FIXME VERY TEMPORARY
                     "User requested update of product: " + productDTO, productOptional.get().getProductId());
             productRepository.save(productOptional.get()); //FIXME New object with reference to the old
             return productOptional.get();
@@ -83,7 +83,7 @@ public class ProductManager implements IProductManager {
         if (productOptional.isPresent()) {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            eventManager.createProductReportEvent(user.getId(),"User requested deletion of" +
+            eventManager.createProductReportEvent(user,"User requested deletion of" +
                     " a product with description: \"" + productDF.getDescription() + "\"", uuid);
             //That's all?
             return true;
