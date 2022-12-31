@@ -54,6 +54,15 @@ export class UserEventsDashboardComponent implements OnInit, OnDestroy {
               });
             }
 
+            this.events = this.events.sort((eventOne, eventTwo) => {
+              if (eventOne.status == "Open" && eventTwo.status == "Open")
+                return 0;
+              else if (eventOne.status == "Open" && eventTwo.status == "Close")
+                return 1;
+
+              return -1;
+            });
+
             this.dataSource = new MatTableDataSource(this.events);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;

@@ -11,9 +11,11 @@
       <p>Nothing New</p>
     </div>
     <div class="card-body" *ngIf="this.events.length > 0">
-      <div class="form-check form-switch" (click)="getEvents()">
-        <input [(ngModel)]="isOpenedOnly" class="form-check-input" id="IsShowClosedCheckBox" type="checkbox">
-        <label class="form-check-label" for="IsShowClosedCheckBox">Show Open Only</label>
+      <div style="display: flex; padding: 10px;">
+        <div class="form-check form-switch" (click)="getEvents()">
+          <input [(ngModel)]="isOpenedOnly" class="form-check-input" id="IsShowClosedCheckBox" type="checkbox">
+          <label class="form-check-label" for="IsShowClosedCheckBox">Show Open Only</label>
+        </div>
       </div>
       <div class="table-responsive">
         <table [dataSource]="dataSource" mat-table matSort
