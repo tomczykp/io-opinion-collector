@@ -21,7 +21,12 @@ export class AdminEventsComponent implements OnInit, OnDestroy {
   counter = interval(1000);
   refreshSubscription: Subscription
 
-  constructor(private eventsService: EventsService) {
+  isOpenedOnly: boolean = true;
+  userFilter: string = "";
+
+  constructor(
+    private eventsService: EventsService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -39,6 +44,20 @@ export class AdminEventsComponent implements OnInit, OnDestroy {
     this.eventsService.getEvents().subscribe(value => {
       this.events = value;
 
+      if (this.isOpenedOnly) {
+        this.events = this.events.filter(function (event) {
+          return event.status != 'Closed';
+        });
+      }
+
+      if (this.userFilter != "") {
+        let filter = this.userFilter.toLowerCase();
+
+        this.events = this.events.filter((event) => {
+          return event.userName.toLowerCase().includes(filter);
+        })
+      }
+
       this.dataSource = new MatTableDataSource(this.events);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -47,6 +66,11 @@ export class AdminEventsComponent implements OnInit, OnDestroy {
 
   closeEvent(id: string): void {
     this.eventsService.closeEvent(id);
+    this.getEvents();
+  }
+
+  clearFilter(): void {
+    this.userFilter = "";
     this.getEvents();
   }
 

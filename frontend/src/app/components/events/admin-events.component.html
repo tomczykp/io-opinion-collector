@@ -7,6 +7,17 @@
     </div>
   </div>
   <div class="card">
+    <div style="display: flex; padding: 20px;">
+      <div class="d-flex">
+        <input [(ngModel)]="userFilter" (ngModelChange)="getEvents()" class="form-control w-50" placeholder="Find by user"
+               type="text">
+        <button (click)="clearFilter()" class="btn btn-primary ms-2">Clear input</button>
+      </div>
+      <div style="margin-top: auto; margin-bottom: auto;" class="form-check form-switch" (click)="getEvents()">
+        <input [(ngModel)]="isOpenedOnly" class="form-check-input" id="IsShowClosedCheckBox" type="checkbox">
+        <label class="form-check-label" for="IsShowClosedCheckBox">Show Open Only</label>
+      </div>
+    </div>
     <div class="table-responsive">
       <table [dataSource]="dataSource" mat-table matSort
              class="table mb-0 bg-light table-hover table-striped align-middle">
