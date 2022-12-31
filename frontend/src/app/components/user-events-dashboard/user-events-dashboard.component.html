@@ -1,0 +1,42 @@
+<div class="card m-2" style="background: #ffffff99; border-radius: 10px; box-shadow: 0 4px 30px #0000001a;backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);">
+  <div class="card m-md-4">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-sm-12 text-md-start pt-3">
+          <h2 class="col-sm-6">User Events</h2>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" *ngIf="this.events.length == 0">
+      <p>Nothing New</p>
+    </div>
+    <div class="card-body" *ngIf="this.events.length > 0">
+      <div class="table-responsive">
+        <table [dataSource]="dataSource" mat-table matSort
+               class="table mb-0 bg-light table-hover table-striped align-middle">
+
+          <ng-container matColumnDef="status">
+            <th *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let element">{{element.status}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th *matHeaderCellDef mat-sort-header>Description</th>
+            <td mat-cell *matCellDef="let element">{{element.description}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th *matHeaderCellDef mat-sort-header>Action</th>
+            <td mat-cell *matCellDef="let element">
+              <button type="button" class="btn btn-primary" >Anwser</button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[10,20]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

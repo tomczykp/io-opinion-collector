@@ -71,10 +71,10 @@ VALUES ('OpinionReportEvent', 'e8a5b357-db44-4a9a-8118-a35448145e2c', '🐶', 0,
        ('OpinionReportEvent', 'f238c3bd-1b75-43b2-b89e-a47f3fa103cb', 'OpinionReport: TEST', 0, '32208864-7b61-4e6e-8573-53863bd93b35',
         'f48bec69-1995-48c0-8ab4-aaee3734f809');
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, questionid)
-VALUES ('QuestionNotifyEvent', '1991023d-8ee5-41fb-b5e3-4076ea49417b', 'New question!!!', 0, '82208864-7b61-4e6e-8573-53863bd93b35',
+VALUES ('QuestionNotifyEvent', '1991023d-8ee5-41fb-b5e3-4076ea49417b', 'New question!!!', 0, '32208864-7b61-4e6e-8573-53863bd93b35',
         '0338ce3f-b8d3-4cf2-b814-b7ddffc17632');
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, productid)
-VALUES ('ProductReportEvent', '1bc29679-fc39-4a1d-b4b7-0f45b45690ed', 'Bad product', 0, '62708864-7b61-4e6e-8573-53863bd93b35',
+VALUES ('ProductReportEvent', '1bc29679-fc39-4a1d-b4b7-0f45b45690ed', 'Bad product', 0, '32208864-7b61-4e6e-8573-53863bd93b35',
         '7eb2fb7b-9e40-4150-ab16-d1d462e06405');
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, questionid)
 VALUES ('AnswerReportEvent', 'b12ac4f9-9e79-4420-987e-039d3f64bc56', 'Not Good Answer', 0, '82208864-7b61-4e6e-8573-53863bd93b35',

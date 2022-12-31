@@ -6,10 +6,10 @@ import {EventsService, OC} from "../../services/events.service";
 
 @Component({
   selector: 'app-events',
-  templateUrl: './events.component.html',
-  styleUrls: ['./events.component.css']
+  templateUrl: './admin-events.component.html',
+  styleUrls: ['./admin-events.component.css']
 })
-export class EventsComponent implements OnInit, AfterViewInit {
+export class AdminEventsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['userName', 'description', 'status', 'action'];
   dataSource: MatTableDataSource<OC.Event>;
 

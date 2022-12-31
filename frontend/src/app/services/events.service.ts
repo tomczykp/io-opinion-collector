@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, Observable} from "rxjs";
 import {environment} from "../../environments/environment";
 
@@ -14,16 +14,20 @@ export class EventsService {
   }
 
   public getEvents(): Observable<OC.Event[]> {
-    return this.httpClient.get<OC.Event[]>(environment.apiUrl + '/events');
+    return this.httpClient.get<OC.Event[]>(`${environment.apiUrl}/events`);
   }
 
-  public getEventsCount(userID: string) : Observable<number> {
-    return this.httpClient.get<number>(environment.apiUrl + '/users/' + userID + '/eventsCount')
+  public getUserEvents(userID: string): Observable<OC.Event[]> {
+    console.log(`/users/${userID}/eventsCount`)
+    return this.httpClient.get<OC.Event[]>(`${environment.apiUrl}/users/${userID}/events`);
+  }
+
+  public getEventsCount(userID: string): Observable<number> {
+    return this.httpClient.get<number>(`${environment.apiUrl}/users/${userID}/eventsCount`)
   }
 
   public closeEvent(id: string): void {
-    let url = environment.apiUrl + '/events/' + id + '/close';
-    this.httpClient.post(url, null).subscribe(value => {
+    this.httpClient.post(`${environment.apiUrl}/events/${id}/close`, null).subscribe(value => {
     })
   }
 }

@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.opinioncollector.eventHandling.dto.EventDTO;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.Event;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.EventStatus;
+import pl.lodz.p.it.opinioncollector.userModule.user.User;
+import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +19,12 @@ import java.util.function.Predicate;
 @CrossOrigin
 public class EventsController {
     EventManager eventManager;
+    UserManager userManager;
 
     @Autowired
-    public EventsController(EventManager eventManager) {
+    public EventsController(EventManager eventManager, UserManager userManager) {
         this.eventManager = eventManager;
+        this.userManager = userManager;
     }
 
     @GetMapping("/events")
@@ -54,8 +58,11 @@ public class EventsController {
         Predicate<Event> UserPredicate = event -> event.getUserID().equals(userUUID);
 
         List<Event> foundEvents = eventManager.getEvents(UserPredicate);
+        List<User> userList = userManager.getAllUsers(null);
 
-        if (foundEvents.isEmpty())
+        User foundUser = userList.stream().filter(listUser -> listUser.getId().equals(userUUID)).findFirst().orElse(null);
+
+        if (foundUser == null)
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(foundEvents);
