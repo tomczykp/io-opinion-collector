@@ -1,15 +1,16 @@
-import {AfterViewInit, Component, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {EventsService, OC} from "../../services/events.service";
+import {interval, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-events',
   templateUrl: './admin-events.component.html',
   styleUrls: ['./admin-events.component.css']
 })
-export class AdminEventsComponent implements OnInit, AfterViewInit {
+export class AdminEventsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['userName', 'description', 'status', 'action'];
   dataSource: MatTableDataSource<OC.Event>;
 
@@ -17,14 +18,21 @@ export class AdminEventsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   events: OC.Event[];
 
+  counter = interval(1000);
+  refreshSubscription: Subscription
+
   constructor(private eventsService: EventsService) {
   }
 
   ngOnInit(): void {
+    this.getEvents()
+    this.refreshSubscription = this.counter.subscribe(value => {
+      this.getEvents();
+    })
   }
 
-  ngAfterViewInit() {
-    this.getEvents()
+  ngOnDestroy() {
+    this.refreshSubscription.unsubscribe();
   }
 
   getEvents(): void {
@@ -39,7 +47,7 @@ export class AdminEventsComponent implements OnInit, AfterViewInit {
 
   closeEvent(id: string): void {
     this.eventsService.closeEvent(id);
-    location.reload();
+    this.getEvents();
   }
 
 }
