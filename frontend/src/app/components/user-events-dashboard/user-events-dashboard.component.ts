@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
@@ -17,11 +17,13 @@ export class UserEventsDashboardComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  events: OC.Event[];
+  events: OC.Event[] = [];
 
 
   counter = interval(5000);
   refreshSubscription : Subscription;
+
+  isOpenedOnly: boolean = true;
 
   constructor(
     private eventsService: EventsService,
@@ -45,6 +47,12 @@ export class UserEventsDashboardComponent implements OnInit, OnDestroy {
 
           this.eventsService.getUserEvents(userID).subscribe((events) => {
             this.events = events;
+
+            if (this.isOpenedOnly) {
+              this.events = this.events.filter(function (event) {
+                return event.status != 'Closed';
+              });
+            }
 
             this.dataSource = new MatTableDataSource(this.events);
             this.dataSource.paginator = this.paginator;

@@ -18,7 +18,6 @@ export class EventsService {
   }
 
   public getUserEvents(userID: string): Observable<OC.Event[]> {
-    console.log(`/users/${userID}/eventsCount`)
     return this.httpClient.get<OC.Event[]>(`${environment.apiUrl}/users/${userID}/events`);
   }
 

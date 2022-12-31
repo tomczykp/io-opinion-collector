@@ -16,7 +16,8 @@ export class EventsIconComponent implements OnInit, OnDestroy{
   userID : string;
 
   counter = interval(5000);
-  refreshSubscription : Subscription;
+  refreshSubscription: Subscription;
+
 
   constructor(
     private eventsService: EventsService,
