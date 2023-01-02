@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Opinion } from '../model/Opinion';
+import { Opinion, OpinionId } from '../model/Opinion';
 
 @Injectable({
     providedIn: 'root'
@@ -15,5 +15,12 @@ export class OpinionService
     {
         const url = `${environment.apiUrl}/products/${productId}/opinions`;
         return this.httpClient.get<Opinion[]>(url);
+    }
+
+    rate(id: OpinionId, positive: boolean): Observable<Opinion>
+    {
+        const url = `${environment.apiUrl}/products/${id.productId}/opinions/${id.opinionId}/${positive ? 'like' : 'dislike'}`;
+
+        return this.httpClient.put<Opinion>(url, null);
     }
 }

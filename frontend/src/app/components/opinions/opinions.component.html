@@ -5,27 +5,43 @@
     <div class="container">
         <ng-container *ngIf="opinions.length; else noOpinions">
             <div *ngFor="let opinion of opinions">
-                <div class="row">
-                    <p class="fs-6 fw-bold mb-1">{{ opinion.author.visibleName }}</p>
-                    <p class="mb-1 fs-4">{{ opinion.description }}</p>
+                <div>
+                    <span class="fs-6 fw-bold mb-1">{{ opinion.author.visibleName }}</span>
+                    <i class="bi bi-dot"></i>
+                    <span>{{ date | date : 'medium' }}</span>
+                    <i class="bi bi-dot"></i>
+                    <ngb-rating
+                        [rate]="opinion.rate"
+                        [readonly]="true">
+                    </ngb-rating>
+                    <p class="mb-1 fs-5">{{ opinion.description }}</p>
                 </div>
                 <ng-container *ngIf="opinion.pros.length || opinion.cons.length">
                     <div class="row">
                         <div class="col">
-                            <p class="mb-0 fs-5">Pros:</p>
+                            <p class="mb-0 fs-6">Pros:</p>
                             <ul>
                                 <li *ngFor="let p of opinion.pros">{{ p.value }}</li>
                             </ul>
                         </div>
                         <div class="col">
-                            <p class="mb-0 fs-5">Cons:</p>
+                            <p class="mb-0 fs-6">Cons:</p>
                             <ul>
                                 <li *ngFor="let c of opinion.cons">{{ c.value }}</li>
                             </ul>
                         </div>
                     </div>
                 </ng-container>
-                <hr class="my-0">
+                <div class="mb-0">
+                    <span (click)="rateOpinion(opinion.id, false)">
+                        <i class="bi bi-hand-thumbs-down"></i>
+                    </span>
+                    <span class="likesCounter">{{ opinion.likesCounter }}</span>
+                    <span (click)="rateOpinion(opinion.id, true)">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                    </span>
+                </div>
+                <hr class="mb-2">
             </div>
         </ng-container>
         <ng-template #noOpinions>
