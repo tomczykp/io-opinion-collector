@@ -72,6 +72,7 @@ public class Opinion implements Serializable {
     @ManyToOne(optional = false)
     private User author;
 
+    @JsonIgnore
     @OneToMany(orphanRemoval = true,
                cascade = CascadeType.ALL,
                mappedBy = "opinion",

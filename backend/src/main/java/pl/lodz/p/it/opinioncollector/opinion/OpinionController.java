@@ -89,6 +89,12 @@ public class OpinionController {
         return opinionManager.addReaction(productId, opinionId, false);
     }
 
+    @DeleteMapping({ "/{opinionId}/like", "/{opinionId}/dislike" })
+    public Opinion removeReaction(@PathVariable UUID productId,
+                                  @PathVariable UUID opinionId) throws OpinionNotFoundException {
+        return opinionManager.removeReaction(productId, opinionId);
+    }
+
     @PostMapping(value = "/{opinionId}/report",
                  consumes = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)

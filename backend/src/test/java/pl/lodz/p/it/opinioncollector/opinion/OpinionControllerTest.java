@@ -1019,4 +1019,188 @@ class OpinionControllerTest {
                     "likesCounter", is(-1));
     }
     // endregion
+
+    // region DELETE /products/{productId}/opinions/{opinionId}/like
+    @Test
+    @WithUserDetails("user2")
+    void shouldRemoveLikeWithStatusCode200Test() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String likeUrl = LIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().delete(likeUrl)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(0));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(0));
+    }
+
+    @Test
+    void shouldRemoveLikeFailWithStatusCode403WhenUserIsUnauthenticatedTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String likeUrl = LIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().delete(likeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+    }
+
+    @Test
+    @WithUserDetails("admin")
+    void shouldRemoveLikeFailWithStatusCode403WhenUserIsAdminTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String likeUrl = LIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().delete(likeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+    }
+    // endregion
+
+    // region DELETE /products/{productId}/opinions/{opinionId}/dislike
+    @Test
+    @WithUserDetails("user10")
+    void shouldRemoveDislikeWithStatusCode200Test() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String dislikeUrl = DISLIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().delete(dislikeUrl)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(2));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(2));
+    }
+
+    @Test
+    void shouldRemoveDislikeFailWithStatusCode403WhenUserIsUnauthenticatedTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String dislikeUrl = DISLIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().delete(dislikeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+    }
+
+    @Test
+    @WithUserDetails("admin")
+    void shouldRemoveDislikeFailWithStatusCode403WhenUserIsAdminTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String dislikeUrl = DISLIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().delete(dislikeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("id.opinionId", is(opinionId),
+                    "id.productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+    }
+    // endregion
 }

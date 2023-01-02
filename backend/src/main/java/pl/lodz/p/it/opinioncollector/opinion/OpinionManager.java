@@ -17,6 +17,7 @@ import pl.lodz.p.it.opinioncollector.opinion.model.Disadvantage;
 import pl.lodz.p.it.opinioncollector.opinion.model.Opinion;
 import pl.lodz.p.it.opinioncollector.opinion.model.OpinionId;
 import pl.lodz.p.it.opinioncollector.opinion.model.Reaction;
+import pl.lodz.p.it.opinioncollector.opinion.model.ReactionId;
 import pl.lodz.p.it.opinioncollector.opinion.repositories.OpinionRepository;
 import pl.lodz.p.it.opinioncollector.opinion.repositories.ReactionRepository;
 import pl.lodz.p.it.opinioncollector.productManagment.ProductRepository;
@@ -129,6 +130,24 @@ public class OpinionManager {
                                     }
                                     opinion.setLikesCounter(reactionRepository.calculateLikesCounter(opinion.getId()));
                                     return opinion;
+                                })
+                                .orElseThrow(OpinionNotFoundException::new);
+    }
+
+    @Transactional
+    public Opinion removeReaction(UUID productId, UUID opinionId) throws OpinionNotFoundException {
+        return opinionRepository.findOne(productId, opinionId)
+                                .map(o -> {
+                                    UUID userId = ((User) SecurityContextHolder.getContext()
+                                                                               .getAuthentication()
+                                                                               .getPrincipal()).getId();
+
+                                    ReactionId reactionId = new ReactionId(o.getId(), userId);
+
+                                    reactionRepository.deleteById(reactionId);
+                                    o.setLikesCounter(reactionRepository.calculateLikesCounter(o.getId()));
+
+                                    return o;
                                 })
                                 .orElseThrow(OpinionNotFoundException::new);
     }
