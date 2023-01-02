@@ -34,8 +34,8 @@
           <ng-container matColumnDef="action">
             <th *matHeaderCellDef mat-sort-header>Action</th>
             <td mat-cell *matCellDef="let element">
-              <button type="button" class="btn btn-primary" *ngIf="element.status == 'Open'">Anwser</button>
-              <button type="button" class="btn btn-primary" disabled *ngIf="element.status != 'Open'">Anwser</button>
+              <button type="button" class="btn btn-primary" *ngIf="element.status == 'Open'">Answer</button>
+              <button type="button" class="btn btn-primary" disabled *ngIf="element.status != 'Open'">Answer</button>
             </td>
           </ng-container>
 
