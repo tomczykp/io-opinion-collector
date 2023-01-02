@@ -97,6 +97,7 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.GET, "/events/{userID}/events").hasAnyRole("USER", "ADMIN")
                                         .requestMatchers(HttpMethod.GET, "/events").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.POST, "/events/{eventID}/close").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/users/{userID}/eventsCount").hasAnyRole("ADMIN", "USER")
 
                                         // Place for your secured endpoints
                                         .anyRequest().permitAll()

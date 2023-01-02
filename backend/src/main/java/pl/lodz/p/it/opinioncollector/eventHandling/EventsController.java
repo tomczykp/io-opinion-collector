@@ -1,7 +1,9 @@
 package pl.lodz.p.it.opinioncollector.eventHandling;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.opinioncollector.eventHandling.dto.EventDTO;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.Event;
@@ -55,6 +57,11 @@ public class EventsController {
     @GetMapping("/users/{userID}/events")
     public ResponseEntity<List<Event>> GetUserEvents(@PathVariable("userID") String userID) {
         UUID userUUID = UUID.fromString(userID);
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.getId().equals(userUUID))
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
         Predicate<Event> UserPredicate = event -> event.getUserID().equals(userUUID);
 
         List<Event> foundEvents = eventManager.getEvents(UserPredicate);
@@ -71,6 +78,11 @@ public class EventsController {
     @GetMapping("/users/{userID}/eventsCount")
     public ResponseEntity<Integer> GetUserEventsCount(@PathVariable("userID") String userID) {
         UUID userUUID = UUID.fromString(userID);
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.getId().equals(userUUID))
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
         Predicate<Event> UserPredicate = event -> event.getUserID().equals(userUUID);
 
         List<Event> foundEvents = eventManager.getEvents(UserPredicate);
