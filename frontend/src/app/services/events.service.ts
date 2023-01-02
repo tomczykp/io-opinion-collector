@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, Observable} from "rxjs";
-import * as url from "url";
 import {environment} from "../../environments/environment";
 
 @Injectable({
@@ -15,13 +14,19 @@ export class EventsService {
   }
 
   public getEvents(): Observable<OC.Event[]> {
-    return this.httpClient.get<OC.Event[]>(environment.apiUrl + '/events');
+    return this.httpClient.get<OC.Event[]>(`${environment.apiUrl}/events`);
+  }
+
+  public getUserEvents(userID: string): Observable<OC.Event[]> {
+    return this.httpClient.get<OC.Event[]>(`${environment.apiUrl}/users/${userID}/events`);
+  }
+
+  public getEventsCount(userID: string): Observable<number> {
+    return this.httpClient.get<number>(`${environment.apiUrl}/users/${userID}/eventsCount`)
   }
 
   public closeEvent(id: string): void {
-    let url = environment.apiUrl + '/events/' + id + '/close';
-    this.httpClient.post(url, null).subscribe(value => {
-      console.log(value);
+    this.httpClient.post(`${environment.apiUrl}/events/${id}/close`, null).subscribe(value => {
     })
   }
 }
@@ -29,11 +34,8 @@ export class EventsService {
 export namespace OC {
   export interface Event {
     eventID: string;
-    userID: string;
+    userName: string;
     description: string;
     status: string;
-    opinionID: string;
-    questionID: string;
-    productID: string;
   }
 }

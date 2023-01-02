@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {EventsComponent} from './components/events/events.component';
+import {AdminEventsComponent} from './components/events/admin-events.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
@@ -31,11 +31,13 @@ import { CategoriesComponent } from './components/categories/categories.componen
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import {UpdateProductComponent} from "./components/products/update-product/update-product.component";
 import { DeleteProductFormComponent } from './components/products/delete-product-form/delete-product-form.component';
+import { EventsIconComponent } from './components/events-icon/events-icon.component';
+import { UserEventsDashboardComponent } from './components/user-events-dashboard/user-events-dashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    EventsComponent,
+    AdminEventsComponent,
     HomeComponent,
     NavComponent,
     ProductsComponent,
@@ -54,6 +56,8 @@ import { DeleteProductFormComponent } from './components/products/delete-product
     AddProductComponent,
     UpdateProductComponent,
     DeleteProductFormComponent,
+    EventsIconComponent,
+    UserEventsDashboardComponent,
   ],
   imports: [
     BrowserModule,
