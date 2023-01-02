@@ -35,7 +35,7 @@ public class EventsController {
 
         for(var event : eventManager.getEvents())
         {
-            result.add(new EventDTO(event.getEventID().toString(), event.getUser().getVisibleName(), event.getDescription(), event.getStatus()));
+            result.add(new EventDTO(event.getEventID(), event.getUser().getVisibleName(), event.getDescription(), event.getStatus()));
         }
 
         return result;
@@ -49,7 +49,7 @@ public class EventsController {
             return ResponseEntity.notFound().build();
 
         Event result = foundEvent.get();
-        EventDTO resultDTO = new EventDTO(result.getEventID().toString(), result.getUser().getVisibleName(), result.getDescription(), result.getStatus());
+        EventDTO resultDTO = new EventDTO(result.getEventID(), result.getUser().getVisibleName(), result.getDescription(), result.getStatus());
 
         return ResponseEntity.ok(resultDTO);
     }
