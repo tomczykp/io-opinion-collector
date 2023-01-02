@@ -9,7 +9,7 @@ import java.util.UUID;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
-    List<Product> findByCategoryId(UUID uuid);
+    List<Product> findByCategory(UUID uuid);
 
     List<Product> findByConfirmedFalse();
 }

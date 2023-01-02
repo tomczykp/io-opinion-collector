@@ -3,7 +3,11 @@ package pl.lodz.p.it.opinioncollector.productManagment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import pl.lodz.p.it.opinioncollector.category.managers.CategoryManager;
+import pl.lodz.p.it.opinioncollector.category.model.Category;
+import pl.lodz.p.it.opinioncollector.category.model.Field;
 import pl.lodz.p.it.opinioncollector.eventHandling.IProductEventManager;
+import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 import java.util.List;
@@ -14,11 +18,14 @@ import java.util.UUID;
 public class ProductManager implements IProductManager {
     private final ProductRepository productRepository;
     private final IProductEventManager eventManager;
+    private final CategoryManager categoryManager;
 
     @Autowired
-    public ProductManager(ProductRepository productRepository, IProductEventManager eventManager) {
+    public ProductManager(ProductRepository productRepository, IProductEventManager eventManager,
+                          CategoryManager categoryManager) {
         this.productRepository = productRepository;
         this.eventManager = eventManager;
+        this.categoryManager = categoryManager;
     }
 
 
@@ -28,14 +35,36 @@ public class ProductManager implements IProductManager {
         return product;
     }
 
-    public Product createSuggestion(ProductDTO productDTO) {
+    public Product createSuggestion(ProductDTO productDTO) throws CategoryNotFoundException {
         Product product = new Product(productDTO);
+
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         product.setConfirmed(false);
+
+
+        try {
+            product.setCategory(categoryManager.getCategory(productDTO.getCategoryId()));
+
+        } catch (CategoryNotFoundException e) {
+            throw new CategoryNotFoundException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        Category categoryTemp = product.getCategory();
+        while (categoryTemp != null) {
+            List<Field> fields = categoryTemp.getFields();
+            for (Field field :
+                    fields) {
+                product.addProperty(field.getName(), field.getType());
+            }
+            categoryTemp = categoryTemp.getParentCategory();
+        }
+
+        productRepository.save(product);
         eventManager.createProductReportEvent(user.getId(), "New product suggestion with name: \""
                         + product.getName() + "\" and description: \"" + product.getDescription() + "\"",
                 product.getProductId());
-        productRepository.save(product);
         return product;
     }
 
@@ -83,7 +112,7 @@ public class ProductManager implements IProductManager {
         if (productOptional.isPresent()) {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            eventManager.createProductReportEvent(user.getId(),"User requested deletion of" +
+            eventManager.createProductReportEvent(user.getId(), "User requested deletion of" +
                     " a product with description: \"" + productDF.getDescription() + "\"", uuid);
             //That's all?
             return true;
@@ -106,7 +135,7 @@ public class ProductManager implements IProductManager {
     }
 
     public List<Product> getProductsByCategory(UUID uuid) {
-        return productRepository.findByCategoryId(uuid);
+        return productRepository.findByCategory(uuid);
     }
 
     public List<Product> getUnconfirmedSuggestions() {

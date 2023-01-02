@@ -13,10 +13,6 @@
           <td>{{ product.productId }}</td>
         </tr>
         <tr>
-          <th scope="col">categoryId</th>
-          <td>{{ product.categoryId }}</td>
-        </tr>
-        <tr>
           <th scope="col">name</th>
           <td>{{ product.name }}</td>
         </tr>
@@ -38,21 +34,27 @@
       </table>
 
       <div class="mb-4">
-        <h3>properties</h3>
-        <table class="table table-bordered">
-          <tbody>
-          <tr *ngFor="let item of product.properties | keyvalue">
-            <th>{{ item.key }}</th>
-            <td>{{ item.value }}</td>
-          </tr>
-          </tbody>
-        </table>
+        <!-- FIXME not working correctly-->
+        <ng-template [ngIf]="product.properties" [ngIfElse]="Properties">
+          <h3>properties</h3>
+          <table class="table table-bordered">
+            <tbody>
+            <tr *ngFor="let item of product.properties | keyvalue">
+              <th>{{ item.key }}</th>
+              <td>{{ item.value }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </ng-template>
+        <ng-template #Properties>
+          <h3>Product has no properties</h3>
+        </ng-template>
       </div>
 
     </div>
 
-<!--    <app-delete-product-form></app-delete-product-form>-->
-<!--    <app-update-product></app-update-product>-->
+    <!--    <app-delete-product-form></app-delete-product-form>-->
+    <!--    <app-update-product></app-update-product>-->
     <app-opinions [productId]="product.productId"></app-opinions>
 
     <app-questions [productId]="product.productId"></app-questions>

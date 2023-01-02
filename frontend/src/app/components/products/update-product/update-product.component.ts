@@ -20,7 +20,7 @@ export class UpdateProductComponent implements OnInit {
 
 
   updateProductForm = new FormGroup({
-    categoryId: new FormControl('', [Validators.required, Validators.pattern(this.regexForm)]),
+    // categoryId: new FormControl('', [Validators.required, Validators.pattern(this.regexForm)]),
     name: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required])
     // ,
@@ -39,7 +39,7 @@ export class UpdateProductComponent implements OnInit {
       console.log(data);
       this.product = data.body!;
       this.updateProductForm.setValue({
-        categoryId: this.product.categoryId,
+        // categoryId: this.product.categoryId,
         name: this.product.name,
         description: this.product.description
         // ,
@@ -52,7 +52,7 @@ export class UpdateProductComponent implements OnInit {
   updateProduct(): void {
     if (this.updateProductForm.valid) {
       const ProductDTO: object = {
-        "categoryId": this.updateProductForm.getRawValue().categoryId,
+        // "categoryId": this.updateProductForm.getRawValue().categoryId,
         "name": this.updateProductForm.getRawValue().name,
         "description": this.updateProductForm.getRawValue().description,
         "properties": {

@@ -26,15 +26,12 @@ public class ProductDTO {
     @NotEmpty
     private String description;
 
-    @NotNull
-    private HashMap<@NotEmpty String, @NotEmpty String> properties;
 
     public ProductDTO(UUID categoryId, String name, String description, HashMap<String,
             String> properties) {
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
-        this.properties = properties;
     }
 
     @Override
@@ -43,7 +40,6 @@ public class ProductDTO {
         sb.append("categoryId=").append(categoryId);
         sb.append(", name='").append(name).append('\'');
         sb.append(", description='").append(description).append('\'');
-        sb.append(", properties=").append(properties);
         return sb.toString();
     }
 }
