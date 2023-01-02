@@ -102,6 +102,6 @@ public class OpinionController {
             throw new OpinionNotFoundException();
         }
 
-        eventManager.createOpinionReportEvent(user.getId(), reason, opinionId);
+        eventManager.createOpinionReportEvent(user, reason, opinionId);
     }
 }
