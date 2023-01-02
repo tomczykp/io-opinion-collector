@@ -1,7 +1,10 @@
 <div class="container custom-container mt-2">
   <div class="card">
     <div class="header">
-      <h3 class="mb-4 text-center">Categories</h3>
+      <h2 class="mb-4 text-center">Categories</h2>
+      <button routerLink="/categories/add" class="btn">
+        <i class="bi bi-plus-circle me-2"></i><div
+        class="d-none d-sm-inline position-relative mb-xxl-5">Add category</div></button>
     </div>
 
     <div class="justify-content-center">
@@ -9,12 +12,15 @@
       <table class="table table-bordered">
         <thead>
           <th>Name</th>
+          <th>Id</th>
           <th>Parent category</th>
           <th>Fields</th>
+          <th>Delete</th>
         </thead>
         <tbody>
         <tr *ngFor="let category of categories$ | async">
           <td>{{ category.name }}</td>
+          <td>{{ category.categoryID }}</td>
           <td>{{ category.parentCategory?.name || "None" }}</td>
           <td>
             <ul>
@@ -22,6 +28,10 @@
                 {{field.name}}: {{field.type}}
               </li>
             </ul>
+          </td>
+          <td>
+            <button type="button" (click)="deleteCategory(category.categoryID)" class="bi bi-trash hover-icon"
+                    style="font-size: 30px; color: darkred;">Delete</button>
           </td>
         </tr>
 
