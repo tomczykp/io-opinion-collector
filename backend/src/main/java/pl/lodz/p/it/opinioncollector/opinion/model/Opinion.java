@@ -1,6 +1,7 @@
 package pl.lodz.p.it.opinioncollector.opinion.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,6 +33,12 @@ public class Opinion implements Serializable {
 
     @EmbeddedId
     private OpinionId id;
+
+    @Column(nullable = false,
+            insertable = false,
+            updatable = false,
+            columnDefinition = "TIMESTAMP DEFAULT NOW()")
+    private LocalDateTime createdAt;
 
     @Column(name = "RATE", nullable = false)
     private int rate;

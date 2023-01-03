@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -111,7 +112,8 @@ class OpinionControllerTest {
                     "rate", equalTo(2),
                     "pros", hasSize(2),
                     "cons", hasSize(1),
-                    "author.id", equalTo("12208864-7b61-4e6e-8573-53863bd93b35"));
+                    "author.id", equalTo("12208864-7b61-4e6e-8573-53863bd93b35"),
+                    "createdAt", not(empty()));
     }
 
     @Test
