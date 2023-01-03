@@ -33,6 +33,7 @@ import {UpdateProductComponent} from "./components/products/update-product/updat
 import { DeleteProductFormComponent } from './components/products/delete-product-form/delete-product-form.component';
 import { EventsIconComponent } from './components/events-icon/events-icon.component';
 import { UserEventsDashboardComponent } from './components/user-events-dashboard/user-events-dashboard.component';
+import { OpinionReportModalComponent } from './components/opinions/opinion-report-modal/opinion-report-modal.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { UserEventsDashboardComponent } from './components/user-events-dashboard
     DeleteProductFormComponent,
     EventsIconComponent,
     UserEventsDashboardComponent,
+    OpinionReportModalComponent,
   ],
   imports: [
     BrowserModule,

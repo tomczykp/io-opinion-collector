@@ -8,7 +8,9 @@
                 <div>
                     <span class="fs-6 fw-bold mb-1">{{ opinion.author.visibleName }}</span>
                     <i class="bi bi-dot"></i>
-                    <span>{{ date | date : 'medium' }}</span>
+                    <span>
+                        {{ opinion.createdAt| date : 'medium' }}
+                    </span>
                     <i class="bi bi-dot"></i>
                     <ngb-rating
                         [rate]="opinion.rate"
@@ -32,14 +34,29 @@
                         </div>
                     </div>
                 </ng-container>
-                <div class="mb-0">
-                    <span (click)="rateOpinion(opinion.id, false)">
-                        <i class="bi bi-hand-thumbs-down"></i>
+                <div class="mb-0 d-inline-flex align-items-center gap-3">
+                    <span>
+                        <span (click)="rateOpinion(opinion.id, true)">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                        </span>
+                        <span class="likesCounter">{{ opinion.likesCounter }}</span>
+                        <span (click)="rateOpinion(opinion.id, false)">
+                            <i class="bi bi-hand-thumbs-down"></i>
+                        </span>
                     </span>
-                    <span class="likesCounter">{{ opinion.likesCounter }}</span>
-                    <span (click)="rateOpinion(opinion.id, true)">
-                        <i class="bi bi-hand-thumbs-up"></i>
-                    </span>
+                    <button
+                        *ngIf="isAuthor(opinion)"
+                        class="btn btn-warning">
+                        <i class="bi bi-pencil-square"></i>
+                        Edit
+                    </button>
+                    <button
+                        *ngIf="isUser()"
+                        (click)="openReportModal(opinion.id)"
+                        class="btn btn-danger">
+                        <i class="bi bi-flag"></i>
+                        Report
+                    </button>
                 </div>
                 <hr class="mb-2">
             </div>

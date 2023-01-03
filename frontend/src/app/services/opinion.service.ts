@@ -23,4 +23,13 @@ export class OpinionService
 
         return this.httpClient.put<Opinion>(url, null);
     }
+
+    report(id: OpinionId, reason: string)
+    {
+        const url = `${environment.apiUrl}/products/${id.productId}/opinions/${id.opinionId}/report`;
+
+        console.log(url);
+
+        this.httpClient.post<null>(url, reason).subscribe();
+    }
 }

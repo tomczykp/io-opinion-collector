@@ -17,6 +17,7 @@ export class Opinion {
     likesCounter: number = 0;
     pros: AdvantageOrDisadvantage[] = [];
     cons: AdvantageOrDisadvantage[] = [];
+    createdAt: Date;
 
     author: User;
 }
