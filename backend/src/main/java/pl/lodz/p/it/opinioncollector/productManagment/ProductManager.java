@@ -61,6 +61,8 @@ public class ProductManager implements IProductManager {
             categoryTemp = categoryTemp.getParentCategory();
         }
 
+        product.setParentProductId(null);
+        product.setConstantProductId(UUID.randomUUID());
         productRepository.save(product);
         eventManager.createProductReportEvent(user.getId(), "New product suggestion with name: \""
                         + product.getName() + "\" and description: \"" + product.getDescription() + "\"",
@@ -74,15 +76,27 @@ public class ProductManager implements IProductManager {
     }
 
     public Product updateProduct(UUID uuid, ProductDTO productDTO) {
-        Optional<Product> productOptional = productRepository.findById(uuid);
-        if (productOptional.isPresent()) {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Product> originalProduct = productRepository.findById(uuid);
+        if (originalProduct.isPresent()) {
+            Product newProduct = new Product(productDTO);
+            newProduct.setProperties(originalProduct.get().getProperties());
+            newProduct.setProperties(productDTO.getProperties());
+            newProduct.setParentProductId(originalProduct.get().getParentProductId());
+            newProduct.setConstantProductId(originalProduct.get().getConstantProductId()); //FIXME works for now?
 
-            productOptional.get().mergeProduct(productDTO); //FIXME
-            eventManager.createProductReportEvent(user.getId(), //FIXME VERY TEMPORARY
-                    "User requested update of product: " + productDTO, productOptional.get().getProductId());
-            productRepository.save(productOptional.get()); //FIXME New object with reference to the old
-            return productOptional.get();
+
+//            List<Product> latestVersionProductList = productRepository.
+//                    findByConstantProductIdAndDeletedFalse(newProduct.getConstantProductId());
+//            if (!latestVersionProductList.isEmpty()) {
+//                Product latestVersionProduct = latestVersionProductList.get(0);
+//                latestVersionProduct.setDeleted(true); //FIXME
+//            }
+
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            eventManager.createProductReportEvent(user.getId(),
+                    "User requested update of product: " + productDTO, newProduct.getParentProductId()); //This?
+            productRepository.save(newProduct);
+            return newProduct;
         }
         return null;
     }
@@ -135,11 +149,15 @@ public class ProductManager implements IProductManager {
     }
 
     public List<Product> getProductsByCategory(UUID uuid) {
-        return productRepository.findByCategory(uuid);
+        return productRepository.findByCategoryCategoryID(uuid);
     }
 
     public List<Product> getUnconfirmedSuggestions() {
         return productRepository.findByConfirmedFalse();
+    }
+
+    public List<Product> getLatestVersionProduct(UUID uuid) {
+        return productRepository.findByConstantProductIdAndDeletedFalse(uuid);
     }
 
 

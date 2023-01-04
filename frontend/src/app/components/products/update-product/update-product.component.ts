@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Product} from "../../../model/Product";
 import {ProductsService} from "../../../services/products.service";
+import {CategoriesService} from "../../../services/categories.service";
 import {HttpResponse} from "@angular/common/http";
+import {Category} from "../../../model/category";
 
 
 @Component({
@@ -12,6 +14,7 @@ import {HttpResponse} from "@angular/common/http";
 })
 export class UpdateProductComponent implements OnInit {
   product: Product = <Product>{};
+  categories: Category[];
   match: RegExpMatchArray | null;
   uuid: string;
 
@@ -19,54 +22,72 @@ export class UpdateProductComponent implements OnInit {
   regexGet: RegExp = new RegExp('[0-9a-f\-]+$');
 
 
-  updateProductForm = new FormGroup({
-    // categoryId: new FormControl('', [Validators.required, Validators.pattern(this.regexForm)]),
+  updateProductForm = this.fb.group({
     name: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required])
-    // ,
-    // properties: new FormControl('')
+    description: new FormControl('', [Validators.required]),
+    properties: this.fb.array([]),
+    category: new FormControl('', Validators.required)
   })
 
+
   constructor(private productService: ProductsService,
+              private categoryService: CategoriesService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private fb: FormBuilder) {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) =>
-    {this.uuid = params.get('uuid')!.toString()});
+    console.log(this.product.properties)
+    this.route.paramMap.subscribe((params) => {
+      this.uuid = params.get('uuid')!.toString()
+    });
+
+    this.categoryService.getCategories().subscribe((data: Category[]) => {
+      this.categories = data;
+    });
+
     this.productService.getProduct(this.uuid).subscribe((data: HttpResponse<Product>) => {
-      console.log(data);
       this.product = data.body!;
       this.updateProductForm.setValue({
-        // categoryId: this.product.categoryId,
         name: this.product.name,
-        description: this.product.description
-        // ,
-        // properties: 'test'
+        description: this.product.description,
+        properties: [],
+        category: this.categories[0].name
       })
+      this.loadProperties();
     });
   }
 
-
   updateProduct(): void {
     if (this.updateProductForm.valid) {
-      const ProductDTO: object = {
+      const productDTO: object = {
         // "categoryId": this.updateProductForm.getRawValue().categoryId,
         "name": this.updateProductForm.getRawValue().name,
         "description": this.updateProductForm.getRawValue().description,
         "properties": {
-          "test": "test" //fixme
+          "": ""
         }
       }
-      console.log(ProductDTO);
-      this.productService.updateProduct(this.uuid, ProductDTO)
+      this.productService.updateProduct(this.uuid, productDTO)
         .subscribe((result) => {
             if (result.status === 200) {
               this.router.navigate(['/']);
             }
           }
         )
+    }
+  }
+
+  loadProperties() {
+    let keys = Object.keys(this.product.properties)
+    let values = Object.values(this.product.properties)
+    for (let i = 0; i < keys.length; i++) {
+      const dynForm = this.fb.group({
+        key: [keys[i], Validators.required],
+        value: [values[i], Validators.required]
+      })
+      this.properties.push(dynForm)
     }
   }
 
@@ -83,6 +104,6 @@ export class UpdateProductComponent implements OnInit {
   }
 
   get properties() {
-    return this.updateProductForm.get('properties');
+    return this.updateProductForm.controls['properties'] as FormArray;
   }
 }

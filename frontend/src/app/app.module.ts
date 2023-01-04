@@ -31,6 +31,8 @@ import { CategoriesComponent } from './components/categories/categories.componen
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import {UpdateProductComponent} from "./components/products/update-product/update-product.component";
 import { DeleteProductFormComponent } from './components/products/delete-product-form/delete-product-form.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
   declarations: [
@@ -73,6 +75,8 @@ import { DeleteProductFormComponent } from './components/products/delete-product
     HttpClientModule,
     FormsModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }

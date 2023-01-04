@@ -26,12 +26,16 @@ public class ProductDTO {
     @NotEmpty
     private String description;
 
+    @NotEmpty
+    HashMap<String, String> properties;
+
 
     public ProductDTO(UUID categoryId, String name, String description, HashMap<String,
             String> properties) {
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
+        this.properties = properties;
     }
 
     @Override

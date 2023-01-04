@@ -49,6 +49,7 @@ export class AddProductComponent implements OnInit {
         "categoryId": this.addProductForm.getRawValue().categoryId,
         "name": this.addProductForm.getRawValue().name,
         "description": this.addProductForm.getRawValue().description,
+        "properties": {"test":"test"} //FIXME
       }
       console.log(ProductDTO);
       this.productService.addProduct(ProductDTO)

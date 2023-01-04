@@ -21,10 +21,15 @@ import java.util.UUID;
 public class Product implements Serializable {
 
     @Id
-    @Column(name = "product_ID", updatable = false, nullable = false)
-    @Setter(AccessLevel.NONE)
+    @Column(name = "product_ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID productId;
+
+    @Column(nullable = true)
+    private UUID parentProductId;
+
+    @Column(nullable = true)
+    private UUID constantProductId;
 
     @ManyToOne(optional = false) //cascade?
     @JoinColumn(name = "category_id", referencedColumnName = "categoryid", nullable = false)
@@ -70,6 +75,17 @@ public class Product implements Serializable {
 
     public String getProperty(String key) {
         return properties.get(key);
+    }
+
+    public void setProperties(Map<String, String> properties) {
+        for (String key :
+                properties.keySet()) {
+            this.properties.put(key, properties.get(key)); //FIXME but now key has to be unique, hashset?
+        }
+//            this.properties.putIfAbsent(key, properties.get(key)); // How about that?
+//            if(this.properties.putIfAbsent(key, properties.get(key)) == null){
+//            this.properties.put(key + "idk_something to distinct", properties.get(key));
+//            }  // And this?
     }
 
     public void mergeProduct(ProductDTO productDTO) {
