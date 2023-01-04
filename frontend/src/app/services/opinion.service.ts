@@ -24,6 +24,13 @@ export class OpinionService
         return this.httpClient.put<Opinion>(url, null);
     }
 
+    removeReaction(productId: string, opinionId: string, positive: boolean)
+    {
+        const url = `${environment.apiUrl}/products/${productId}/opinions/${opinionId}/${positive ? 'like' : 'dislike'}`;
+
+        return this.httpClient.delete<Opinion>(url);
+    }
+
     report(productId: string, opinionId: string, reason: string)
     {
         const url = `${environment.apiUrl}/products/${productId}/opinions/${opinionId}/report`;

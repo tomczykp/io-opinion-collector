@@ -36,20 +36,20 @@
                 </ng-container>
                 <div class="mb-0 d-inline-flex align-items-center gap-3">
                     <span>
-                        <span (click)="rateOpinion(opinion, true)">
+                        <span (click)="onReactionClick(opinion, true)">
                             <i
                                 class="bi"
                                 [ngClass]="{ 
-                                    'bi-hand-thumbs-up': !opinion.liked,
-                                    'bi-hand-thumbs-up-fill': opinion.liked }"></i>
+                                    'bi-hand-thumbs-up-fill': opinion.liked,
+                                    'bi-hand-thumbs-up': !opinion.liked }"></i>
                         </span>
                         <span class="likesCounter">{{ opinion.likesCounter }}</span>
-                        <span (click)="rateOpinion(opinion, false)">
+                        <span (click)="onReactionClick(opinion, false)">
                             <i
                                 class="bi"
                                 [ngClass]="{ 
-                                    'bi-hand-thumbs-down': !opinion.disliked,
-                                    'bi-hand-thumbs-down-fill': opinion.disliked }"></i>
+                                    'bi-hand-thumbs-down-fill': opinion.disliked,
+                                    'bi-hand-thumbs-down': !opinion.disliked }"></i>
                         </span>
                     </span>
                     <button

@@ -40,25 +40,34 @@ export class OpinionsComponent implements OnChanges
         })
     }
 
-    rateOpinion(opinion: Opinion, positive: boolean)
+    onReactionClick(opinion: Opinion, positive: boolean)
     {
-        if (this.authService.authenticated.value)
+        if (this.isUser())
         {
-            this.opinionService.rate(opinion.productId, opinion.opinionId, positive).subscribe(updated =>
+            if (positive && !opinion.liked)
             {
-                this.opinions$.next(
-                    this.opinions$.value.map(o =>
-                    {
-                        if (o.opinionId == opinion.opinionId)
-                        {
-                            o.likesCounter = updated.likesCounter;
-                            o.liked = updated.liked;
-                            o.disliked = updated.disliked;
-                        }
-                        return o;
-                    })
-                )
-            });
+                this.opinionService
+                    .rate(opinion.productId, opinion.opinionId, positive)
+                    .subscribe(u => this.replaceUpdated(u));
+            }
+            else if (!positive && !opinion.disliked)
+            {
+                this.opinionService
+                    .rate(opinion.productId, opinion.opinionId, positive)
+                    .subscribe(u => this.replaceUpdated(u));
+            }
+            else if (positive && opinion.liked)
+            {
+                this.opinionService
+                    .removeReaction(opinion.productId, opinion.opinionId, positive)
+                    .subscribe(u => this.replaceUpdated(u));
+            }
+            else if (!positive && opinion.disliked)
+            {
+                this.opinionService
+                    .removeReaction(opinion.productId, opinion.opinionId, positive)
+                    .subscribe(u => this.replaceUpdated(u));
+            }
         }
     }
 
@@ -78,5 +87,21 @@ export class OpinionsComponent implements OnChanges
         const modalRef = this.modalService.open(OpinionReportModalComponent);
 
         (modalRef.componentInstance as OpinionReportModalComponent).opinion = opinion;
+    }
+
+    private replaceUpdated(updated: Opinion)
+    {
+        this.opinions$.next(
+            this.opinions$.value.map(o =>
+            {
+                if (o.opinionId == updated.opinionId)
+                {
+                    o.likesCounter = updated.likesCounter;
+                    o.liked = updated.liked;
+                    o.disliked = updated.disliked;
+                }
+                return o;
+            })
+        );
     }
 }
