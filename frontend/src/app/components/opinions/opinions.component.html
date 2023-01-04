@@ -6,7 +6,7 @@
         <ng-container *ngIf="opinions.length; else noOpinions">
             <div *ngFor="let opinion of opinions">
                 <div>
-                    <span class="fs-6 fw-bold mb-1">{{ opinion.author.visibleName }}</span>
+                    <span class="fs-6 fw-bold mb-1">{{ opinion.authorName }}</span>
                     <i class="bi bi-dot"></i>
                     <span>
                         {{ opinion.createdAt| date : 'medium' }}
@@ -36,12 +36,20 @@
                 </ng-container>
                 <div class="mb-0 d-inline-flex align-items-center gap-3">
                     <span>
-                        <span (click)="rateOpinion(opinion.id, true)">
-                            <i class="bi bi-hand-thumbs-up"></i>
+                        <span (click)="rateOpinion(opinion, true)">
+                            <i
+                                class="bi"
+                                [ngClass]="{ 
+                                    'bi-hand-thumbs-up': !opinion.liked,
+                                    'bi-hand-thumbs-up-fill': opinion.liked }"></i>
                         </span>
                         <span class="likesCounter">{{ opinion.likesCounter }}</span>
-                        <span (click)="rateOpinion(opinion.id, false)">
-                            <i class="bi bi-hand-thumbs-down"></i>
+                        <span (click)="rateOpinion(opinion, false)">
+                            <i
+                                class="bi"
+                                [ngClass]="{ 
+                                    'bi-hand-thumbs-down': !opinion.disliked,
+                                    'bi-hand-thumbs-down-fill': opinion.disliked }"></i>
                         </span>
                     </span>
                     <button
@@ -52,7 +60,7 @@
                     </button>
                     <button
                         *ngIf="isUser()"
-                        (click)="openReportModal(opinion.id)"
+                        (click)="openReportModal(opinion)"
                         class="btn btn-danger">
                         <i class="bi bi-flag"></i>
                         Report

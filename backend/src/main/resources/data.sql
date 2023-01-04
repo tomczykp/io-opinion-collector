@@ -46,8 +46,8 @@ VALUES ('4811913c-b953-4856-979b-838488049d07', 'value1', 'key1'),
        ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'value3', 'key3');
 
 INSERT INTO OPINION (OPINION_ID, PRODUCT_ID, DESCRIPTION, RATE, AUTHOR_ID)
-VALUES ('6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07', 'Test desc 1', 2, '12208864-7b61-4e6e-8573-53863bd93b35'),
-       ('dc0dac8a-797b-11ed-a1eb-0242ac120002', '4811913c-b953-4856-979b-838488049d07', 'desc 2', 3, '66208864-7b61-4e6e-8573-53863bd93b35'),
+VALUES ('6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07', 'Test desc 1', 2, '12208864-7b61-4e6e-8573-53863bd93b35'), -- created by user1
+       ('dc0dac8a-797b-11ed-a1eb-0242ac120002', '4811913c-b953-4856-979b-838488049d07', 'desc 2', 3, '66208864-7b61-4e6e-8573-53863bd93b35'), -- created by user
        ('6ddee1ee-9eba-4222-a031-463a849e1886', 'b9cd38e3-9bbf-47b2-bdb0-d82dd1e39e03', 'Pyszne kremówki najlepsze jakie w życiu jadłem', 5, '6ddee1ee-9eba-4222-a031-463a849e1886');
 
 INSERT INTO ADVANTAGE (ID, VALUE, OPINION_OPINION_ID, OPINION_PRODUCT_ID)
@@ -62,9 +62,9 @@ INSERT INTO public.category (categoryid, name, parent_category_category_id) VALU
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'e65b1f71-f3d8-4e16-ba55-df16a316f051');
 
 INSERT INTO REACTION (AUTHOR_ID, PRODUCT_ID, OPINION_ID, POSITIVE)
-VALUES ('22208864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', TRUE),
-       ('62308864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', FALSE),
-       ('62808864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', TRUE);
+VALUES ('22208864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', TRUE), -- user2
+       ('62308864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', FALSE), -- user10
+       ('62808864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', TRUE); -- user15
 
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, opinionid)
 VALUES ('OpinionReportEvent', 'e8a5b357-db44-4a9a-8118-a35448145e2c', '🐶', 0, '66208864-7b61-4e6e-8573-53863bd93b35',
@@ -85,4 +85,3 @@ VALUES ('AnswerReportEvent', 'b12ac4f9-9e79-4420-987e-039d3f64bc56', 'Not Good A
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, questionid)
 VALUES ('QuestionReportEvent', 'd60e9ea8-129f-4b8f-b9ab-5cdcd6aee228', 'Not Good Answer', 0, '62908864-7b61-4e6e-8573-53863bd93b35',
         '0338ce3f-b8d3-4cf2-b814-b7ddffc17632');
-

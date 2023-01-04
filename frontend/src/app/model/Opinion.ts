@@ -1,17 +1,13 @@
-import { User } from "./User";
-
-export interface OpinionId {
-    productId: string;
-    opinionId: string;
-}
-
-export interface AdvantageOrDisadvantage {
+export interface AdvantageOrDisadvantage
+{
     id: string;
     value: string;
 }
 
-export class Opinion {
-    id: OpinionId;
+export class Opinion
+{
+    productId: string;
+    opinionId: string;
     rate: number = 0;
     description: string = '';
     likesCounter: number = 0;
@@ -19,5 +15,8 @@ export class Opinion {
     cons: AdvantageOrDisadvantage[] = [];
     createdAt: Date;
 
-    author: User;
+    liked: boolean;
+    disliked: boolean;
+
+    authorName: string;
 }

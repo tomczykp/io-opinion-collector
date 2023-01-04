@@ -23,7 +23,6 @@ import pl.lodz.p.it.opinioncollector.eventHandling.EventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.opinion.OpinionOperationAccessForbiddenException;
 import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundException;
-import pl.lodz.p.it.opinioncollector.opinion.model.Opinion;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 @CrossOrigin
@@ -37,14 +36,14 @@ public class OpinionController {
 
     @GetMapping
     @ResponseBody
-    public List<Opinion> getAll(@PathVariable UUID productId) {
+    public List<OpinionDetailsDto> getAll(@PathVariable UUID productId) {
         return opinionManager.getOpinions(productId);
     }
 
     @GetMapping("/{opinionId}")
     @ResponseBody
-    public Opinion getById(@PathVariable UUID productId,
-                           @PathVariable UUID opinionId)
+    public OpinionDetailsDto getById(@PathVariable UUID productId,
+                                     @PathVariable UUID opinionId)
         throws OpinionNotFoundException {
         return opinionManager.getOpinion(productId, opinionId);
     }
@@ -52,8 +51,8 @@ public class OpinionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Opinion create(@PathVariable UUID productId,
-                          @Valid @RequestBody CreateOpinionDto createOpinionDto)
+    public OpinionDetailsDto create(@PathVariable UUID productId,
+                                    @Valid @RequestBody CreateOpinionDto createOpinionDto)
         throws ProductNotFoundException {
         return opinionManager.create(productId, createOpinionDto);
     }
@@ -68,30 +67,30 @@ public class OpinionController {
 
     @PutMapping("/{opinionId}")
     @ResponseBody
-    public Opinion update(@PathVariable UUID productId,
-                          @PathVariable UUID opinionId,
-                          @Valid @RequestBody CreateOpinionDto dto)
+    public OpinionDetailsDto update(@PathVariable UUID productId,
+                                    @PathVariable UUID opinionId,
+                                    @Valid @RequestBody CreateOpinionDto dto)
         throws OpinionNotFoundException, OpinionOperationAccessForbiddenException {
         return opinionManager.update(productId, opinionId, dto);
     }
 
     @PutMapping("/{opinionId}/like")
-    public Opinion like(@PathVariable UUID productId,
-                        @PathVariable UUID opinionId)
+    public OpinionDetailsDto like(@PathVariable UUID productId,
+                                  @PathVariable UUID opinionId)
         throws OpinionNotFoundException {
         return opinionManager.addReaction(productId, opinionId, true);
     }
 
     @PutMapping("/{opinionId}/dislike")
-    public Opinion dislike(@PathVariable UUID productId,
-                           @PathVariable UUID opinionId)
+    public OpinionDetailsDto dislike(@PathVariable UUID productId,
+                                     @PathVariable UUID opinionId)
         throws OpinionNotFoundException {
         return opinionManager.addReaction(productId, opinionId, false);
     }
 
     @DeleteMapping({ "/{opinionId}/like", "/{opinionId}/dislike" })
-    public Opinion removeReaction(@PathVariable UUID productId,
-                                  @PathVariable UUID opinionId) throws OpinionNotFoundException {
+    public OpinionDetailsDto removeReaction(@PathVariable UUID productId,
+                                            @PathVariable UUID opinionId) throws OpinionNotFoundException {
         return opinionManager.removeReaction(productId, opinionId);
     }
 

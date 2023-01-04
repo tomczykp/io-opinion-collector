@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { OpinionId } from 'src/app/model/Opinion';
+import { Opinion } from 'src/app/model/Opinion';
 import { OpinionService } from 'src/app/services/opinion.service';
 
 @Component({
@@ -11,7 +11,7 @@ export class OpinionReportModalComponent
 {
     protected reason = '';
 
-    opinionId: OpinionId;
+    opinion: Opinion;
 
     constructor(
         private opinionService: OpinionService,
@@ -20,7 +20,7 @@ export class OpinionReportModalComponent
 
     onSubmit()
     {
-        this.opinionService.report(this.opinionId, this.reason);
+        this.opinionService.report(this.opinion.productId, this.opinion.opinionId, this.reason);
         this.activeModal.close();
     }
 }
