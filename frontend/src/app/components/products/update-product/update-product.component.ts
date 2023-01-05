@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Product} from "../../../model/Product";
+import {Product, ProductFull} from "../../../model/Product";
 import {ProductsService} from "../../../services/products.service";
 import {CategoriesService} from "../../../services/categories.service";
 import {HttpResponse} from "@angular/common/http";
@@ -27,7 +27,6 @@ export class UpdateProductComponent implements OnInit {
     name: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
     propertiesValues: this.fb.array([]),
-    // category: this.fb.control('', Validators.required)
   })
 
 
@@ -39,18 +38,26 @@ export class UpdateProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     // console.log(this.product.properties)
     this.route.paramMap.subscribe((params) => {
       this.uuid = params.get('uuid')!.toString()
     });
 
-    // this.categoryService.getCategories().subscribe((data: Category[]) => {
-    //   this.categories = data;
-    // });
 
-    this.productService.getProduct(this.uuid).subscribe((data: HttpResponse<Product>) => {
-      this.product = data.body!;
-      console.log(this.product.properties);
+
+    this.productService.getProductFull(this.uuid).subscribe((data: HttpResponse<ProductFull>) => {
+      let apiProd = data.body!;
+      this.product = {
+        productId: apiProd.productId,
+        name: apiProd.name,
+        description: apiProd.description,
+        properties: apiProd.properties,
+        deleted: apiProd.deleted,
+        confirmed: apiProd.confirmed,
+        categoryId: apiProd.category.categoryID
+      } as Product;
+      console.log(data.body);
       let properties: {[id: string]: any} = this.product.properties;
       Object.keys(properties).forEach(key => {
         let value = properties[key];
@@ -65,26 +72,29 @@ export class UpdateProductComponent implements OnInit {
         name: this.product.name,
         description: this.product.description,
         propertiesValues: this.product.properties,
-        // category: this.categories[0].name
       })
 
-      // this.loadProperties();
     });
   }
 
   updateProduct(): void {
     if (this.updateProductForm.valid) {
-      const productDTO: object = {
-        // "categoryId": this.updateProductForm.getRawValue().categoryId,
+
+      let propertiesValues = this.updateProductForm.getRawValue().propertiesValues.toString(); //
+      // let propertiesDTO = [];
+      const pMap: Map<string, string> = new Map()
+      for (let i = 0; i < propertiesValues.length; i++) {
+        // propertiesDTO[this.propertyKeys[i]] = propertiesValues[i];
+        pMap.set(this.propertyKeys[i], propertiesValues[i])
+      }
+      const productDTO = {
+        "categoryId": this.product.categoryId,
         "name": this.updateProductForm.getRawValue().name,
         "description": this.updateProductForm.getRawValue().description,
-        "propertiesKeys": [
-          'key1', 'key2'
-        ],
-        "propertiesValues": [
-          'value1', 'value2'
-        ]
+        "properties": pMap
       }
+      console.log(productDTO)
+      console.log(JSON.stringify(productDTO));
       this.productService.updateProduct(this.uuid, productDTO)
         .subscribe((result) => {
             if (result.status === 200) {
@@ -95,17 +105,7 @@ export class UpdateProductComponent implements OnInit {
     }
   }
 
-  loadProperties() {
-    // let keys = Object.keys(this.product.properties)
-    // let values = Object.values(this.product.properties)
-    // // let keyForm = this.fb.array([])
-    // // let valueForm = this.fb.array([])
-    // for (let i = 0; i < keys.length; i++) {
-    // this.updateProductForm.controls.propertiesKeys.push(this.fb.control({keys[i], [Validators.required]}));
-    // this.updateProductForm.controls.propertiesValues.push(this.fb.control({values[i], [Validators.required]}));
-    //
-    // }
-  }
+
 
   get categoryId() {
     return this.updateProductForm.get('categoryId');
