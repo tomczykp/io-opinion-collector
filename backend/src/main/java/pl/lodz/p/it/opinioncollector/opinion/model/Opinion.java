@@ -20,6 +20,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 import pl.lodz.p.it.opinioncollector.productManagment.Product;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
@@ -34,6 +36,7 @@ public class Opinion implements Serializable {
     @EmbeddedId
     private OpinionId id;
 
+    @Generated(GenerationTime.INSERT)
     @Column(nullable = false,
             insertable = false,
             updatable = false,

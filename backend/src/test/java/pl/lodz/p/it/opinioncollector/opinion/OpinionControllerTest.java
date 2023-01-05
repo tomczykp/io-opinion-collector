@@ -66,7 +66,9 @@ class OpinionControllerTest {
                     "[0].cons", hasSize(1),
                     "[0].authorName", equalTo("User1"),
                     "[0].liked", is(false),
-                    "[0].disliked", is(false))
+                    "[0].disliked", is(false),
+                    "[0].createdAt", not(empty()),
+                    "[0].createdAt", not("null"))
               .body("[1].opinionId", equalTo("dc0dac8a-797b-11ed-a1eb-0242ac120002"),
                     "[1].productId", equalTo(PRODUCT_ID),
                     "[1].description", equalTo("desc 2"),
@@ -76,7 +78,9 @@ class OpinionControllerTest {
                     "[1].cons", empty(),
                     "[1].authorName", equalTo("User"),
                     "[1].liked", is(false),
-                    "[1].disliked", is(false));
+                    "[1].disliked", is(false),
+                    "[0].createdAt", not(empty()),
+                    "[0].createdAt", not("null"));
     }
 
     @Test
@@ -107,7 +111,9 @@ class OpinionControllerTest {
                     "[1].cons", empty(),
                     "[1].authorName", equalTo("User"),
                     "[1].liked", is(false),
-                    "[1].disliked", is(false));
+                    "[1].disliked", is(false),
+                    "[1].createdAt", not(empty()),
+                    "[1].createdAt", not("null"));
     }
 
     @Test
@@ -149,6 +155,7 @@ class OpinionControllerTest {
                     "cons", hasSize(1),
                     "authorName", equalTo("User1"),
                     "createdAt", not(empty()),
+                    "createdAt", not("null"),
                     "liked", is(false),
                     "disliked", is(false));
     }
@@ -171,6 +178,7 @@ class OpinionControllerTest {
                     "cons", hasSize(1),
                     "authorName", equalTo("User1"),
                     "createdAt", not(empty()),
+                    "createdAt", not("null"),
                     "liked", is(true),
                     "disliked", is(false));
     }
@@ -193,6 +201,7 @@ class OpinionControllerTest {
                     "cons", hasSize(1),
                     "authorName", equalTo("User1"),
                     "createdAt", not(empty()),
+                    "createdAt", not("null"),
                     "liked", is(false),
                     "disliked", is(true));
     }
@@ -238,7 +247,9 @@ class OpinionControllerTest {
                      "pros.value", hasItems("p111", "p112"),
                      "cons.size()", is(3),
                      "cons.value", hasItems("c111", "c112", "c113"),
-                     "authorName", is("User3"));
+                     "authorName", is("User3"),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
     }
 
     @Test
@@ -280,7 +291,9 @@ class OpinionControllerTest {
                      "cons.size()", is(0),
                      "liked", is(false),
                      "disliked", is(false),
-                     "authorName", is("User4"));
+                     "authorName", is("User4"),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
     }
 
     @Test
@@ -305,7 +318,9 @@ class OpinionControllerTest {
                      "cons.size()", is(3),
                      "liked", is(false),
                      "disliked", is(false),
-                     "authorName", is("User5"));
+                     "authorName", is("User5"),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
     }
 
     @Test
@@ -328,7 +343,9 @@ class OpinionControllerTest {
                      "description", is("ddd"),
                      "pros.size()", is(4),
                      "cons.size()", is(0),
-                     "authorName", is("User6"));
+                     "authorName", is("User6"),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
     }
 
     @Test
@@ -452,7 +469,9 @@ class OpinionControllerTest {
                      "liked", is(false),
                      "disliked", is(false),
                      "pros.value", hasItems("updated p1", "updated p2"),
-                     "cons.value", hasItems("updated c1", "updated c2", "updated c3"));
+                     "cons.value", hasItems("updated c1", "updated c2", "updated c3"),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
 
         when().get(url)
               .then()
@@ -467,7 +486,9 @@ class OpinionControllerTest {
                     "liked", is(false),
                     "disliked", is(false),
                     "pros.value", hasItems("updated p1", "updated p2"),
-                    "cons.value", hasItems("updated c1", "updated c2", "updated c3"));
+                    "cons.value", hasItems("updated c1", "updated c2", "updated c3"),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
     }
 
     @Test
@@ -594,7 +615,9 @@ class OpinionControllerTest {
                      "disliked", is(false),
                      "description", is("Updated description"),
                      "pros.size()", is(0),
-                     "cons.size()", is(0));
+                     "cons.size()", is(0),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
 
         when().get(url)
               .then()
@@ -634,7 +657,9 @@ class OpinionControllerTest {
                      "disliked", is(false),
                      "description", is("Update"),
                      "pros.size()", is(0),
-                     "cons.size()", is(5));
+                     "cons.size()", is(5),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
 
         when().get(url)
               .then()
@@ -900,7 +925,9 @@ class OpinionControllerTest {
                     "productId", is(PRODUCT_ID),
                     "likesCounter", is(2),
                     "liked", is(true),
-                    "disliked", is(false));
+                    "disliked", is(false),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
@@ -921,7 +948,9 @@ class OpinionControllerTest {
                     "productId", is(PRODUCT_ID),
                     "likesCounter", is(2),
                     "liked", is(true),
-                    "disliked", is(false));
+                    "disliked", is(false),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
@@ -983,7 +1012,9 @@ class OpinionControllerTest {
                     "productId", is(PRODUCT_ID),
                     "liked", is(true),
                     "disliked", is(false),
-                    "likesCounter", is(3));
+                    "likesCounter", is(3),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
@@ -1024,7 +1055,9 @@ class OpinionControllerTest {
                     "productId", is(PRODUCT_ID),
                     "liked", is(false),
                     "disliked", is(true),
-                    "likesCounter", is(0));
+                    "likesCounter", is(0),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
@@ -1045,7 +1078,9 @@ class OpinionControllerTest {
                     "productId", is(PRODUCT_ID),
                     "liked", is(false),
                     "disliked", is(true),
-                    "likesCounter", is(0));
+                    "likesCounter", is(0),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
@@ -1145,7 +1180,9 @@ class OpinionControllerTest {
                     "productId", is(PRODUCT_ID),
                     "liked", is(false),
                     "disliked", is(true),
-                    "likesCounter", is(-1));
+                    "likesCounter", is(-1),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
@@ -1186,7 +1223,9 @@ class OpinionControllerTest {
                     "productId", is(PRODUCT_ID),
                     "liked", is(false),
                     "disliked", is(false),
-                    "likesCounter", is(0));
+                    "likesCounter", is(0),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
@@ -1284,7 +1323,9 @@ class OpinionControllerTest {
                     "productId", is(PRODUCT_ID),
                     "liked", is(false),
                     "disliked", is(false),
-                    "likesCounter", is(2));
+                    "likesCounter", is(2),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
