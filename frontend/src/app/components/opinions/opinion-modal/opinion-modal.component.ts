@@ -5,18 +5,7 @@ import { CreateUpdateOpinionDto } from 'src/app/model/Opinion';
 @Component({
     selector: 'app-opinion-modal',
     templateUrl: './opinion-modal.component.html',
-    styles: [
-        `
-        .pros-and-cons-list {
-            max-height: 12vh;
-            overflow-y: scroll;
-        }
-        `,
-        `
-        .pros-and-cons-list span {
-            cursor: pointer;
-        }`
-    ]
+    styleUrls: ['./opinion-modal.component.css']
 })
 export class OpinionModalComponent
 {
@@ -39,11 +28,17 @@ export class OpinionModalComponent
         this.currentProsValue = '';
     }
 
-
     addCons()
     {
         this.opinion.cons.push(this.currentConsValue);
         this.currentConsValue = '';
     }
 
+    /**
+     * Function used for checking whether both pros and cons inputs are empty.
+     * @returns true if both empty, false otherwise
+     */
+    protected allProsAndConsAdded(): boolean {
+        return !this.currentProsValue && !this.currentConsValue;
+    }
 }

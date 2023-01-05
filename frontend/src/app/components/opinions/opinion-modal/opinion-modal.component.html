@@ -115,12 +115,24 @@
                 (click)="activeModal.dismiss()">
                 Cancel
             </button>
-            <button
-                [disabled]="form.invalid"
-                class="btn btn-primary"
-                type="submit">
-                OK
-            </button>
+            <ng-container *ngIf="allProsAndConsAdded(); else warningButton">
+                <button
+                    [disabled]="form.invalid"
+                    class="btn btn-primary"
+                    type="submit">
+                    OK
+                </button>
+            </ng-container>
+            <ng-template #warningButton>
+                <button
+                    [disabled]="form.invalid"
+                    placement="bottom"
+                    [ngbTooltip]="'Some pros or cons weren\'t added.'"
+                    class="btn btn-warning"
+                    type="submit">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </button>
+            </ng-template>
         </div>
     </form>
 </div>
