@@ -98,7 +98,8 @@ export class AddProductComponent implements OnInit {
     Object.keys(properties).forEach(key => {
       let value = properties[key];
       this.propertyKeys.push(key);
-      this.addProductForm.controls.properties.push(this.fb.control(value));
+      this.addProductForm.controls.properties.push(this.fb.control(
+        value, Validators.required));
     });
     console.log(this.propertyKeys);
   }
