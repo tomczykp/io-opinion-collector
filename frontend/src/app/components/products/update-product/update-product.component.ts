@@ -39,12 +39,9 @@ export class UpdateProductComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // console.log(this.product.properties)
     this.route.paramMap.subscribe((params) => {
       this.uuid = params.get('uuid')!.toString()
     });
-
-
 
     this.productService.getProductFull(this.uuid).subscribe((data: HttpResponse<ProductFull>) => {
       let apiProd = data.body!;
@@ -57,11 +54,10 @@ export class UpdateProductComponent implements OnInit {
         confirmed: apiProd.confirmed,
         categoryId: apiProd.category.categoryID
       } as Product;
-      console.log(data.body);
+
       let properties: {[id: string]: any} = this.product.properties;
       Object.keys(properties).forEach(key => {
         let value = properties[key];
-        console.log(key, value);
         this.propertyKeys.push(key);
         this.updateProductForm.controls.propertiesValues.push(this.fb.control(
           value, [Validators.required]
@@ -80,11 +76,9 @@ export class UpdateProductComponent implements OnInit {
   updateProduct(): void {
     if (this.updateProductForm.valid) {
 
-      let propertiesValues = this.updateProductForm.getRawValue().propertiesValues.toString(); //
-      // let propertiesDTO = [];
+      let propertiesValues = this.updateProductForm.getRawValue().propertiesValues.toString();
       const pMap: Map<string, string> = new Map()
       for (let i = 0; i < propertiesValues.length; i++) {
-        // propertiesDTO[this.propertyKeys[i]] = propertiesValues[i];
         pMap.set(this.propertyKeys[i], propertiesValues[i])
       }
       const productDTO = {
@@ -93,8 +87,6 @@ export class UpdateProductComponent implements OnInit {
         "description": this.updateProductForm.getRawValue().description,
         "properties": pMap
       }
-      console.log(productDTO)
-      console.log(JSON.stringify(productDTO));
       this.productService.updateProduct(this.uuid, productDTO)
         .subscribe((result) => {
             if (result.status === 200) {
