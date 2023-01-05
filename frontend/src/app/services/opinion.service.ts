@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Opinion } from '../model/Opinion';
+import { CreateUpdateOpinionDto, Opinion } from '../model/Opinion';
 
 @Injectable({
     providedIn: 'root'
@@ -38,5 +38,12 @@ export class OpinionService
         console.log(url);
 
         this.httpClient.post<null>(url, reason).subscribe();
+    }
+
+    updateOpinion(productId: string, opinionId: string, dto: CreateUpdateOpinionDto)
+    {
+        const url = `${environment.apiUrl}/products/${productId}/opinions/${opinionId}`;
+
+        return this.httpClient.put<Opinion>(url, dto);
     }
 }

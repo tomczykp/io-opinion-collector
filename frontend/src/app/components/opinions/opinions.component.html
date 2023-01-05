@@ -9,10 +9,11 @@
                     <span class="fs-6 fw-bold mb-1">{{ opinion.authorName }}</span>
                     <i class="bi bi-dot"></i>
                     <span>
-                        {{ opinion.createdAt| date : 'medium' }}
+                        {{ opinion.createdAt | date : 'medium' }}
                     </span>
                     <i class="bi bi-dot"></i>
                     <ngb-rating
+                        class="fs-5"
                         [rate]="opinion.rate"
                         [readonly]="true">
                     </ngb-rating>
@@ -54,6 +55,7 @@
                     </span>
                     <button
                         *ngIf="isAuthor(opinion)"
+                        (click)="openEditOpinionModal(opinion)"
                         class="btn btn-warning">
                         <i class="bi bi-pencil-square"></i>
                         Edit

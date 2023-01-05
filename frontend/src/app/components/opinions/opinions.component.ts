@@ -1,9 +1,10 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
-import { Opinion } from 'src/app/model/Opinion';
+import { CreateUpdateOpinionDto, Opinion } from 'src/app/model/Opinion';
 import { AuthService } from 'src/app/services/auth.service';
 import { OpinionService } from 'src/app/services/opinion.service';
+import { OpinionModalComponent } from './opinion-modal/opinion-modal.component';
 import { OpinionReportModalComponent } from './opinion-report-modal/opinion-report-modal.component';
 
 
@@ -73,8 +74,8 @@ export class OpinionsComponent implements OnChanges
 
     isAuthor(opinion: Opinion): boolean
     {
-        // TODO
-        return false;
+        // TODO retrieve username from authService
+        return true;
     }
 
     isUser(): boolean
@@ -89,18 +90,47 @@ export class OpinionsComponent implements OnChanges
         (modalRef.componentInstance as OpinionReportModalComponent).opinion = opinion;
     }
 
+    openCreateOpinionModal()
+    {
+        const modalRef = this.modalService.open(OpinionModalComponent);
+
+        (modalRef.componentInstance as OpinionModalComponent).opinion = new CreateUpdateOpinionDto();
+
+        modalRef.result
+            .then((dto: CreateUpdateOpinionDto) =>
+            {
+                console.log(dto);
+                // TODO
+            })
+            .catch(() => { });
+    }
+
+    openEditOpinionModal(opinion: Opinion)
+    {
+        const modalRef = this.modalService.open(OpinionModalComponent);
+
+        (modalRef.componentInstance as OpinionModalComponent).opinion = new CreateUpdateOpinionDto(opinion);
+
+        modalRef.result
+            .then((dto: CreateUpdateOpinionDto) =>
+            {
+                this.opinionService
+                    .updateOpinion(opinion.productId, opinion.opinionId, dto)
+                    .subscribe(u => this.replaceUpdated(u));
+            })
+            .catch(() => { });
+    }
+
     private replaceUpdated(updated: Opinion)
     {
         this.opinions$.next(
-            this.opinions$.value.map(o =>
+            this.opinions$.value.map(old =>
             {
-                if (o.opinionId == updated.opinionId)
+                if (old.opinionId == updated.opinionId)
                 {
-                    o.likesCounter = updated.likesCounter;
-                    o.liked = updated.liked;
-                    o.disliked = updated.disliked;
+                    Object.assign(old, updated);
                 }
-                return o;
+                return old;
             })
         );
     }
