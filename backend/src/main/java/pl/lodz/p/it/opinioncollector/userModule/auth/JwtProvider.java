@@ -9,7 +9,6 @@ import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import pl.lodz.p.it.opinioncollector.userModule.user.UserType;
 
 import java.util.Date;
 
@@ -21,13 +20,12 @@ public class JwtProvider {
     @Value("${jwt.expiration.time}")
     private Long jwtExpirationInMillis;
 
-    public String generateJWT(String email, UserType type) {
+    public String generateJWT(String email) {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setHeaderParam("role", type)
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMillis))
-                .signWith(SignatureAlgorithm.HS512, secret) //TODO SECRET will be stored as environmental variable
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
