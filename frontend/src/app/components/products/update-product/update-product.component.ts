@@ -39,12 +39,9 @@ export class UpdateProductComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // console.log(this.product.properties)
     this.route.paramMap.subscribe((params) => {
       this.uuid = params.get('uuid')!.toString()
     });
-
-
 
     this.productService.getProductFull(this.uuid).subscribe((data: HttpResponse<ProductFull>) => {
       let apiProd = data.body!;
@@ -57,11 +54,10 @@ export class UpdateProductComponent implements OnInit {
         confirmed: apiProd.confirmed,
         categoryId: apiProd.category.categoryID
       } as Product;
-      console.log(data.body);
+
       let properties: {[id: string]: any} = this.product.properties;
       Object.keys(properties).forEach(key => {
         let value = properties[key];
-        console.log(key, value);
         this.propertyKeys.push(key);
         this.updateProductForm.controls.propertiesValues.push(this.fb.control(
           value, [Validators.required]
@@ -85,6 +81,7 @@ export class UpdateProductComponent implements OnInit {
 
       for (let i = 0; i < propertiesValues.length; i++) {
         pMap.set(this.propertyKeys[i], propertiesValues[i] as string)
+
       }
 
       const properties = Object.fromEntries(pMap);
