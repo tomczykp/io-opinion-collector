@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Product} from "../../../model/Product";
 import {ProductsService} from "../../../services/products.service";
@@ -23,10 +23,15 @@ export class UpdateProductComponent implements OnInit {
 
 
   updateProductForm = this.fb.group({
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required]),
-    properties: this.fb.array([]),
-    category: new FormControl('', Validators.required)
+    name: this.fb.control('', [Validators.required]),
+    description: this.fb.control('', [Validators.required]),
+    propertiesKeys: this.fb.array([
+      this.fb.control('xdd')
+    ]),
+    propertiesValues: this.fb.array([
+      this.fb.control('xdd')
+    ]),
+    category: this.fb.control('', Validators.required)
   })
 
 
@@ -38,7 +43,7 @@ export class UpdateProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.product.properties)
+    // console.log(this.product.properties)
     this.route.paramMap.subscribe((params) => {
       this.uuid = params.get('uuid')!.toString()
     });
@@ -52,10 +57,15 @@ export class UpdateProductComponent implements OnInit {
       this.updateProductForm.setValue({
         name: this.product.name,
         description: this.product.description,
-        properties: [],
+          propertiesKeys: [
+          'key1', 'key2'
+        ],
+        propertiesValues: [
+          'value1', 'value2'
+        ],
         category: this.categories[0].name
       })
-      this.loadProperties();
+      // this.loadProperties();
     });
   }
 
@@ -65,9 +75,12 @@ export class UpdateProductComponent implements OnInit {
         // "categoryId": this.updateProductForm.getRawValue().categoryId,
         "name": this.updateProductForm.getRawValue().name,
         "description": this.updateProductForm.getRawValue().description,
-        "properties": {
-          "": ""
-        }
+        "propertiesKeys": [
+          'key1', 'key2'
+        ],
+        "propertiesValues": [
+          'value1', 'value2'
+        ]
       }
       this.productService.updateProduct(this.uuid, productDTO)
         .subscribe((result) => {
@@ -80,15 +93,18 @@ export class UpdateProductComponent implements OnInit {
   }
 
   loadProperties() {
-    let keys = Object.keys(this.product.properties)
-    let values = Object.values(this.product.properties)
-    for (let i = 0; i < keys.length; i++) {
-      const dynForm = this.fb.group({
-        key: [keys[i], Validators.required],
-        value: [values[i], Validators.required]
-      })
-      this.properties.push(dynForm)
-    }
+    // let keys = Object.keys(this.product.properties)
+    // let values = Object.values(this.product.properties)
+    // let keyForm = this.fb.array([])
+    // let valueForm = this.fb.array([])
+    // for (let i = 0; i < keys.length; i++) {
+    //   keyForm.push(this.fb.control({keys[i], [Validators.required]}
+    //   ))
+    //
+    //
+    // }
+    // this.updateProductForm.controls.propertiesKeys.push(keyForm);
+    // this.updateProductForm.controls.propertiesValues.push(valueForm);
   }
 
   get categoryId() {
@@ -103,7 +119,11 @@ export class UpdateProductComponent implements OnInit {
     return this.updateProductForm.get('description');
   }
 
-  get properties() {
-    return this.updateProductForm.controls['properties'] as FormArray;
+  get propertiesKeys() {
+    return this.updateProductForm.get('propertiesKeys') as FormArray;
+  }
+
+  get propertiesValues() {
+    return this.updateProductForm.get('propertiesValues') as FormArray;
   }
 }

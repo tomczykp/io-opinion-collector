@@ -66,7 +66,7 @@ public class Product implements Serializable {
     }
 
     public void removeProperty(String key) {
-        properties.remove(key); //TODO where to use that?
+        properties.remove(key);
     }
 
     public void addProperty(String key, String value) {
