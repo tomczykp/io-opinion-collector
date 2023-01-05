@@ -17,12 +17,12 @@ export class EventsService {
     return this.httpClient.get<OC.Event[]>(`${environment.apiUrl}/events`);
   }
 
-  public getUserEvents(userID: string): Observable<OC.Event[]> {
-    return this.httpClient.get<OC.Event[]>(`${environment.apiUrl}/users/${userID}/events`);
+  public getUserEvents(): Observable<OC.Event[]> {
+    return this.httpClient.get<OC.Event[]>(`${environment.apiUrl}/user/events`);
   }
 
-  public getEventsCount(userID: string): Observable<number> {
-    return this.httpClient.get<number>(`${environment.apiUrl}/users/${userID}/eventsCount`)
+  public getEventsCount(): Observable<number> {
+    return this.httpClient.get<number>(`${environment.apiUrl}/user/eventsCount`)
   }
 
   public closeEvent(id: string): void {

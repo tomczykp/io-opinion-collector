@@ -21,8 +21,7 @@ export class EventsIconComponent implements OnInit, OnDestroy{
 
   constructor(
     private eventsService: EventsService,
-    private authService: AuthService,
-    private userService: UserService) {
+    private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -36,12 +35,8 @@ export class EventsIconComponent implements OnInit, OnDestroy{
     this.authService.authenticated.subscribe((change) => {
       this.authenticated = change;
       if (this.authenticated) {
-        this.userService.getUser().subscribe((user) => {
-          this.userID = user.id.toString();
-
-          this.eventsService.getEventsCount(this.userID).subscribe((eventsCount) => {
-            this.eventsCount = eventsCount;
-          })
+        this.eventsService.getEventsCount().subscribe((eventsCount) => {
+          this.eventsCount = eventsCount;
         })
       }
     })
