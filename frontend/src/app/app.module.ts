@@ -32,6 +32,7 @@ import { AddProductComponent } from './components/products/add-product/add-produ
 import {UpdateProductComponent} from "./components/products/update-product/update-product.component";
 import { DeleteProductFormComponent } from './components/products/delete-product-form/delete-product-form.component';
 import { AddCategoryComponent } from './components/categories/add-category/add-category.component';
+import { EditCategoryComponent } from './components/categories/edit-category/edit-category.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { AddCategoryComponent } from './components/categories/add-category/add-c
     UpdateProductComponent,
     DeleteProductFormComponent,
     AddCategoryComponent,
+    EditCategoryComponent,
   ],
   imports: [
     BrowserModule,

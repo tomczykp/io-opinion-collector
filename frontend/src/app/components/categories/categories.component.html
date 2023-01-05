@@ -4,11 +4,11 @@
       <h2 class="mb-4 text-center">Categories</h2>
       <button routerLink="/categories/add" class="btn">
         <i class="bi bi-plus-circle me-2"></i><div
-        class="d-none d-sm-inline position-relative mb-xxl-5">Add category</div></button>
+        class="d-none d-sm-inline position-relative mb-xxl-5">Add category</div>
+      </button>
     </div>
 
     <div class="justify-content-center">
-
       <table class="table table-bordered">
         <thead>
           <th>Name</th>
@@ -31,7 +31,11 @@
           </td>
           <td>
             <button type="button" (click)="deleteCategory(category.categoryID)" class="bi bi-trash hover-icon"
-                    style="font-size: 30px; color: darkred;">Delete</button>
+                    style="font-size: 30px; color: darkred;"></button>
+          </td>
+          <td>
+            <button [routerLink]="['/categories/edit', category.categoryID]" type="button" class="bi hover-icon"
+                    style="font-size: 30px; color: darkred;">Edit</button>
           </td>
         </tr>
 

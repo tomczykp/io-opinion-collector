@@ -1,15 +1,14 @@
-
 <div class="container py-sm-4 h-auto w-auto">
   <h1>
-    ADD CATEGORY
+    EDIT CATEGORY
   </h1>
   <div class="col-md-8 p-lg-4 mx-lg-auto my-lg-4 bg-white border-4 border">
-    <form [formGroup]="addCategoryForm" (ngSubmit)="createCategory()">
+    <form [formGroup]="editCategoryForm" (ngSubmit)="editCategory()">
 
       <div class="mat-form-field align-self-auto">
-        <label class="form-label" for="name">Name</label>
+        <h1 class="form-label" for="name">Name</h1>
         <input required type="text" id="name" formControlName="name" class="form-control form-control-lg" />
-        <div *ngIf="name && name?.touched && name?.dirty">
+        <div *ngIf="name">
           <small class="text-danger" *ngIf="name.errors?.['required']">
             Name is required
           </small>
@@ -17,22 +16,21 @@
       </div>
 
       <div class="mat-form-field align-self-auto">
-        <label class="form-label" for="parent">Parent category</label>
+        <h1 class="form-label" for="parent">Parent</h1>
         <select id="parent" formControlName="parent" >
-          <option selected="selected" value="{{null}}" type="text/javascript">None</option>
-          <option *ngFor="let category of categories$ | async" value="{{category.categoryID}}" type="text/javascript">
+          <option value="{{null}}" type="text/javascript" [selected]="parent == undefined">None</option>
+          <option *ngFor="let category of categories | async" value="{{category.categoryID}}" [selected]="category.categoryID === parent" type="text/javascript">
             {{category.name}}
           </option>
         </select>
       </div>
 
-      <label>Fields</label>
-      <button type="button" (click)="addFields()">+ Add another field</button>
-
+      <h1>Fields</h1>
+      <button type="button" (click)="addFields()">+ Add field</button>
       <div class="container" style="display:flex">
         <div class="item" formArrayName="fieldsNames">
           <div *ngFor="let name of getFieldsNames.controls; let i = index">
-            <label for="name-{{ i }}">Name: </label>
+            <label for="name-{{ i }}"></label>
             <input type="text" id="{{ i }}" [formControlName]="i" />
           </div>
         </div>
@@ -48,8 +46,8 @@
           </div>
         </div>
       </div>
-      <input *ngIf="addCategoryForm.valid" type="submit" class="btn btn-primary btn-lg btn-block w-100" value="Add product">
-      <input *ngIf="!addCategoryForm.valid" type="submit" class="disabled btn btn-light btn-lg btn-block w-100" value="Add product">
+      <input *ngIf="editCategoryForm.valid" type="submit" class="btn btn-primary btn-lg btn-block w-100" value="Accept">
+      <input *ngIf="!editCategoryForm.valid" type="submit" class="disabled btn btn-light btn-lg btn-block w-100" value="Accept">
 
     </form>
 

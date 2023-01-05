@@ -18,7 +18,6 @@ export class CategoriesComponent implements OnInit {
     //fields: new FormArray();
   })
   constructor(
-
     private categoriesService : CategoriesService
   ) {}
 
@@ -31,14 +30,14 @@ export class CategoriesComponent implements OnInit {
     this.categories$ = this.categoriesService.getCategories();
   }
 
-  deleteCategory(categoryID: String) {
+  deleteCategory(categoryID: string) {
     if (confirm("Do you really want to delete category with id: " + categoryID + "? This action can't be undone")) {
       this.categoriesService.deleteCategory(categoryID).subscribe((result) => {
         this.getCategories();
       });
     }
   }
-  createCategory(categoryID: String) {
+  createCategory(categoryID: string) {
     if (confirm("Do you really want to delete category with id: " + categoryID + "? This action can't be undone")) {
       this.categoriesService.deleteCategory(categoryID).subscribe((result) => {
         this.getCategories();
