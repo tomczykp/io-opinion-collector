@@ -14,7 +14,8 @@ import {Category} from "../../../model/category";
 })
 export class UpdateProductComponent implements OnInit {
   product: Product = <Product>{};
-  categories: Category[];
+  // categories: Category[];
+  propertyKeys: any = [];
   match: RegExpMatchArray | null;
   uuid: string;
 
@@ -25,13 +26,8 @@ export class UpdateProductComponent implements OnInit {
   updateProductForm = this.fb.group({
     name: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
-    propertiesKeys: this.fb.array([
-      this.fb.control('xdd')
-    ]),
-    propertiesValues: this.fb.array([
-      this.fb.control('xdd')
-    ]),
-    category: this.fb.control('', Validators.required)
+    propertiesValues: this.fb.array([]),
+    // category: this.fb.control('', Validators.required)
   })
 
 
@@ -48,23 +44,30 @@ export class UpdateProductComponent implements OnInit {
       this.uuid = params.get('uuid')!.toString()
     });
 
-    this.categoryService.getCategories().subscribe((data: Category[]) => {
-      this.categories = data;
-    });
+    // this.categoryService.getCategories().subscribe((data: Category[]) => {
+    //   this.categories = data;
+    // });
 
     this.productService.getProduct(this.uuid).subscribe((data: HttpResponse<Product>) => {
       this.product = data.body!;
+      console.log(this.product.properties);
+      let properties: {[id: string]: any} = this.product.properties;
+      Object.keys(properties).forEach(key => {
+        let value = properties[key];
+        console.log(key, value);
+        this.propertyKeys.push(key);
+        this.updateProductForm.controls.propertiesValues.push(this.fb.control(
+          value, [Validators.required]
+        ));
+      })
+
       this.updateProductForm.setValue({
         name: this.product.name,
         description: this.product.description,
-          propertiesKeys: [
-          'key1', 'key2'
-        ],
-        propertiesValues: [
-          'value1', 'value2'
-        ],
-        category: this.categories[0].name
+        propertiesValues: this.product.properties,
+        // category: this.categories[0].name
       })
+
       // this.loadProperties();
     });
   }
@@ -95,16 +98,13 @@ export class UpdateProductComponent implements OnInit {
   loadProperties() {
     // let keys = Object.keys(this.product.properties)
     // let values = Object.values(this.product.properties)
-    // let keyForm = this.fb.array([])
-    // let valueForm = this.fb.array([])
+    // // let keyForm = this.fb.array([])
+    // // let valueForm = this.fb.array([])
     // for (let i = 0; i < keys.length; i++) {
-    //   keyForm.push(this.fb.control({keys[i], [Validators.required]}
-    //   ))
-    //
+    // this.updateProductForm.controls.propertiesKeys.push(this.fb.control({keys[i], [Validators.required]}));
+    // this.updateProductForm.controls.propertiesValues.push(this.fb.control({values[i], [Validators.required]}));
     //
     // }
-    // this.updateProductForm.controls.propertiesKeys.push(keyForm);
-    // this.updateProductForm.controls.propertiesValues.push(valueForm);
   }
 
   get categoryId() {
@@ -117,10 +117,6 @@ export class UpdateProductComponent implements OnInit {
 
   get description() {
     return this.updateProductForm.get('description');
-  }
-
-  get propertiesKeys() {
-    return this.updateProductForm.get('propertiesKeys') as FormArray;
   }
 
   get propertiesValues() {

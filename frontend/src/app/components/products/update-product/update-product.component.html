@@ -1,19 +1,19 @@
 <div class="container py-sm-4 h-auto w-auto">
-  <h2>UPDATE PRODUCT TEMP</h2>
-  <div class="col-sm-6 col-7 bg-white col-sm-6 border-4 border p-xxl-5">
-    <form [formGroup]="updateProductForm" (ngSubmit)="updateProduct()">
-<!--      <div class="mat-form-field align-content-sm-stretch">-->
-<!--        <input required type="text" id="categoryId" formControlName="categoryId" class="form-control form-control-lg"/>-->
-<!--        <div *ngIf="categoryId && categoryId?.touched && categoryId?.dirty">-->
-<!--          <small class="text-danger" *ngIf="categoryId.errors?.['pattern']">-->
-<!--            Not matching UUID pattern-->
-<!--          </small>-->
-<!--          <small class="text-danger" *ngIf="categoryId.errors?.['required']">-->
-<!--            CategoryId is required-->
-<!--          </small>-->
-<!--        </div>-->
-<!--        <label class="form-label" for="categoryId">Category ID</label>-->
-<!--      </div>-->
+  <h2>UPDATE PRODUCT</h2>
+  <mat-form-field class="col-sm-6 col-7 bg-white col-sm-6 border-4 border p-xxl-5">
+    <form [formGroup]="updateProductForm" (ngSubmit)="updateProduct()" style="display: flex; flex-direction: column;">
+      <!--      <div class="mat-form-field align-content-sm-stretch">-->
+      <!--        <input required type="text" id="categoryId" formControlName="categoryId" class="form-control form-control-lg"/>-->
+      <!--        <div *ngIf="categoryId && categoryId?.touched && categoryId?.dirty">-->
+      <!--          <small class="text-danger" *ngIf="categoryId.errors?.['pattern']">-->
+      <!--            Not matching UUID pattern-->
+      <!--          </small>-->
+      <!--          <small class="text-danger" *ngIf="categoryId.errors?.['required']">-->
+      <!--            CategoryId is required-->
+      <!--          </small>-->
+      <!--        </div>-->
+      <!--        <label class="form-label" for="categoryId">Category ID</label>-->
+      <!--      </div>-->
       <div class="form-row mb-4">
         <label class="form-label" for="name">Name</label>
         <input required type="text" id="name" formControlName="name" class="form-control"/>
@@ -24,7 +24,8 @@
         </div>
       </div>
 
-      <div class="form-row mb-4">
+      <mat-form-field hideRequiredMarker="false"
+                      floatLabel="auto">
         <label class="form-label" for="description">Description</label>
         <input required type="text" id="description" formControlName="description"
                class="form-control"/>
@@ -33,38 +34,34 @@
             Description is required
           </small>
         </div>
-      </div>
+      </mat-form-field>
 
-      <div class="form-row mb-4">
-        <div class="form-group">
-          <label class="form-label" for="categoryID">Categories</label>
-          <select formControlName="category" class="form-control" id="categoryID">
-            <option disabled>Select Category</option>
-            <option>Choose Category</option>
-            <option *ngFor="let cat of categories">{{cat.name}}</option>
-          </select>
-        </div>
-      </div>
+      <!--      <div class="form-row mb-4">-->
+      <!--        <div class="form-group">-->
+      <!--          <label class="form-label" for="categoryID">Categories</label>-->
+      <!--          <select formControlName="category" class="form-control" id="categoryID">-->
+      <!--            <option disabled>Select Category</option>-->
+      <!--            <option>Choose Category</option>-->
+      <!--            <option *ngFor="let cat of categories">{{cat.name}}</option>-->
+      <!--          </select>-->
+      <!--        </div>-->
+      <!--      </div>-->
 
-      <div class="loadPropertiesForm" [formGroup]="updateProductForm">
-        <ng-container formArrayName="propertiesKeys">
-          <ng-container *ngFor="let ligma of propertiesKeys.controls; let i = index">
-            <div class="propertiesRow">
-              <mat-form-field appearance="fill">
-                <input matInput formControlName="{{i}}" placeholder="Form key" [readonly]="true">
-              </mat-form-field>
-            </div>
+      <div class="form-row mb-4" [formGroup]="updateProductForm">
+        <input matInput placeholder="niewiadomo kurwa"/>
+        <ng-container formArrayName="propertiesValues">
+          <ng-container *ngFor="let prop of propertiesValues.controls; let i = index" class="mb-3 input-group">
+            <mat-form-field appearance="fill" class="form-control">
+              <input matInput placeholder="{{propertyKeys[i]}}" formControlName="{{i}}">
+            </mat-form-field>
+
           </ng-container>
         </ng-container>
-<!--        <ng-container formArrayName="propertiesValues">-->
-<!--          <ng-container *ngFor="let ligma of propertiesValues.controls; let i = index">-->
-<!--            <div class="propertiesRow">-->
-<!--              <mat-form-field appearance="fill">-->
-<!--                <input matInput formControlName="{{i}}" placeholder="Form value">-->
-<!--              </mat-form-field>-->
-<!--            </div>-->
-<!--          </ng-container>-->
-<!--        </ng-container>-->
+        <!--        <ng-container formArrayName="propertiesValues">-->
+        <!--          <ng-container *ngFor="let ligma of propertiesValues.controls; let i = index">-->
+
+        <!--          </ng-container>-->
+        <!--        </ng-container>-->
       </div>
 
       <input *ngIf="updateProductForm.valid" type="submit" class="mt-3 btn btn-primary btn-lg btn-block w-100"
@@ -73,6 +70,5 @@
              value="Update product">
 
     </form>
-
-  </div>
+  </mat-form-field>
 </div>
