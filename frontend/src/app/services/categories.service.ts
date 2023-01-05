@@ -42,8 +42,13 @@ export class CategoriesService {
   }
 
   removeField(uuid: string){
-    return this.http.delete(environment.apiUrl + "/category/fields/" + uuid, {observe: 'response'})
+    return this.http.delete(environment.apiUrl + "/category/fields/" + uuid,
+      {observe: 'response'})
   }
 
+  updateField(uuid: string, FieldDTO: object): Observable<HttpResponse<Field>> {
+    return this.http.put<Field>(environment.apiUrl + "/category/fields/" + uuid, FieldDTO,
+      { observe: 'response'})
+  }
 
 }

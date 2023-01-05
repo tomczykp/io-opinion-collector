@@ -28,21 +28,42 @@
       <h1>Fields</h1>
       <button type="button" (click)="addFields()">+ Add field</button>
       <div class="container" style="display:flex">
-        <div class="item" formArrayName="fieldsNames">
-          <div *ngFor="let name of getFieldsNames.controls; let i = index">
-            <label for="name-{{ i }}"></label>
-            <input type="text" id="{{ i }}" [formControlName]="i" />
+        <div class="item">
+          <div formArrayName="oldFieldsNames">
+            <div *ngFor="let name of getOldFieldsNames.controls; let i = index">
+              <label for="name-{{ i }}"></label>
+              <input type="text" id="{{ i }}" [formControlName]="i" />
+            </div>
+          </div>
+          <div formArrayName="newFieldsNames">
+            <div *ngFor="let name of getNewFieldsNames.controls; let i = index">
+              <label for="name-{{ i }}"></label>
+              <input type="text" id="{{ i }}" [formControlName]="i" />
+            </div>
           </div>
         </div>
-        <div class="item" formArrayName="fieldsTypes">
-          <div *ngFor="let type of getFieldsTypes.controls; let i = index">
-            <label for="type-{{ i }}">Type: </label>
-            <select id="{{ i }}" [formControlName]="i" >
-              <option value="Int">Int</option>
-              <option value="Double">Double</option>
-              <option value="String">String</option>
-            </select>
-            <button type="button" (click)="removeFields(i)">- Remove field</button>
+        <div class="item">
+          <div formArrayName="oldFieldsTypes">
+            <div *ngFor="let type of getOldFieldsTypes.controls; let i = index">
+              <label for="type-{{ i }}">Type: </label>
+              <select id="{{ i }}" [formControlName]="i" >
+                <option value="Int">Int</option>
+                <option value="Double">Double</option>
+                <option value="String">String</option>
+              </select>
+              <button type="button" (click)="removeOldFields(i)">- Remove field</button>
+            </div>
+          </div>
+          <div  formArrayName="newFieldsTypes">
+            <div *ngFor="let type of getNewFieldsTypes.controls; let i = index">
+              <label for="type-{{ i }}">Type: </label>
+              <select id="{{ i }}" [formControlName]="i" >
+                <option value="Int">Int</option>
+                <option value="Double">Double</option>
+                <option value="String">String</option>
+              </select>
+              <button type="button" (click)="removeNewFields(i)">- Remove field</button>
+            </div>
           </div>
         </div>
       </div>

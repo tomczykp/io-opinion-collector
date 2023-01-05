@@ -37,12 +37,5 @@ export class CategoriesComponent implements OnInit {
       });
     }
   }
-  createCategory(categoryID: string) {
-    if (confirm("Do you really want to delete category with id: " + categoryID + "? This action can't be undone")) {
-      this.categoriesService.deleteCategory(categoryID).subscribe((result) => {
-        this.getCategories();
-      });
-    }
-  }
 
 }

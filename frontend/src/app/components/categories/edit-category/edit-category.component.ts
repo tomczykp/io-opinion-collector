@@ -20,27 +20,41 @@ export class EditCategoryComponent implements OnInit {
   editCategoryForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     parent: new FormControl(''),
-    fieldsNames: this.fb.array([]),
-    fieldsTypes: this.fb.array([])
+    oldFieldsNames: this.fb.array([]),
+    oldFieldsTypes: this.fb.array([]),
+    newFieldsNames: this.fb.array([]),
+    newFieldsTypes: this.fb.array([])
   })
 
-  get getFieldsNames() {
-    return this.editCategoryForm.get('fieldsNames') as FormArray;
+  get getOldFieldsNames() {
+    return this.editCategoryForm.get('oldFieldsNames') as FormArray;
+  }
+  get getOldFieldsTypes() {
+    return this.editCategoryForm.get('oldFieldsTypes') as FormArray;
+  }
+  get getNewFieldsNames() {
+    return this.editCategoryForm.get('newFieldsNames') as FormArray;
+  }
+  get getNewFieldsTypes() {
+    return this.editCategoryForm.get('newFieldsTypes') as FormArray;
   }
   addFieldsNames() {
-    this.getFieldsNames.push(this.fb.control(''));
-  }
-  removeFieldsNames(i : number) {
-    this.getFieldsNames.removeAt(i);
-  }
-  get getFieldsTypes() {
-    return this.editCategoryForm.get('fieldsTypes') as FormArray;
+    this.getNewFieldsNames.push(this.fb.control(''));
   }
   addFieldsTypes() {
-    this.getFieldsTypes.push(this.fb.control(''));
+    this.getNewFieldsTypes.push(this.fb.control(''));
   }
-  removeFieldsTypes(i : number) {
-    this.getFieldsTypes.removeAt(i);
+  private removeOldFieldsNames(i : number) {
+    this.getOldFieldsNames.removeAt(i);
+  }
+  private removeOldFieldsTypes(i : number) {
+    this.getOldFieldsTypes.removeAt(i);
+  }
+  private removeNewFieldsNames(i : number) {
+    this.getNewFieldsNames.removeAt(i);
+  }
+  private removeNewFieldsTypes(i : number) {
+    this.getNewFieldsTypes.removeAt(i);
   }
   get name() {
     return this.editCategoryForm.get('name');
@@ -70,11 +84,10 @@ export class EditCategoryComponent implements OnInit {
     {this.uuid = params.get('uuid')!.toString()});
     this.categoriesService.getCategory(this.uuid).subscribe(
       (data: HttpResponse<Category>) => {
-      //console.log(data);
       this.category = data.body!;
       for(let i = 0;i < this.category.fields.length; i++){
-        this.getFieldsNames.push(this.fb.control(this.category.fields[i].name));
-        this.getFieldsTypes.push(this.fb.control(this.category.fields[i].type));
+        this.getOldFieldsNames.push(this.fb.control(this.category.fields[i].name));
+        this.getOldFieldsTypes.push(this.fb.control(this.category.fields[i].type));
       }
       this.editCategoryForm.patchValue({
         name: this.category.name,
@@ -83,32 +96,23 @@ export class EditCategoryComponent implements OnInit {
     });
   }
 
-  removeFields(i : number){
-    this.removeFieldsNames(i);
-    this.removeFieldsTypes(i);
+  removeNewFields(i : number){
+    this.removeNewFieldsNames(i);
+    this.removeNewFieldsTypes(i);
+  }
+  removeOldFields(i : number){
+    this.removeOldFieldsNames(i);
+    this.removeOldFieldsTypes(i);
   }
 
   editCategory() {
     if (this.editCategoryForm.valid) {
-      let fields : Array<object> = [];
-      for(let i = 0;i<this.getFieldsNames.getRawValue().length; i++){
+      for(let i = 0;i < this.getNewFieldsTypes.getRawValue().length; i++){
         const FieldDTO: object = {
-          "name": this.getFieldsNames.getRawValue()[i],
-          "type": this.getFieldsTypes.getRawValue()[i]
+          "name": this.getNewFieldsNames.getRawValue()[i],
+          "type": this.getNewFieldsTypes.getRawValue()[i]
         };
-        fields.push(FieldDTO);
-      }
-
-      console.log(fields.length);
-
-      for(let i = 0; i < this.category.fields.length ; i++){
-        //this.removeFields();
-        //console.log(this.category.fields[i].fieldID);
-        //this.categoriesService.removeField(this.category.fields[i].fieldID).subscribe()
-      }
-      for(let i = 0; i < fields.length; i++){
-        console.log(fields[i]);
-        this.categoriesService.addField(this.uuid, fields[i])
+        this.categoriesService.addField(this.uuid, FieldDTO)
           .subscribe((result) => {
               if (result.status === 200) {
                 this.router.navigate(['/']);
@@ -116,11 +120,27 @@ export class EditCategoryComponent implements OnInit {
             }
           )
       }
-
+      for(let i = 0;i < this.getOldFieldsTypes.getRawValue().length; i++){
+        const FieldDTO: object = {
+          "name": this.getOldFieldsNames.getRawValue()[i],
+          "type": this.getOldFieldsTypes.getRawValue()[i]
+        };
+        this.categoriesService.updateField(this.category.fields[i].fieldID, FieldDTO)
+          .subscribe((result) => {
+              if (result.status === 200) {
+                this.router.navigate(['/']);
+              }
+            }
+          )
+      }
+      //for(let i = 0; i < this.category.fields.length ; i++){
+        //this.removeFields();
+        //console.log(this.category.fields[i].fieldID);
+        //this.categoriesService.removeField(this.category.fields[i].fieldID).subscribe()
+      //}
       const CategoryDTO: object = {
         "name": this.editCategoryForm.getRawValue().name,
-        "parentCategoryID": this.editCategoryForm.getRawValue().parent,
-        "fields": fields
+        "parentCategoryID": this.editCategoryForm.getRawValue().parent
       }
       console.log(CategoryDTO);
       this.categoriesService.updateCategory(this.uuid,CategoryDTO)
