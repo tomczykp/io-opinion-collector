@@ -3,6 +3,14 @@
         <h4>Opinions ({{ opinions.length }})</h4>
     </div>
     <div class="container">
+        <button
+            *ngIf="isUser()"
+            class="btn btn-success"
+            (click)="openCreateOpinionModal()">
+            Add new opinion
+        </button>
+    </div>
+    <div class="container">
         <ng-container *ngIf="opinions.length; else noOpinions">
             <div *ngFor="let opinion of opinions">
                 <div>

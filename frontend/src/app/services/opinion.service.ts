@@ -40,10 +40,17 @@ export class OpinionService
         this.httpClient.post<null>(url, reason).subscribe();
     }
 
-    updateOpinion(productId: string, opinionId: string, dto: CreateUpdateOpinionDto)
+    updateOpinion(productId: string, opinionId: string, dto: CreateUpdateOpinionDto): Observable<Opinion>
     {
         const url = `${environment.apiUrl}/products/${productId}/opinions/${opinionId}`;
 
         return this.httpClient.put<Opinion>(url, dto);
+    }
+
+    createOpinion(productId: string, dto: CreateUpdateOpinionDto): Observable<Opinion>
+    {
+        const url = `${environment.apiUrl}/products/${productId}/opinions`;
+
+        return this.httpClient.post<Opinion>(url, dto);
     }
 }

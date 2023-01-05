@@ -29,16 +29,13 @@ export class OpinionsComponent implements OnChanges
     {
         if (!changes['productId'].isFirstChange())
         {
-            this.getOpinions();
+            this.opinionService
+                .getOpinions(this.productId)
+                .subscribe(data =>
+                {
+                    this.opinions$.next(data);
+                });
         }
-    }
-
-    getOpinions()
-    {
-        this.opinionService.getOpinions(this.productId).subscribe(data =>
-        {
-            this.opinions$.next(data);
-        })
     }
 
     onReactionClick(opinion: Opinion, positive: boolean)
@@ -99,8 +96,9 @@ export class OpinionsComponent implements OnChanges
         modalRef.result
             .then((dto: CreateUpdateOpinionDto) =>
             {
-                console.log(dto);
-                // TODO
+                this.opinionService
+                    .createOpinion(this.productId, dto)
+                    .subscribe(u => this.opinions$.value.push(u));
             })
             .catch(() => { });
     }
