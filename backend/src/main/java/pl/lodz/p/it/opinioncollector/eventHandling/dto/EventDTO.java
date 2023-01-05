@@ -57,8 +57,8 @@ public class EventDTO {
             this.type = "opinionReport";
         }
         else if (event instanceof ProductReportEvent castedEvent) {
-            this.questionID = castedEvent.getProductID();
-            this.type = "opinionReport";
+            this.productID = castedEvent.getProductID();
+            this.type = "productReport";
         }
     }
 

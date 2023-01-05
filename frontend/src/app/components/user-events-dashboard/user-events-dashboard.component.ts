@@ -6,6 +6,9 @@ import {EventsService, OC} from "../../services/events.service";
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
 import {interval, Subscription} from "rxjs";
+import {Router} from "@angular/router";
+import {ProductsService} from "../../services/products.service";
+import {OpinionService} from "../../services/opinion.service";
 
 @Component({
   selector: 'app-user-events-dashboard',
@@ -13,11 +16,11 @@ import {interval, Subscription} from "rxjs";
 })
 export class UserEventsDashboardComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['status', 'description', 'action'];
-  dataSource: MatTableDataSource<OC.Event>;
+  dataSource: MatTableDataSource<OC.BasicEvent>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  events: OC.Event[] = [];
+  events: OC.BasicEvent[] = [];
 
 
   counter = interval(5000);
@@ -27,7 +30,9 @@ export class UserEventsDashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private eventsService: EventsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private opinionService: OpinionService,
+    private router: Router
   ) {
   }
 
@@ -63,6 +68,21 @@ export class UserEventsDashboardComponent implements OnInit, OnDestroy {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         })
+      }
+    })
+  }
+
+  answerEvent(eventID: string): void {
+    this.eventsService.getEvent(eventID).subscribe((event) => {
+      if (event.type == 'productReport') {
+        this.router.navigate([`products/:${event.productID}`]);
+      } else if (event.type == 'questionNotify'
+        || event.type == 'questionReport'
+        || event.type == 'answerReport') {
+        //TODO:
+        console.log("route to question");
+      } else if (event.type == 'opinionReport') {
+        console.log("route to opinion");
       }
     })
   }

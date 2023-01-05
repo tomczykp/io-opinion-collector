@@ -7,16 +7,16 @@ import {interval, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-events',
-  templateUrl: './admin-events.component.html',
-  styleUrls: ['./admin-events.component.css']
+  templateUrl: './admin-events-dashboard.component.html',
+  styleUrls: ['./admin-events-dashboard.component.css']
 })
-export class AdminEventsComponent implements OnInit, OnDestroy {
+export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['userName', 'description', 'status', 'action'];
-  dataSource: MatTableDataSource<OC.Event>;
+  dataSource: MatTableDataSource<OC.BasicEvent>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  events: OC.Event[];
+  events: OC.BasicEvent[];
 
   counter = interval(1000);
   refreshSubscription: Subscription
