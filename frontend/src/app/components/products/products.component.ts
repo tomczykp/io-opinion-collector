@@ -29,6 +29,10 @@ export class ProductsComponent implements OnInit {
     this.productService.getProduct(uuid).subscribe((data: HttpResponse<Product>) => {
       console.log(data)
       this.product = data.body!;
+      this.product.createdAt = this.product.createdAt.split('T').join(" ").split('.')[0]
+      if (this.product.editedAt != null) {
+        this.product.editedAt = this.product.editedAt.split('T').join(" ").split('.')[0]
+      }
     })};
 
 }

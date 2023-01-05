@@ -7,6 +7,8 @@ export interface Product {
   description: string,
   deleted: boolean,
   confirmed: boolean,
+  createdAt: string,
+  editedAt: string|null,
   properties: Array<string>;
 }
 

@@ -80,21 +80,21 @@ export class UpdateProductComponent implements OnInit {
   updateProduct(): void {
     if (this.updateProductForm.valid) {
 
-      let propertiesValues = this.updateProductForm.getRawValue().propertiesValues.toString(); //
-      // let propertiesDTO = [];
-      const pMap: Map<string, string> = new Map()
+      let propertiesValues = this.updateProductForm.getRawValue().propertiesValues;
+      const pMap: Map<string, string> = new Map();
+
       for (let i = 0; i < propertiesValues.length; i++) {
-        // propertiesDTO[this.propertyKeys[i]] = propertiesValues[i];
-        pMap.set(this.propertyKeys[i], propertiesValues[i])
+        pMap.set(this.propertyKeys[i], propertiesValues[i] as string)
       }
+
+      const properties = Object.fromEntries(pMap);
+
       const productDTO = {
         "categoryId": this.product.categoryId,
         "name": this.updateProductForm.getRawValue().name,
         "description": this.updateProductForm.getRawValue().description,
-        "properties": pMap
+        "properties": properties
       }
-      console.log(productDTO)
-      console.log(JSON.stringify(productDTO));
       this.productService.updateProduct(this.uuid, productDTO)
         .subscribe((result) => {
             if (result.status === 200) {

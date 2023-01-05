@@ -10,6 +10,7 @@ import lombok.Setter;
 import pl.lodz.p.it.opinioncollector.category.model.Category;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -25,10 +26,6 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID productId;
 
-    @Column(nullable = true)
-    private UUID parentProductId;
-
-    @Column(nullable = true)
     private UUID constantProductId;
 
     @ManyToOne(optional = false) //cascade?
@@ -42,6 +39,10 @@ public class Product implements Serializable {
     private boolean deleted;
 
     private boolean confirmed;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime editedAt;
 
     @ElementCollection
     @CollectionTable(name = "properties")
@@ -62,11 +63,8 @@ public class Product implements Serializable {
         this.name = productDTO.getName();
         this.description = productDTO.getDescription();
         this.deleted = false;
-        this.confirmed = true;
-    }
-
-    public void removeProperty(String key) {
-        properties.remove(key);
+        this.confirmed = false;
+        this.setCreatedAt(LocalDateTime.now());
     }
 
     public void addProperty(String key, String value) {
@@ -88,8 +86,4 @@ public class Product implements Serializable {
 //            }  // And this?
     }
 
-    public void mergeProduct(ProductDTO productDTO) {
-        this.name = productDTO.getName();
-        this.description = productDTO.getDescription();
-    }
 }

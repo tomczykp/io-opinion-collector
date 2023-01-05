@@ -30,11 +30,20 @@
           <th scope="col">confirmed</th>
           <td>{{ product.confirmed }}</td>
         </tr>
+
+        <tr>
+          <th scope="col">created at</th>
+          <td>{{ product.createdAt }}</td>
+        </tr>
+
+        <tr>
+          <th scope="col">edited at</th>
+          <td>{{ product.editedAt }}</td>
+        </tr>
         </tbody>
       </table>
 
       <div class="mb-4">
-        <!-- FIXME not working correctly-->
         <ng-template [ngIf]="product.properties" [ngIfElse]="Properties">
           <h3>properties</h3>
           <table class="table table-bordered">
@@ -53,8 +62,6 @@
 
     </div>
 
-    <!--    <app-delete-product-form></app-delete-product-form>-->
-    <!--    <app-update-product></app-update-product>-->
     <app-opinions [productId]="product.productId"></app-opinions>
 
     <app-questions [productId]="product.productId"></app-questions>

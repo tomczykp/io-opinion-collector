@@ -10,6 +10,7 @@ import pl.lodz.p.it.opinioncollector.eventHandling.IProductEventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,8 +40,6 @@ public class ProductManager implements IProductManager {
         Product product = new Product(productDTO);
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        product.setConfirmed(false);
-
 
         try {
             product.setCategory(categoryManager.getCategory(productDTO.getCategoryId()));
@@ -60,9 +59,8 @@ public class ProductManager implements IProductManager {
             }
             categoryTemp = categoryTemp.getParentCategory();
         }
-
-        product.setParentProductId(null);
         product.setConstantProductId(UUID.randomUUID());
+
         productRepository.save(product);
         eventManager.createProductReportEvent(user.getId(), "New product suggestion with name: \""
                         + product.getName() + "\" and description: \"" + product.getDescription() + "\"",
@@ -79,22 +77,18 @@ public class ProductManager implements IProductManager {
         Optional<Product> originalProduct = productRepository.findById(uuid);
         if (originalProduct.isPresent()) {
             Product newProduct = new Product(productDTO);
-            newProduct.setProperties(originalProduct.get().getProperties());
+
+            newProduct.setCategory(originalProduct.get().getCategory());
+//            newProduct.setProperties(originalProduct.get().getProperties());
             newProduct.setProperties(productDTO.getProperties());
-            newProduct.setParentProductId(originalProduct.get().getParentProductId());
-            newProduct.setConstantProductId(originalProduct.get().getConstantProductId()); //FIXME works for now?
+            newProduct.setConstantProductId(originalProduct.get().getConstantProductId());
 
 
-//            List<Product> latestVersionProductList = productRepository.
-//                    findByConstantProductIdAndDeletedFalse(newProduct.getConstantProductId());
-//            if (!latestVersionProductList.isEmpty()) {
-//                Product latestVersionProduct = latestVersionProductList.get(0);
-//                latestVersionProduct.setDeleted(true); //FIXME
-//            }
-
+            originalProduct.get().setEditedAt(LocalDateTime.now());
+            productRepository.save(originalProduct.get());
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             eventManager.createProductReportEvent(user.getId(),
-                    "User requested update of product: " + productDTO, newProduct.getParentProductId()); //This?
+                    "User requested update of product: " + productDTO, newProduct.getProductId());
             productRepository.save(newProduct);
             return newProduct;
         }
