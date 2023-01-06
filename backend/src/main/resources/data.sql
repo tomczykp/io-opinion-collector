@@ -20,17 +20,17 @@ INSERT INTO public.app_user (id, active, email, locked, password, role, visible_
 INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name, provider, deleted) VALUES ('62908864-7b61-4e6e-8573-53863bd93b35', true, 'user16', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User16', 'LOCAL', true);
 INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name, provider, deleted) VALUES ('6ddee1ee-9eba-4222-a031-463a849e1886', true, 'Karok2137', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'Karol2137', 'LOCAL', false);
 
-INSERT INTO iodb.public.question (question_id, content, date, product_id)
+INSERT INTO iodb.public.question (question_id, content, date, product_id, author)
 VALUES ('8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
-        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07'),
+        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07', 'User'),
        ('35c3863a-2241-4c05-942b-6df9dabdf193', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
-        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07'),
+        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07', 'User'),
        ('95bc5f23-ac70-4c7e-a01f-4d9e92fad63d', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
-        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07');
+        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07', 'User');
 
-INSERT INTO iodb.public.answer (answer_id, content, date, question_id)
-VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'Yes', CURRENT_TIMESTAMP, '8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6'),
-       ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'No', CURRENT_TIMESTAMP, '35c3863a-2241-4c05-942b-6df9dabdf193');
+INSERT INTO iodb.public.answer (answer_id, content, date, question_id, author)
+VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'Yes', CURRENT_TIMESTAMP, '8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6', 'Admin'),
+       ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'No', CURRENT_TIMESTAMP, '35c3863a-2241-4c05-942b-6df9dabdf193', 'Admin');
 
 
 INSERT INTO public.field (fieldid, name, type) VALUES ('e65b1f71-f3d8-4e16-ba55-df16a316f051', 'Numer', 'Int');
@@ -49,9 +49,9 @@ INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES 
 
 
 INSERT INTO iodb.public.product (product_id, category_id, constant_product_id,  name, description, deleted, confirmed, created_at)
-VALUES ('4811913c-b953-4856-979b-838488049d07', 'b293013b-40da-4dde-a997-bce3068636ec', 'a64b3ef4-9dee-4088-8e99-bf7e7904d529', 'Product1', 'Description1', false, true, CURRENT_TIMESTAMP),
-       ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'b293013b-40da-4dde-a997-bce3068636ec', 'a675ee5e-57da-423b-9a69-dcd7a40a77af', 'Product2', 'Description2', false, true, CURRENT_TIMESTAMP),
-       ('2f335bfb-6805-4a40-ae9c-53b43f22b3ce', 'b293013b-40da-4dde-a997-bce3068636ec', '97ccb8f6-1f17-450e-9c77-f1f123b0d849', 'Product3', 'Description3', false, true, CURRENT_TIMESTAMP),
+VALUES ('4811913c-b953-4856-979b-838488049d07', 'f93af257-b1c2-4643-a844-5b2a7d75873f', 'a64b3ef4-9dee-4088-8e99-bf7e7904d529', 'Product1', 'Description1', false, true, CURRENT_TIMESTAMP),
+       ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'f93af257-b1c2-4643-a844-5b2a7d75873f', 'a675ee5e-57da-423b-9a69-dcd7a40a77af', 'Product2', 'Description2', false, true, CURRENT_TIMESTAMP),
+       ('2f335bfb-6805-4a40-ae9c-53b43f22b3ce', 'f93af257-b1c2-4643-a844-5b2a7d75873f', '97ccb8f6-1f17-450e-9c77-f1f123b0d849', 'Product3', 'Description3', false, true, CURRENT_TIMESTAMP),
        ('b71a95ef-3f19-4ced-a0f4-ebdca10a7668', 'b293013b-40da-4dde-a997-bce3068636ec', 'bad729e9-10e8-4fc6-96c6-6e0f82b781e6', 'Product4', 'Description4', false, true, CURRENT_TIMESTAMP),
        ('4950d349-1127-4690-82a0-94fdc81b019b', 'b293013b-40da-4dde-a997-bce3068636ec', '4dfd650a-b331-4076-8e26-66d9901c13fb', 'Product5', 'Description5', false, true, CURRENT_TIMESTAMP),
        ('b4c7b393-2e26-49e2-9783-785583bd4c66', 'b293013b-40da-4dde-a997-bce3068636ec', '313d9397-b6f8-452d-9f01-5e87004c43fb', 'Product6', 'Description6', true, true, CURRENT_TIMESTAMP),

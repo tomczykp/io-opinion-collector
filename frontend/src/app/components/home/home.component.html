@@ -26,8 +26,8 @@
     </ng-container>
 
     <ng-container matColumnDef="categoryId">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Category Id</th>
-      <td mat-cell *matCellDef="let element">{{element.categoryId}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+      <td mat-cell *matCellDef="let element">{{element.category.name}}</td>
     </ng-container>
 
     <div *ngIf="role == 'USER'">

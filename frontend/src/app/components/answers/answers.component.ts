@@ -14,6 +14,7 @@ export class AnswersComponent implements OnInit, OnChanges  {
   answers: Answer[] = [];
   authenticated: boolean;
   role: string;
+  username: string;
   @Input() questionId: string;
   answerForm: FormGroup;
   submitted: Boolean = false;
@@ -29,7 +30,8 @@ export class AnswersComponent implements OnInit, OnChanges  {
       this.authenticated = change;
 
       if (this.authenticated) {
-        this.role = localStorage.getItem("role")!;
+        this.username = this.authService.getUsername()!;
+        this.role = this.authService.getRole()!;
       }
     })
     this.answerForm = this.formBuilder.group({

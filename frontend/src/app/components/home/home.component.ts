@@ -6,6 +6,8 @@ import {ProductsService } from 'src/app/services/products.service';
 import {AuthService} from "../../services/auth.service";
 import {Product} from "../../model/Product";
 import {DeleteProductFormComponent} from "../products/delete-product-form/delete-product-form.component";
+import { CategoriesService } from 'src/app/services/categories.service';
+import { Category } from 'src/app/model/category';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +18,7 @@ export class HomeComponent implements OnInit {
 
   adminColumns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId', 'action'];
   userColumns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId', 'makeUpdateForm', 'makeDeleteForm'];
-  columns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId'];
+  columns: string[] = ['productId', 'name', 'description', 'categoryId'];
   data: MatTableDataSource<Product>;
   authenticated = false;
   products: Product[];
@@ -51,8 +53,7 @@ export class HomeComponent implements OnInit {
 
   getProducts(): void {
     this.productsService.getProducts().subscribe(value => {
-      this.products = value;
-
+      this.authenticated ? this.products = value : this.products = value.filter(p=> !p.deleted)
       this.data = new MatTableDataSource(this.products);
       this.data.paginator = this.paginator;
       this.data.sort = this.sort;

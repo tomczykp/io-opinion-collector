@@ -16,6 +16,7 @@ export class QuestionsComponent implements OnInit, OnChanges {
   counter: number;
   authenticated: boolean;
   role: string;
+  username: string;
   submitted: Boolean = false;
   questions: Question[] = [];
   @Input() productId: string;
@@ -32,7 +33,8 @@ export class QuestionsComponent implements OnInit, OnChanges {
       this.authenticated = change;
 
       if (this.authenticated) {
-        this.role = localStorage.getItem("role")!;
+        this.username = this.authService.getUsername()!;
+        this.role = this.authService.getRole()!;
       }
     })
 

@@ -2,7 +2,10 @@ package pl.lodz.p.it.opinioncollector.qa;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import pl.lodz.p.it.opinioncollector.userModule.user.User;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +26,9 @@ public class QAManager {
 
     public Question createQuestion(Question question) {
         question.setDate(LocalDateTime.now());
-        // tutaj coś typu:
-        // productRepository.findById(question.getProductId).addQuestion(question)
-        // zeby powiazac produkt z pytaniem?
+        question.setAuthor(((User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal()).getVisibleName());
         return questionRepository.save(question);
     }
 
@@ -52,6 +55,9 @@ public class QAManager {
 
     public Answer createAnswer(Answer answer) {
         answer.setDate(LocalDateTime.now());
+        answer.setAuthor(((User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal()).getVisibleName());
         return answerRepository.save(answer);
     }
 

@@ -3,5 +3,6 @@ export interface Question {
     content: string;
     date: Date;
     productId: string;
+    author: string;
   }
   

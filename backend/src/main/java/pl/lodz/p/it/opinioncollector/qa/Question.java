@@ -1,6 +1,7 @@
 package pl.lodz.p.it.opinioncollector.qa;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,5 +25,8 @@ public class Question {
     private String content;
     private LocalDateTime date;
     private UUID productId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String author;
 
 }
