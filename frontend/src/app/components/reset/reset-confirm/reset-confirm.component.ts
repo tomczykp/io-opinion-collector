@@ -48,7 +48,6 @@ export class ResetConfirmComponent implements OnInit {
 
       this.userService.confirmResetPassword(pass!.toString(), this.token)
         .subscribe((result) => {
-          console.log(result.status)
           if (result.status == 200) {
             this.router.navigate(['/login'], {queryParams: {'password-reset-success': true}});
           }

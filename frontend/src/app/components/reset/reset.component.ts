@@ -28,7 +28,6 @@ export class ResetComponent implements OnInit {
     let email = this.resetPasswordForm.getRawValue().email;
     this.userService.resetPassword(email!.toString())
       .subscribe((result) => {
-        console.log(result.status);
         if (result.status == 200) {
           this.email?.reset();
           this.emailStatus = 1;

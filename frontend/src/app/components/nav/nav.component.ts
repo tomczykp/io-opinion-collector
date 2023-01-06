@@ -9,7 +9,7 @@ import {AuthService} from "../../services/auth.service";
 export class NavComponent implements OnInit {
 
   authenticated = false;
-  email = "";
+  username = "";
   role = "";
 
   constructor(public authService: AuthService) { }
@@ -18,8 +18,8 @@ export class NavComponent implements OnInit {
     this.authService.authenticated.subscribe((change) => {
       this.authenticated = change;
       if (this.authenticated) {
-        this.email = localStorage.getItem("email")!;
-        this.role = localStorage.getItem("role")!;
+        this.username = this.authService.getUsername()!;
+        this.role = this.authService.getRole()!;
       }
     })
   }

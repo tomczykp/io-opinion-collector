@@ -18,7 +18,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
       </ul>
-      <span *ngIf="authenticated" class="me-2">Hi, {{email}}</span>
+      <span *ngIf="authenticated" class="me-2">Hi, {{authService.getUsername()}}</span>
       <button routerLink="/suggestion" class="btn" *ngIf="authenticated">
         <i class="bi bi-plus-circle me-2"></i><div
         class="d-none d-sm-inline position-relative mb-xxl-5">Add product</div></button>
