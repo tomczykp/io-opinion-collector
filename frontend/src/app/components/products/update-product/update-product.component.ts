@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Product, ProductFull} from "../../../model/Product";
 import {ProductsService} from "../../../services/products.service";
 import {CategoriesService} from "../../../services/categories.service";
 import {HttpResponse} from "@angular/common/http";
-import {Category} from "../../../model/category";
 
 
 @Component({
@@ -14,18 +13,17 @@ import {Category} from "../../../model/category";
 })
 export class UpdateProductComponent implements OnInit {
   product: Product = <Product>{};
-  // categories: Category[];
   propertyKeys: any = [];
   match: RegExpMatchArray | null;
   uuid: string;
 
-  regexForm: RegExp = new RegExp('^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$');
-  regexGet: RegExp = new RegExp('[0-9a-f\-]+$');
+  patternValidate: RegExp = new RegExp('^(\s+\S+\s*)*(?!\s).*$'); //Zero-width space works
+
 
 
   updateProductForm = this.fb.group({
-    name: this.fb.control('', [Validators.required]),
-    description: this.fb.control('', [Validators.required]),
+    name: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
+    description: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
     propertiesValues: this.fb.array([]),
   })
 
@@ -60,7 +58,7 @@ export class UpdateProductComponent implements OnInit {
         let value = properties[key];
         this.propertyKeys.push(key);
         this.updateProductForm.controls.propertiesValues.push(this.fb.control(
-          value, [Validators.required]
+          value, [Validators.required, Validators.pattern(this.patternValidate)]
         ));
       })
 

@@ -10,21 +10,20 @@ import {CategoriesService} from "../../../services/categories.service";
   templateUrl: './add-product.component.html'
 })
 export class AddProductComponent implements OnInit {
-  regex: RegExp = new RegExp('^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$');
+  // regex: RegExp = new RegExp('^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$');
+  patternValidate: RegExp = new RegExp('^(\s+\S+\s*)*(?!\s).*$'); //Zero-width space works
+
   categories: Category[];
   categoryId: string;
   propertyKeys: any = [];
 
   addProductForm = new FormGroup({
-    category: this.fb.control('', Validators.required),
-    name: this.fb.control('', [Validators.required]),
-    description: this.fb.control('', [Validators.required]),
+    category: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
+    name: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
+    description: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
     properties: this.fb.array([])
   })
 
-  // get categoryId() {
-  //   return this.addProductForm.get('categoryId');
-  // }
 
   get name() {
     return this.addProductForm.get('name');
@@ -99,8 +98,7 @@ export class AddProductComponent implements OnInit {
       let value = properties[key];
       this.propertyKeys.push(key);
       this.addProductForm.controls.properties.push(this.fb.control(
-        value, Validators.required));
+        value, [Validators.required, Validators.pattern(this.patternValidate)]));
     });
-    console.log(this.propertyKeys);
   }
 }
