@@ -18,6 +18,7 @@ import {AddProductComponent} from "./components/products/add-product/add-product
 import {UpdateProductComponent} from "./components/products/update-product/update-product.component";
 import {DeleteProductFormComponent} from "./components/products/delete-product-form/delete-product-form.component";
 import {UserEventsDashboardComponent} from "./components/user-events-dashboard/user-events-dashboard.component";
+import { InfoComponent } from './components/info/info.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -30,6 +31,7 @@ const routes: Routes = [
   {path: 'products/:uuid/delete', component: DeleteProductFormComponent},
   {path: 'suggestion', component: AddProductComponent},
   {path: 'user-events', component: UserEventsDashboardComponent},
+  {path: 'info', component: InfoComponent},
   {
     path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard, AdminGuard],
     children: [
