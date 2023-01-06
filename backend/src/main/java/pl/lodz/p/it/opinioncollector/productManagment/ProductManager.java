@@ -4,14 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.category.managers.CategoryManager;
-import pl.lodz.p.it.opinioncollector.category.model.Category;
-import pl.lodz.p.it.opinioncollector.category.model.Field;
 import pl.lodz.p.it.opinioncollector.eventHandling.IProductEventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,15 +48,11 @@ public class ProductManager implements IProductManager {
             throw new RuntimeException(e);
         }
 
-        Category categoryTemp = product.getCategory();
-        while (categoryTemp != null) {
-            List<Field> fields = categoryTemp.getFields();
-            for (Field field :
-                    fields) {
-                product.addProperty(field.getName(), field.getType());
-            }
-            categoryTemp = categoryTemp.getParentCategory();
+        // Putting properties from DTO to a new product
+        for (Map.Entry<String, String> entry : productDTO.properties.entrySet()) {
+            product.addProperty(entry.getKey(), entry.getValue());
         }
+
         product.setConstantProductId(UUID.randomUUID());
 
         productRepository.save(product);
@@ -79,12 +73,12 @@ public class ProductManager implements IProductManager {
             Product newProduct = new Product(productDTO);
 
             newProduct.setCategory(originalProduct.get().getCategory());
-//            newProduct.setProperties(originalProduct.get().getProperties());
             newProduct.setProperties(productDTO.getProperties());
             newProduct.setConstantProductId(originalProduct.get().getConstantProductId());
 
 
-            originalProduct.get().setEditedAt(LocalDateTime.now());
+//            originalProduct.get().setEditedAt(LocalDateTime.now());
+
             productRepository.save(originalProduct.get());
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             eventManager.createProductReportEvent(user.getId(),
@@ -115,14 +109,13 @@ public class ProductManager implements IProductManager {
         return false;
     }
 
-    public boolean makeDeleteFormProduct(UUID uuid, ProductDeleteForm productDF) { //TODO delete form
+    public boolean makeDeleteFormProduct(UUID uuid, ProductDeleteForm productDF) {
         Optional<Product> productOptional = productRepository.findById(uuid);
         if (productOptional.isPresent()) {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             eventManager.createProductReportEvent(user.getId(), "User requested deletion of" +
                     " a product with description: \"" + productDF.getDescription() + "\"", uuid);
-            //That's all?
             return true;
         }
         return false;
@@ -133,6 +126,15 @@ public class ProductManager implements IProductManager {
         if (product.isPresent()) {
             product.get().setDeleted(true);
             productRepository.save(product.get());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean hardDeleteSuggestion(UUID uuid) {
+        Optional<Product> product = productRepository.findById(uuid);
+        if (product.isPresent() && !product.get().isConfirmed()) {
+            productRepository.delete(product.get());
             return true;
         }
         return false;
@@ -150,9 +152,21 @@ public class ProductManager implements IProductManager {
         return productRepository.findByConfirmedFalse();
     }
 
+    public List<Product> getConfirmedNotDeletedSuggestions() {
+        return productRepository.findProductsByConfirmedTrueAndDeletedFalse();
+    }
+
     public List<Product> getLatestVersionProduct(UUID uuid) {
         return productRepository.findByConstantProductIdAndDeletedFalse(uuid);
     }
 
 
+    //FIXME both are not working
+    public List<Product> getByPropertyValues(String value) {
+        return productRepository.getByPropertyValues(value);
+    }
+
+    public List<Product> getByPropertyKey(String key) {
+        return productRepository.getByPropertyKey(key);
+    }
 }

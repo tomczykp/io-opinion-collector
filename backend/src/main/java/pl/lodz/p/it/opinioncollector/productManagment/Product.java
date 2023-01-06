@@ -3,10 +3,8 @@ package pl.lodz.p.it.opinioncollector.productManagment;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import pl.lodz.p.it.opinioncollector.category.model.Category;
 
 import java.io.Serializable;
@@ -42,7 +40,7 @@ public class Product implements Serializable {
 
     private LocalDateTime createdAt;
 
-    private LocalDateTime editedAt;
+//    private LocalDateTime editedAt;
 
     @ElementCollection
     @CollectionTable(name = "properties")

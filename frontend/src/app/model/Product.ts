@@ -8,7 +8,7 @@ export interface Product {
   deleted: boolean,
   confirmed: boolean,
   createdAt: string,
-  editedAt: string|null,
+  // editedAt: string|null,
   properties: Array<string>;
 }
 

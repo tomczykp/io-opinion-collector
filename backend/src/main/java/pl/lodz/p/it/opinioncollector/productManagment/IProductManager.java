@@ -16,4 +16,7 @@ public interface IProductManager {
     List<Product> getProductsByCategory(UUID uuid);
 
     List<Product> getUnconfirmedSuggestions();
+
+    List<Product> getConfirmedNotDeletedSuggestions();
+
 }
