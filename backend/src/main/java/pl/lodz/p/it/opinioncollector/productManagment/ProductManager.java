@@ -56,7 +56,7 @@ public class ProductManager implements IProductManager {
         product.setConstantProductId(UUID.randomUUID());
 
         productRepository.save(product);
-        eventManager.createProductReportEvent(user.getId(), "New product suggestion with name: \""
+        eventManager.createProductReportEvent(user, "New product suggestion with name: \""
                         + product.getName() + "\" and description: \"" + product.getDescription() + "\"",
                 product.getProductId());
         return product;
@@ -81,10 +81,11 @@ public class ProductManager implements IProductManager {
 
             productRepository.save(originalProduct.get());
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            eventManager.createProductReportEvent(user.getId(),
-                    "User requested update of product: " + productDTO, newProduct.getProductId());
+            eventManager.createProductReportEvent(user,
+                    "User requested update of product: " + productDTO, originalProduct.get().getProductId());
             productRepository.save(newProduct);
             return newProduct;
+
         }
         return null;
     }
@@ -114,7 +115,8 @@ public class ProductManager implements IProductManager {
         if (productOptional.isPresent()) {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            eventManager.createProductReportEvent(user.getId(), "User requested deletion of" +
+
+            eventManager.createProductReportEvent(user,"User requested deletion of" +
                     " a product with description: \"" + productDF.getDescription() + "\"", uuid);
             return true;
         }
