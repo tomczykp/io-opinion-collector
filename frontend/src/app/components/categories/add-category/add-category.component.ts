@@ -86,7 +86,7 @@ export class AddCategoryComponent implements OnInit {
     this.categoriesService.createCategory(CategoryDTO)
       .subscribe((result) => {
           if (result.status === 200) {
-            this.router.navigate(['/']);
+            this.router.navigate(['/dashboard/categories']);
           }
         }
       )

@@ -1,9 +1,13 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Observable} from "rxjs";
 import {Opinion} from "../../model/Opinion";
 import {Category} from "../../model/category";
 import {CategoriesService} from "../../services/categories.service";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
+import {MatTableDataSource} from "@angular/material/table";
+import {User} from "../../model/User";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-categories',
@@ -11,6 +15,9 @@ import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class CategoriesComponent implements OnInit {
 
+  dataSource: MatTableDataSource<Category>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   categories$: Observable<Category[]>;
 
   addCategoryForm = new FormGroup({

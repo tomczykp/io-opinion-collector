@@ -26,6 +26,8 @@ export class EditCategoryComponent implements OnInit {
     newFieldsTypes: this.fb.array([])
   })
 
+  removed : number[] = [];
+
   get getOldFieldsNames() {
     return this.editCategoryForm.get('oldFieldsNames') as FormArray;
   }
@@ -60,7 +62,6 @@ export class EditCategoryComponent implements OnInit {
     return this.editCategoryForm.get('name');
   }
   get parent() {
-    //console.log(this.editCategoryForm.get('parent')?.getRawValue());
     return this.editCategoryForm.get('parent')?.getRawValue();
   }
   getCategories(){
@@ -101,8 +102,13 @@ export class EditCategoryComponent implements OnInit {
     this.removeNewFieldsTypes(i);
   }
   removeOldFields(i : number){
+    this.removed.push(i);
     this.removeOldFieldsNames(i);
     this.removeOldFieldsTypes(i);
+    this.categoriesService.removeField(this.category.fields[this.removed[i]].fieldID)
+      .subscribe((result) => {
+        if (result.status === 200) {
+        }})
   }
 
   editCategory() {
@@ -114,39 +120,33 @@ export class EditCategoryComponent implements OnInit {
         };
         this.categoriesService.addField(this.uuid, FieldDTO)
           .subscribe((result) => {
-              if (result.status === 200) {
-                this.router.navigate(['/']);
-              }
+              if (result.status === 200) {}
             }
           )
       }
+
       for(let i = 0;i < this.getOldFieldsTypes.getRawValue().length; i++){
-        const FieldDTO: object = {
-          "name": this.getOldFieldsNames.getRawValue()[i],
-          "type": this.getOldFieldsTypes.getRawValue()[i]
-        };
-        this.categoriesService.updateField(this.category.fields[i].fieldID, FieldDTO)
-          .subscribe((result) => {
-              if (result.status === 200) {
-                this.router.navigate(['/']);
+        if(!this.removed.includes(i)){
+          const FieldDTO: object = {
+            "name": this.getOldFieldsNames.getRawValue()[i],
+            "type": this.getOldFieldsTypes.getRawValue()[i]
+          };
+          this.categoriesService.updateField(this.category.fields[i].fieldID, FieldDTO)
+            .subscribe((result) => {
+                if (result.status === 200) {
+                }
               }
-            }
-          )
+            )
+        }
       }
-      //for(let i = 0; i < this.category.fields.length ; i++){
-        //this.removeFields();
-        //console.log(this.category.fields[i].fieldID);
-        //this.categoriesService.removeField(this.category.fields[i].fieldID).subscribe()
-      //}
       const CategoryDTO: object = {
         "name": this.editCategoryForm.getRawValue().name,
         "parentCategoryID": this.editCategoryForm.getRawValue().parent
       }
-      console.log(CategoryDTO);
       this.categoriesService.updateCategory(this.uuid,CategoryDTO)
         .subscribe((result) => {
             if (result.status === 200) {
-              this.router.navigate(['/']);
+              this.router.navigate(['/dashboard/categories']);
             }
           }
         )
