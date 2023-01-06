@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {AdminEventsComponent} from './components/events/admin-events.component';
+import {AdminEventsDashboardComponent} from './components/admin-events-dashboard/admin-events-dashboard.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
@@ -35,11 +35,13 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import { EventsIconComponent } from './components/events-icon/events-icon.component';
 import { UserEventsDashboardComponent } from './components/user-events-dashboard/user-events-dashboard.component';
+import { OpinionReportModalComponent } from './components/opinions/opinion-report-modal/opinion-report-modal.component';
+import { OpinionModalComponent } from './components/opinions/opinion-modal/opinion-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AdminEventsComponent,
+    AdminEventsDashboardComponent,
     HomeComponent,
     NavComponent,
     ProductsComponent,
@@ -60,6 +62,8 @@ import { UserEventsDashboardComponent } from './components/user-events-dashboard
     DeleteProductFormComponent,
     EventsIconComponent,
     UserEventsDashboardComponent,
+    OpinionReportModalComponent,
+    OpinionModalComponent,
   ],
   imports: [
     BrowserModule,

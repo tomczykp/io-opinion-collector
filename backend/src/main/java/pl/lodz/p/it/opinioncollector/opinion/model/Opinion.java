@@ -1,6 +1,7 @@
 package pl.lodz.p.it.opinioncollector.opinion.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,6 +20,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 import pl.lodz.p.it.opinioncollector.productManagment.Product;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
@@ -32,6 +35,13 @@ public class Opinion implements Serializable {
 
     @EmbeddedId
     private OpinionId id;
+
+    @Generated(GenerationTime.INSERT)
+    @Column(nullable = false,
+            insertable = false,
+            updatable = false,
+            columnDefinition = "TIMESTAMP DEFAULT NOW()")
+    private LocalDateTime createdAt;
 
     @Column(name = "RATE", nullable = false)
     private int rate;
@@ -72,6 +82,7 @@ public class Opinion implements Serializable {
     @ManyToOne(optional = false)
     private User author;
 
+    @JsonIgnore
     @OneToMany(orphanRemoval = true,
                cascade = CascadeType.ALL,
                mappedBy = "opinion",

@@ -1,0 +1,8 @@
+.pros-and-cons-list {
+    max-height: 12vh;
+    overflow-y: scroll;
+}
+
+.pros-and-cons-list span {
+    cursor: pointer;
+}

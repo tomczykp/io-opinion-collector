@@ -13,16 +13,20 @@ export class EventsService {
   constructor(private httpClient: HttpClient) {
   }
 
-  public getEvents(): Observable<OC.Event[]> {
-    return this.httpClient.get<OC.Event[]>(`${environment.apiUrl}/events`);
+  public getEvents(): Observable<OC.BasicEvent[]> {
+    return this.httpClient.get<OC.BasicEvent[]>(`${environment.apiUrl}/events`);
   }
 
-  public getUserEvents(userID: string): Observable<OC.Event[]> {
-    return this.httpClient.get<OC.Event[]>(`${environment.apiUrl}/users/${userID}/events`);
+  public getUserEvents(): Observable<OC.BasicEvent[]> {
+    return this.httpClient.get<OC.BasicEvent[]>(`${environment.apiUrl}/user/events`);
   }
 
-  public getEventsCount(userID: string): Observable<number> {
-    return this.httpClient.get<number>(`${environment.apiUrl}/users/${userID}/eventsCount`)
+  public getEventsCount(): Observable<number> {
+    return this.httpClient.get<number>(`${environment.apiUrl}/user/eventsCount`)
+  }
+
+  public getEvent(eventID: String): Observable<OC.Event> {
+    return this.httpClient.get<OC.Event>(`${environment.apiUrl}/events/${eventID}`);
   }
 
   public closeEvent(id: string): void {
@@ -32,10 +36,21 @@ export class EventsService {
 }
 
 export namespace OC {
-  export interface Event {
+  export interface BasicEvent {
     eventID: string;
     userName: string;
     description: string;
     status: string;
+  }
+
+  export interface Event {
+    eventID: string;
+    userID: string;
+    description: string;
+    status: string;
+    questionID: string;
+    opinionID?: any;
+    productID?: any;
+    type: string;
   }
 }

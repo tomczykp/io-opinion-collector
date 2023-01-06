@@ -43,6 +43,7 @@ export class AuthService {
     localStorage.setItem("refreshToken", result.body.refreshToken)
     localStorage.setItem("role", result.body.role)
     localStorage.setItem("provider", result.body.provider)
+    localStorage.setItem("username", result.body.visibleName)
   }
 
   register(email: string, username: string, password: string) {
@@ -64,6 +65,14 @@ export class AuthService {
       this.authenticated.next(false);
       this.router.navigate(['/login'], {queryParams: {'logout-success': true}});
     })
+  }
+
+  setUsername(username: string) {
+    localStorage.setItem("username", username);
+  }
+
+  getUsername() {
+    return localStorage.getItem("username");
   }
 
   getRole() {

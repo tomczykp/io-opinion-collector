@@ -22,9 +22,9 @@
       <button routerLink="/suggestion" class="btn btn-dark me-3" *ngIf="authenticated">
         <i class="bi bi-plus-circle fs-6 me-2"></i>
         <div class="d-none d-sm-inline">Add product</div></button>
-      <i routerLink="/profile" class="bi bi-person me-4 fa-2xl" *ngIf="authenticated"></i>
+      <i routerLink="/profile" class="bi bi-person me-3 fa-2xl" *ngIf="authenticated"></i>
       <i routerLink="/dashboard/users" class="bi bi-person-gear me-4 fa-2xl" *ngIf="authenticated && role=='ADMIN'"></i>
-      <app-events-icon style="padding: 10px"></app-events-icon>
+      <app-events-icon class="me-2"></app-events-icon>
       <button class="btn-danger btn" *ngIf="authenticated" (click)="onLogout()">Logout</button>
       <button class="btn-primary btn me-3" *ngIf="!authenticated" routerLink="/register">Register</button>
       <button class="btn-primary btn" *ngIf="!authenticated" routerLink="/login">Login</button>

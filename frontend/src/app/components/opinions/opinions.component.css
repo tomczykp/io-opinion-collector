@@ -2,3 +2,9 @@
     border-bottom: #EEE 1px solid;
     margin-bottom: 20px;
 }
+
+.likesCounter {
+    width: 5ch;
+    display: inline-block;
+    text-align: center;
+}
