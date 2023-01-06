@@ -162,11 +162,11 @@ public class ProductManager implements IProductManager {
 
 
     //FIXME both are not working
-    public List<Product> getByPropertyValues(String value) {
-        return productRepository.getByPropertyValues(value);
-    }
+//    public List<Product> getByPropertyValues(String value) {
+//        return productRepository.getByPropertyValues(value);
+//    }
 
-    public List<Product> getByPropertyKey(String key) {
-        return productRepository.getByPropertyKey(key);
-    }
+//    public List<Product> getByPropertyKey(String key) {
+//        return productRepository.getByPropertyKey(key);
+//    }
 }

@@ -18,17 +18,17 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     List<Product> findProductsByConfirmedTrueAndDeletedFalse();
 
-    @Query("""
-        SELECT p
-        FROM Product p
-        WHERE :value IN (VALUE(p.properties))
-            """)
-    List<Product> getByPropertyValues(String value);
+//    @Query("""
+//        SELECT p
+//        FROM Product p
+//        WHERE :value IN (VALUE(p.properties))
+//            """)
+//    List<Product> getByPropertyValues(String value);
 
-    @Query("""
-        SELECT p
-        FROM Product p
-        WHERE :value IN (key(p.properties))
-            """)
-    List<Product> getByPropertyKey(String key);
+//    @Query("""
+//        SELECT p
+//        FROM Product p
+//        WHERE :value IN (KEY(p.properties))
+//            """)
+//    List<Product> getByPropertyKey(String key);
 }
