@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { CreateUpdateOpinionDto, Opinion } from 'src/app/model/Opinion';
 import { AuthService } from 'src/app/services/auth.service';
 import { OpinionService } from 'src/app/services/opinion.service';
+import { DeleteOpinionModalComponent } from './delete-opinion-modal/delete-opinion-modal.component';
 import { OpinionModalComponent } from './opinion-modal/opinion-modal.component';
 import { OpinionReportModalComponent } from './opinion-report-modal/opinion-report-modal.component';
 
@@ -71,8 +72,7 @@ export class OpinionsComponent implements OnChanges
 
     isAuthor(opinion: Opinion): boolean
     {
-        // TODO retrieve username from authService
-        return true;
+        return this.authService.getUsername() === opinion.authorName;
     }
 
     isUser(): boolean
@@ -115,6 +115,28 @@ export class OpinionsComponent implements OnChanges
                 this.opinionService
                     .updateOpinion(opinion.productId, opinion.opinionId, dto)
                     .subscribe(u => this.replaceUpdated(u));
+            })
+            .catch(() => { });
+    }
+
+    openDeleteConfirmationModal(opinion: Opinion)
+    {
+        const modalRef = this.modalService.open(DeleteOpinionModalComponent, {
+            centered: true,
+            size: 'sm'
+        });
+
+        (modalRef.componentInstance as DeleteOpinionModalComponent).opinion = opinion;
+
+        modalRef.result
+            .then((wasDeleted: boolean) =>
+            {
+                if (wasDeleted)
+                {
+                    this.opinions$.next(
+                        this.opinions$.value.filter(o => o.opinionId !== opinion.opinionId)
+                    );
+                }
             })
             .catch(() => { });
     }

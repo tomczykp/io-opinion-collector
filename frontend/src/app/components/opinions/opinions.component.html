@@ -75,6 +75,13 @@
                         <i class="bi bi-flag"></i>
                         Report
                     </button>
+                    <button
+                        *ngIf="isAuthor(opinion)"
+                        class="btn btn-dark"
+                        (click)="openDeleteConfirmationModal(opinion)">
+                        <i class="bi bi-trash-fill"></i>
+                        Delete
+                    </button>
                 </div>
                 <hr class="mb-2">
             </div>
