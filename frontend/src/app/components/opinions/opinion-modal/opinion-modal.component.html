@@ -1,0 +1,138 @@
+<div class="container mt-2">
+    <form
+        #form="ngForm"
+        (submit)="onSubmit()">
+        <div class="mb-2">
+            <label
+                for="desc"
+                class="form-label">
+                What do you think about this product?
+            </label>
+            <input
+                type="text"
+                id="desc"
+                name="description"
+                [(ngModel)]="opinion.description"
+                required
+                placeholder="Enter your opinion here..."
+                #descInput="ngModel"
+                pattern=".*\S+.*"
+                class="form-control">
+            <div
+                class="text-danger"
+                *ngIf="descInput.invalid">
+                Opinion must not be blank.
+            </div>
+        </div>
+        <div class="mb-2">
+            <label
+                for="rating"
+                class="form-label">
+                How do you rate this product?
+            </label>
+            <div>
+                <ngb-rating
+                    name="rating"
+                    id="rating"
+                    [rate]="opinion.rate"
+                    [(ngModel)]="opinion.rate"
+                    class="fs-5">
+                </ngb-rating>
+            </div>
+        </div>
+        <div class="mb-2">
+            <label
+                for="pros"
+                class="form-label">
+                What are the pros of this product?
+            </label>
+            <ul class="pros-and-cons-list">
+                <li *ngFor="let p of opinion.pros; let i = index">
+                    {{ p }}
+                    <span (click)="this.opinion.pros.splice(i, 1)">
+                        <i class="bi bi-trash-fill text-danger fs-5"></i>
+                    </span>
+                </li>
+            </ul>
+            <div class="input-group mb-3">
+                <input
+                    type="text"
+                    id="pros"
+                    class="form-control"
+                    placeholder="Enter pros here"
+                    name="pros"
+                    [(ngModel)]="currentProsValue">
+                <button
+                    [disabled]="!currentProsValue"
+                    class="btn btn-success"
+                    type="button"
+                    (click)="addPros()">
+                    <span>
+                        <i class="bi bi-plus-lg"></i>
+                        Add
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="mb-2">
+            <label
+                for="cons"
+                class="form-label">
+                What are the cons of this product?
+            </label>
+            <ul class="pros-and-cons-list">
+                <li *ngFor="let c of opinion.cons; let i = index">
+                    {{ c }}
+                    <span (click)="this.opinion.cons.splice(i, 1)">
+                        <i class="bi bi-trash-fill text-danger fs-5"></i>
+                    </span>
+                </li>
+            </ul>
+            <div class="input-group mb-3">
+                <input
+                    id="cons"
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter cons here"
+                    name="cons"
+                    [(ngModel)]="currentConsValue">
+                <button
+                    [disabled]="!currentConsValue"
+                    class="btn btn-danger"
+                    type="button"
+                    (click)="addCons()">
+                    <span>
+                        <i class="bi bi-plus-lg"></i>
+                        Add
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="mb-2 d-flex justify-content-end gap-3">
+            <button
+                class="btn btn-secondary"
+                type="button"
+                (click)="activeModal.dismiss()">
+                Cancel
+            </button>
+            <ng-container *ngIf="allProsAndConsAdded(); else warningButton">
+                <button
+                    [disabled]="form.invalid"
+                    class="btn btn-primary"
+                    type="submit">
+                    OK
+                </button>
+            </ng-container>
+            <ng-template #warningButton>
+                <button
+                    [disabled]="form.invalid"
+                    placement="bottom"
+                    [ngbTooltip]="'Some pros or cons weren\'t added.'"
+                    class="btn btn-warning"
+                    type="submit">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </button>
+            </ng-template>
+        </div>
+    </form>
+</div>
