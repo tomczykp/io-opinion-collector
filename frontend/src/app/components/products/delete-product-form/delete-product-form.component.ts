@@ -10,10 +10,12 @@ import {ProductsService} from "../../../services/products.service";
 export class DeleteProductFormComponent implements OnInit {
   match: RegExpMatchArray | null;
   uuid: string;
-  regexGet: RegExp = new RegExp('[0-9a-f\-]+$');
+  patternValidate: RegExp = new RegExp('^(\s+\S+\s*)*(?!\s).{19,}$'); //Zero-width space works
 
-  deleteProductForm = new FormGroup({                                //Idk if 20 is fine
-    description: new FormControl('', [Validators.required, Validators.minLength(20)]),
+
+  deleteProductForm = new FormGroup({
+    description: new FormControl('', [Validators.required,
+      Validators.pattern(this.patternValidate)]),
   });
 
   get description() {

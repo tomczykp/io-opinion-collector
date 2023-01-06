@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundException;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public class ProductController {
     }
 
     @PostMapping("/suggestion")
-    public ResponseEntity<Product> createSuggestion(@Valid @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<Product> createSuggestion(@Valid @RequestBody ProductDTO productDTO) throws CategoryNotFoundException {
         Product product = productManager.createSuggestion(productDTO);
         return ResponseEntity.ok(product);
     }

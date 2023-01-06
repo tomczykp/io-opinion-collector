@@ -3,14 +3,12 @@ package pl.lodz.p.it.opinioncollector.productManagment;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.Type;
+import pl.lodz.p.it.opinioncollector.category.model.Category;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -22,12 +20,15 @@ import java.util.UUID;
 public class Product implements Serializable {
 
     @Id
-    @Setter(AccessLevel.NONE)
+    @Column(name = "product_ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID productId;
 
-    @Setter(AccessLevel.NONE)
-    private UUID categoryId;
+    private UUID constantProductId;
+
+    @ManyToOne(optional = false) //cascade?
+    @JoinColumn(name = "category_id", referencedColumnName = "categoryid", nullable = false)
+    private Category category;
 
     private String name;
 
@@ -37,35 +38,31 @@ public class Product implements Serializable {
 
     private boolean confirmed;
 
-    @NotNull
+    private LocalDateTime createdAt;
+
+//    private LocalDateTime editedAt;
+
     @ElementCollection
     @CollectionTable(name = "properties")
     @MapKeyColumn(name = "key")
     @Column(name = "value")
-    @JoinColumn(name = "productId")
-    private Map<String, String> properties;
+    @JoinColumn(name = "product_id")
+    private Map<String, String> properties = new HashMap<>();
 
 
-    public Product(UUID categoryId, String name, String description, HashMap<String, String> properties) {
-        this.categoryId = categoryId;
+    public Product(UUID categoryId, String name, String description) {
         this.name = name;
         this.description = description;
         this.deleted = false;
         this.confirmed = true;
-        this.properties = properties;
     }
 
     public Product(ProductDTO productDTO) {
-        this.categoryId = productDTO.getCategoryId();
         this.name = productDTO.getName();
         this.description = productDTO.getDescription();
         this.deleted = false;
-        this.confirmed = true;
-        this.properties = productDTO.getProperties();
-    }
-
-    public void removeProperty(String key) {
-        properties.remove(key); //TODO where to use that?
+        this.confirmed = false;
+        this.setCreatedAt(LocalDateTime.now());
     }
 
     public void addProperty(String key, String value) {
@@ -76,10 +73,15 @@ public class Product implements Serializable {
         return properties.get(key);
     }
 
-    public void mergeProduct(ProductDTO productDTO) {
-        this.categoryId = productDTO.getCategoryId();
-        this.name = productDTO.getName();
-        this.description = productDTO.getDescription();
-        this.properties = productDTO.getProperties();
+    public void setProperties(Map<String, String> properties) {
+        for (String key :
+                properties.keySet()) {
+            this.properties.put(key, properties.get(key)); //FIXME but now key has to be unique, hashset?
+        }
+//            this.properties.putIfAbsent(key, properties.get(key)); // How about that?
+//            if(this.properties.putIfAbsent(key, properties.get(key)) == null){
+//            this.properties.put(key + "idk_something to distinct", properties.get(key));
+//            }  // And this?
     }
+
 }

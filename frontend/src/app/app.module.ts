@@ -31,6 +31,8 @@ import { CategoriesComponent } from './components/categories/categories.componen
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import {UpdateProductComponent} from "./components/products/update-product/update-product.component";
 import { DeleteProductFormComponent } from './components/products/delete-product-form/delete-product-form.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
 import { EventsIconComponent } from './components/events-icon/events-icon.component';
 import { UserEventsDashboardComponent } from './components/user-events-dashboard/user-events-dashboard.component';
 import { OpinionReportModalComponent } from './components/opinions/opinion-report-modal/opinion-report-modal.component';
@@ -83,6 +85,8 @@ import { DeleteOpinionModalComponent } from './components/opinions/delete-opinio
     HttpClientModule,
     FormsModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
