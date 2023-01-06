@@ -82,7 +82,7 @@ export class OpinionsComponent implements OnChanges
 
     openReportModal(opinion: Opinion)
     {
-        const modalRef = this.modalService.open(OpinionReportModalComponent);
+        const modalRef = this.modalService.open(OpinionReportModalComponent, { centered: true });
 
         (modalRef.componentInstance as OpinionReportModalComponent).opinion = opinion;
     }
