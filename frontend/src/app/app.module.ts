@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {AdminEventsComponent} from './components/events/admin-events.component';
+import {AdminEventsDashboardComponent} from './components/admin-events-dashboard/admin-events-dashboard.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
@@ -40,7 +40,7 @@ import { DeleteOpinionModalComponent } from './components/opinions/delete-opinio
 @NgModule({
   declarations: [
     AppComponent,
-    AdminEventsComponent,
+    AdminEventsDashboardComponent,
     HomeComponent,
     NavComponent,
     ProductsComponent,

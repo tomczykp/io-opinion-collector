@@ -4,7 +4,7 @@ import {LoginComponent} from "./components/login/login.component";
 import {HomeComponent} from "./components/home/home.component";
 import {RegisterComponent} from "./components/register/register.component";
 import {ProfileComponent} from "./components/profile/profile.component";
-import {AdminEventsComponent} from "./components/events/admin-events.component";
+import {AdminEventsDashboardComponent} from "./components/admin-events-dashboard/admin-events-dashboard.component";
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ResetComponent } from './components/reset/reset.component';
 import { ResetConfirmComponent } from './components/reset/reset-confirm/reset-confirm.component';
@@ -39,7 +39,7 @@ const routes: Routes = [
       },
       {
         path: 'events',
-        component: AdminEventsComponent,
+        component: AdminEventsDashboardComponent,
       },
       {
         path: 'categories',

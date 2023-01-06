@@ -101,4 +101,12 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
 
         return result;
     }
+
+    public List<Event> getUserEvents(User user) {
+        return eventsRepository.findByUser(user);
+    }
+
+    public int getUserEventsCount(User user) {
+        return eventsRepository.countByUserAndStatus(user, EventStatus.Open);
+    }
 }
