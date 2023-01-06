@@ -1,25 +1,29 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {ProductsService} from "../../../services/products.service";
+import {Category} from "../../../model/category";
+import {CategoriesService} from "../../../services/categories.service";
 
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html'
 })
 export class AddProductComponent implements OnInit {
-  regex: RegExp = new RegExp('^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$');
+  // regex: RegExp = new RegExp('^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$');
+  patternValidate: RegExp = new RegExp('^(\s+\S+\s*)*(?!\s).*$'); //Zero-width space works
+
+  categories: Category[];
+  categoryId: string;
+  propertyKeys: any = [];
 
   addProductForm = new FormGroup({
-    categoryId: new FormControl('', [Validators.required, Validators.pattern(this.regex)]),
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required]),
-    properties: new FormControl('')
+    category: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
+    name: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
+    description: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
+    properties: this.fb.array([])
   })
 
-  get categoryId() {
-    return this.addProductForm.get('categoryId');
-  }
 
   get name() {
     return this.addProductForm.get('name');
@@ -30,30 +34,37 @@ export class AddProductComponent implements OnInit {
   }
 
   get properties() {
-    return this.addProductForm.get('properties');
+    return this.addProductForm.get('properties') as FormArray;
   }
 
   constructor(
     private productService: ProductsService,
-    private router: Router
+    private categoryService: CategoriesService,
+    private router: Router,
+    private fb: FormBuilder
   ) {
   }
 
   ngOnInit(): void {
+    this.categoryService.getCategories().subscribe((data: Category[]) => {
+      this.categories = data;
+    });
   }
-
 
   addProduct() {
     if (this.addProductForm.valid) {
+      let propertiesValues = this.addProductForm.getRawValue().properties;
+      const pMap: Map<string, string> = new Map();
+      for (let i = 0; i < propertiesValues.length; i++) {
+        pMap.set(this.propertyKeys[i], propertiesValues[i] as string)
+      }
+      const properties = Object.fromEntries(pMap);
       const ProductDTO: object = {
-        "categoryId": this.addProductForm.getRawValue().categoryId,
+        "categoryId": this.categoryId,
         "name": this.addProductForm.getRawValue().name,
         "description": this.addProductForm.getRawValue().description,
-        "properties": {
-          "test": "test"
-        }
+        "properties": properties
       }
-      console.log(ProductDTO);
       this.productService.addProduct(ProductDTO)
         .subscribe((result) => {
             if (result.status === 200) {
@@ -62,5 +73,32 @@ export class AddProductComponent implements OnInit {
           }
         )
     }
+  }
+
+  onCategoryChanged(value: string) {
+    this.categoryId = value.split(' ')[1];
+    let selectedCategory = this.categories.find(obj => {
+      return obj.categoryID == this.categoryId;
+    })
+    if(selectedCategory === undefined) {
+       return;
+    }
+    console.log(selectedCategory);
+    let properties: {[id: string]: any} = [];
+    let mutableCategory: Category|null = selectedCategory;
+    while(mutableCategory !== null) {
+      mutableCategory.fields.forEach(field => {
+        properties[field.type] = field.name;
+      })
+      mutableCategory = mutableCategory.parentCategory;
+    }
+    this.addProductForm.controls.properties.clear();
+    this.propertyKeys = [];
+    Object.keys(properties).forEach(key => {
+      let value = properties[key];
+      this.propertyKeys.push(key);
+      this.addProductForm.controls.properties.push(this.fb.control(
+        value, [Validators.required, Validators.pattern(this.patternValidate)]));
+    });
   }
 }
