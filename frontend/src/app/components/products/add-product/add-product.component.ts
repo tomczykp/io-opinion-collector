@@ -88,7 +88,6 @@ export class AddProductComponent implements OnInit {
     if(selectedCategory === undefined) {
        return;
     }
-    console.log(selectedCategory);
     let properties: {[id: string]: any} = [];
     let mutableCategory: Category|null = selectedCategory;
     while(mutableCategory !== null) {
