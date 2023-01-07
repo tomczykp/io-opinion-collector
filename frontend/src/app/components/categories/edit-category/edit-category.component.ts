@@ -76,7 +76,7 @@ export class EditCategoryComponent implements OnInit {
     this.getNewFieldsNames.push(new FormControl('', [Validators.required]));
   }
   addFieldsTypes() {
-    this.getNewFieldsTypes.push(new FormControl('Int', [Validators.required]));
+    this.getNewFieldsTypes.push(new FormControl('String', [Validators.required]));
   }
   private removeOldFieldsNames(i : number) {
     this.getOldFieldsNames.removeAt(i);

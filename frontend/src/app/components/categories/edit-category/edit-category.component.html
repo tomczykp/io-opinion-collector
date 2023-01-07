@@ -2,10 +2,10 @@
   <h1>
     EDIT CATEGORY
   </h1>
-  <div class="col-md-8 p-lg-4 mx-lg-auto my-lg-4 bg-white border-4 border">
+  <div class="col-md-10 p-lg-4 mx-lg-auto my-lg-4 bg-white border-4 border">
     <form [formGroup]="editCategoryForm" (ngSubmit)="editCategory()">
 
-      <div class="mat-form-field mb-3">
+      <div class="mat-form-field mb-3 w-100">
         <label class="form-label" for="name">Name</label>
         <input required type="text" id="name" formControlName="name" class="form-control form-control-lg" />
         <div *ngIf="name && name?.touched && name?.dirty">
@@ -16,77 +16,75 @@
       </div>
 
       <div class="mat-form-field mb-2">
-        <label class="form-label me-2 " for="parent">Parent category</label>
-        <select id="parent" formControlName="parent" >
+        <label class="form-label me-2 w-100" for="parent">Parent category</label>
+        <select class="form-select w-100" id="parent" formControlName="parent" >
           <option value="{{null}}" [selected]="parent == undefined">None</option>
           <option *ngFor="let category of categories | async" value="{{category.categoryID}}" [selected]="category.categoryID === parent" type="text/javascript">
             {{category.name}}
           </option>
         </select>
       </div>
-
-      <div class="mat-form-field mb-1">
-        <button type="button" class="btn btn-primary ms-2" (click)="addFields()">Add field</button>
-      </div>
-      <div class="col-container" style="display:flex; width: 100%;">
-        <div class="col">
+      <div class="col-container d-flex">
+        <div class="col-6">
           <div formArrayName="oldFieldsNames">
-            <div class="container modal-dialog-centered" style="height: 56px"*ngFor="let name of getOldFieldsNames.controls; let i = index">
+            <div class="container my-2" *ngFor="let name of getOldFieldsNames.controls; let i = index">
               <label class="form-label me-1" for="name-{{ i }}"></label>
-              <input type="text" id="{{ i }}" [formControlName]="i" />
-              <div *ngIf="getOldFieldName(i) && getOldFieldName(i)?.touched && getOldFieldName(i)?.dirty">
-                <small class="text-danger" *ngIf="getOldFieldName(i).errors?.['required']">
-                  Name is required
-                </small>
-              </div>
+              <input class="form-control w-auto d-inline-block" type="text" id="{{ i }}" [formControlName]="i" />
+              <p class="ms-2 d-inline text-danger" *ngIf="getOldFieldName(i) && getOldFieldName(i)?.touched && getOldFieldName(i)?.dirty && getOldFieldName(i).errors?.['required']">
+                Name is required
+              </p>
             </div>
           </div>
           <div formArrayName="newFieldsNames">
-            <div class="container modal-dialog-centered" style="height: 56px" *ngFor="let name of getNewFieldsNames.controls; let i = index">
+            <div class="container my-2" *ngFor="let name of getNewFieldsNames.controls; let i = index">
               <label class="form-label me-1" for="name-{{ i }}"></label>
-              <input type="text" id="{{ i }}" [formControlName]="i" />
-              <div *ngIf="getNewFieldName(i) && getNewFieldName(i)?.touched && getNewFieldName(i)?.dirty">
-                <small class="text-danger" *ngIf="getNewFieldName(i).errors?.['required']">
-                  Name is required
-                </small>
-              </div>
+              <input class="form-control w-auto d-inline-block" type="text" id="{{ i }}" [formControlName]="i" />
+              <p class="ms-2 d-inline text-danger" *ngIf="getNewFieldName(i) && getNewFieldName(i)?.touched && getNewFieldName(i)?.dirty && getNewFieldName(i).errors?.['required']">
+                Name is required
+              </p>
             </div>
           </div>
         </div>
-        <div class="col">
+        <div class="col-6">
           <div formArrayName="oldFieldsTypes">
-            <div class="container modal-dialog-centered" style="height: 56px" *ngFor="let type of getOldFieldsTypes.controls; let i = index">
+            <div class="container my-2" *ngFor="let type of getOldFieldsTypes.controls; let i = index">
               <label class="form-label me-1" for="type-{{ i }}">Type: </label>
-              <select id="{{ i }}" [formControlName]="i" >
-                <option  selected="selected" value="Int">Int</option>
-                <option value="Double">Double</option>
-                <option value="String">String</option>
-              </select>
-              <div *ngIf="getOldFieldType(i) && getOldFieldType(i)?.touched && getOldFieldType(i)?.dirty">
-                <small class="text-danger" *ngIf="getOldFieldType(i).errors?.['required']">
-                  Name is required
-                </small>
-              </div>
-              <button type="button" (click)="removeOldFields(i)">Remove field</button>
-            </div>
-          </div>
-          <div  formArrayName="newFieldsTypes">
-            <div class="container modal-dialog-centered" style="height: 56px" *ngFor="let type of getNewFieldsTypes.controls; let i = index">
-              <label class="form-label me-1" for="type-{{ i }}">Type: </label>
-              <select id="{{ i }}" [formControlName]="i" >
+              <select class="form-select w-auto d-inline-block" id="{{ i }}" [formControlName]="i" >
                 <option value="Int">Int</option>
                 <option value="Double">Double</option>
                 <option value="String">String</option>
               </select>
-              <div *ngIf="getNewFieldType(i) && getNewFieldType(i)?.touched && getNewFieldType(i)?.dirty">
-                <small class="text-danger" *ngIf="getNewFieldType(i).errors?.['required']">
-                  Name is required
-                </small>
-              </div>
-              <button type="button" (click)="removeNewFields(i)">Remove field</button>
+              <p class="ms-2 d-inline text-danger" *ngIf="getOldFieldType(i) && getOldFieldType(i)?.touched && getOldFieldType(i)?.dirty && getOldFieldType(i).errors?.['required']">
+                Type is required
+              </p>
+              <button class="d-inline-block btn btn-danger ms-2 modal-dialog-centered"  type="button" (click)="removeOldFields(i)">
+                <i class="bi bi-trash me-2"></i>Remove field
+              </button>
+            </div>
+          </div>
+          <div  formArrayName="newFieldsTypes">
+            <div class="container my-2" *ngFor="let type of getNewFieldsTypes.controls; let i = index">
+              <label class="form-label me-1" for="type-{{ i }}">Type: </label>
+              <select class="form-select w-auto d-inline-block" id="{{ i }}" [formControlName]="i" >
+                <option value="Int">Int</option>
+                <option value="Double">Double</option>
+                <option value="String" [selected]="true">String</option>
+              </select>
+              <p class="ms-2 d-inline text-danger" *ngIf="getNewFieldType(i) && getNewFieldType(i)?.touched && getNewFieldType(i)?.dirty && getNewFieldType(i).errors?.['required']">
+                Type is required
+              </p>
+              <button class="d-inline-block btn btn-danger ms-2 modal-dialog-centered" type="button" (click)="removeNewFields(i)">
+                <i class="bi bi-trash me-2"></i>Remove field
+              </button>
             </div>
           </div>
         </div>
+      </div>
+      <div class="mb-1">
+        <button type="button" class="btn btn-primary" (click)="addFields()">
+          <i class="bi bi-plus-circle me-2"></i>
+          Add field
+        </button>
       </div>
       <input *ngIf="editCategoryForm.valid" type="submit" class="btn btn-primary btn-lg btn-block w-100" value="Accept">
       <input *ngIf="!editCategoryForm.valid" type="submit" class="disabled btn btn-light btn-lg btn-block w-100" value="Accept">
