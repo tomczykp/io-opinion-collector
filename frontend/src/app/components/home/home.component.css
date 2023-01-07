@@ -1,26 +1,42 @@
 .mat-row {
-    height: auto;
-  }
-  
-  .mat-cell {
-    padding: 20px;
-  }
-  .products-list-container {
-    width: 100%;
-    align-content: center;
-    margin: auto;
-  }
-  
-  table {
-    width: 100%;
-  }
-  
-  th.mat-header-cell, .mat-cell {
-    text-align: center !important;
-  }
+  height: auto;
+}
 
-  .mat-row:hover {
-    background-color: #dee2e6;
-    cursor: pointer;
-  }
-  
+.mat-cell {
+  padding: 20px;
+}
+
+.products-list-container {
+  width: 100%;
+  align-content: center;
+  margin: auto;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-header-cell,
+.mat-cell {
+  text-align: center !important;
+}
+
+.mat-row:hover {
+  background-color: #dee2e6;
+  cursor: pointer;
+}
+
+.card {
+  padding: 25px 25px;
+  margin-top: 20px;
+
+}
+
+.header {
+  border-bottom: #EEE 1px solid;
+  margin-bottom: 20px;
+}
+
+.router-link-active {
+  cursor: pointer;
+}

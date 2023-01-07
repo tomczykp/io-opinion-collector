@@ -22,9 +22,9 @@ export class ProductsService {
     return this.httpClient.get<ProductFull>(this.baseUrl + '/' + uuid, {observe: 'response'});
   }
 
-  public getProducts(): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(this.baseUrl);
-  }
+	public getProducts(): Observable<ProductFull[]> {
+		return this.httpClient.get<ProductFull[]>(this.baseUrl)
+	}
 
   public addProduct(ProductDTO: object): Observable<HttpResponse<Product>> {
     return this.httpClient.post<Product>(this.baseUrl + '/' + "suggestion", ProductDTO,
