@@ -7,7 +7,7 @@
     <form [formGroup]="deleteProductForm" (ngSubmit)="deleteProduct()">
       <div class="mat-form-field align-self-auto">
         <input required type="text" id="description" formControlName="description"
-               class="form-control form-control-lg" pattern='^(\s+\S+\s*)*(?!\s).{19,}$' />
+               class="form-control form-control-lg" pattern='^( )*[^ ].{19,}( )*$'/>
         <div *ngIf="description && description?.touched && description?.dirty">
           <small class="text-danger" *ngIf="description.errors?.['required']">
             Description is required

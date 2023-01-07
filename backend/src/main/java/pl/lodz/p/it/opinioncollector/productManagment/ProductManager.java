@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.category.managers.CategoryManager;
+import pl.lodz.p.it.opinioncollector.category.model.Field;
 import pl.lodz.p.it.opinioncollector.eventHandling.IProductEventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.products.ProductCannotBeEditedException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class ProductManager implements IProductManager {
@@ -27,12 +27,13 @@ public class ProductManager implements IProductManager {
         this.categoryManager = categoryManager;
     }
 
-
+    // unused
     public Product createProduct(ProductDTO productDTO) {
         Product product = new Product(productDTO);
         productRepository.save(product);
         return product;
     }
+
 
     public Product createSuggestion(ProductDTO productDTO) throws CategoryNotFoundException {
         Product product = new Product(productDTO);
@@ -49,11 +50,13 @@ public class ProductManager implements IProductManager {
         }
 
         // Putting properties from DTO to a new product
-        for (Map.Entry<String, String> entry : productDTO.properties.entrySet()) {
-            product.addProperty(entry.getKey(), entry.getValue());
+        if (productDTO.properties != null) {
+            for (Map.Entry<String, String> entry : productDTO.properties.entrySet()) {
+                product.addProperty(entry.getKey(), entry.getValue());
+            }
         }
 
-        product.setConstantProductId(UUID.randomUUID());
+        product.setConstantProductId(product.getProductId());
 
         productRepository.save(product);
         eventManager.createProductReportEvent(user, "New product suggestion with name: \""
@@ -65,24 +68,32 @@ public class ProductManager implements IProductManager {
     public Product getProduct(UUID uuid) {
         Optional<Product> product = productRepository.findById(uuid);
         return product.orElse(null);
+
     }
 
-    public Product updateProduct(UUID uuid, ProductDTO productDTO) {
+    public Product updateProduct(UUID uuid, ProductDTO productDTO) throws ProductCannotBeEditedException {
         Optional<Product> originalProduct = productRepository.findById(uuid);
         if (originalProduct.isPresent()) {
+            Product oldProduct = originalProduct.get();
+            if (oldProduct.isDeleted()) {
+                throw new ProductCannotBeEditedException();
+            }
             Product newProduct = new Product(productDTO);
 
-            newProduct.setCategory(originalProduct.get().getCategory());
-            newProduct.setProperties(productDTO.getProperties());
-            newProduct.setConstantProductId(originalProduct.get().getConstantProductId());
+            newProduct.setCategory(oldProduct.getCategory());
+            if(productDTO.getProperties() != null) {
+                newProduct.setProperties(productDTO.getProperties());
+            }
+
+            newProduct.setConstantProductId(oldProduct.getConstantProductId());
 
 
 //            originalProduct.get().setEditedAt(LocalDateTime.now());
 
-            productRepository.save(originalProduct.get());
+            productRepository.save(oldProduct);
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             eventManager.createProductReportEvent(user,
-                    "User requested update of product: " + productDTO, originalProduct.get().getProductId());
+                    "User requested update of product: " + productDTO, oldProduct.getProductId());
             productRepository.save(newProduct);
             return newProduct;
 
@@ -91,13 +102,53 @@ public class ProductManager implements IProductManager {
     }
 
     public boolean confirmProduct(UUID uuid) {
-        Optional<Product> productOptional = productRepository.findById(uuid);
-        if (productOptional.isPresent()) {
-            productOptional.get().setConfirmed(true);
-            productRepository.save(productOptional.get());
+        Optional<Product> suggestionOptional = productRepository.findById(uuid);
+        if (suggestionOptional.isEmpty()) {
+            return false;
+        }
+        Product suggestion = suggestionOptional.get();
+
+        if(suggestion.isConfirmed()) {
+            return false;
+        }
+        Optional<Product> productOptional = productRepository.findById(suggestion.getConstantProductId());
+        if(productOptional.isEmpty()) { //
+            suggestion.setConfirmed(true);
+            productRepository.save(suggestion);
             return true;
         }
-        return false;
+
+        Product product = productOptional.get();
+        suggestion.setConfirmed(true);
+        product.setDeleted(true);
+
+        swapProducts(product, suggestion);
+
+        productRepository.save(product);
+        productRepository.save(suggestion);
+        return true;
+    }
+
+    private void swapProducts(Product p1, Product p2) {
+        Product temp = new Product(p1);
+
+        p1.setConstantProductId(p2.getConstantProductId());
+        p1.setCategory(p2.getCategory());
+        p1.setName(p2.getName());
+        p1.setDescription(p2.getDescription());
+        p1.setDeleted(p2.isDeleted());
+        p1.setConfirmed(p2.isConfirmed());
+        p1.setCreatedAt(p2.getCreatedAt());
+        p1.setProperties(p2.getProperties());
+
+        p2.setConstantProductId(temp.getConstantProductId());
+        p2.setCategory(temp.getCategory());
+        p2.setName(temp.getName());
+        p2.setDescription(temp.getDescription());
+        p2.setDeleted(temp.isDeleted());
+        p2.setConfirmed(temp.isConfirmed());
+        p2.setCreatedAt(temp.getCreatedAt());
+        p2.setProperties(temp.getProperties());
     }
 
     public boolean unconfirmProduct(UUID uuid) {
@@ -158,8 +209,8 @@ public class ProductManager implements IProductManager {
         return productRepository.findProductsByConfirmedTrueAndDeletedFalse();
     }
 
-    public List<Product> getLatestVersionProduct(UUID uuid) {
-        return productRepository.findByConstantProductIdAndDeletedFalse(uuid);
+    public List<Product> getProductsByConstantId(UUID uuid) {
+        return productRepository.findByConstantProductId(uuid);
     }
 
 
