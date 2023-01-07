@@ -2,9 +2,31 @@
     <div class="mt-5 header">
         <h4>Opinions ({{ opinions.length }})</h4>
     </div>
-    <div class="container">
+    <div class="d-flex gap-3 mb-1">
+        <!-- <div></div> -->
+        <div class="input-group w-auto">
+            <span class="input-group-text">Sorting order:</span>
+            <select
+                class="form-select"
+                [(ngModel)]="selectedOrder">
+                <option [ngValue]="ORDER.NONE"></option>
+                <option [ngValue]="ORDER.BEST_TO_WORST">best to worst</option>
+                <option [ngValue]="ORDER.WORST_TO_BEST">worst to best</option>
+                <option [ngValue]="ORDER.NEWEST_TO_OLDEST">newest to latest</option>
+                <option [ngValue]="ORDER.OLDEST_TO_NEWEST">latest to newest</option>
+            </select>
+        </div>
         <button
-            *ngIf="isUser()"
+            class="btn btn-primary"
+            (click)="applyFiltersAndSortingOrder()">
+            Apply
+        </button>
+    </div>
+    <div
+        [ngbTooltip]="isUser() ? null : 'You need to sign in to create opinions.'"
+        placement="right">
+        <button
+            [disabled]="!isUser()"
             class="btn btn-success"
             (click)="openCreateOpinionModal()">
             Add new opinion

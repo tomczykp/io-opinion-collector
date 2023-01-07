@@ -8,6 +8,14 @@ import { DeleteOpinionModalComponent } from './delete-opinion-modal/delete-opini
 import { OpinionModalComponent } from './opinion-modal/opinion-modal.component';
 import { OpinionReportModalComponent } from './opinion-report-modal/opinion-report-modal.component';
 
+export enum SortingOrder
+{
+    NONE = -1,
+    BEST_TO_WORST = 0,
+    WORST_TO_BEST = 1,
+    NEWEST_TO_OLDEST = 2,
+    OLDEST_TO_NEWEST = 3
+}
 
 @Component({
     selector: 'app-opinions',
@@ -16,7 +24,12 @@ import { OpinionReportModalComponent } from './opinion-report-modal/opinion-repo
 })
 export class OpinionsComponent implements OnChanges
 {
+    ORDER = SortingOrder;
+
     @Input() productId: string;
+
+    selectedOrder: SortingOrder = SortingOrder.NONE;
+    currentlyUsedOrder: SortingOrder = SortingOrder.NONE;
 
     opinions$ = new BehaviorSubject<Opinion[]>([]);
 
@@ -141,6 +154,12 @@ export class OpinionsComponent implements OnChanges
             .catch(() => { });
     }
 
+    applyFiltersAndSortingOrder()
+    {
+        this.currentlyUsedOrder = this.selectedOrder;
+        this.opinions$.next(this.opinions$.value.sort(this.comparatorFn))
+    }
+
     private replaceUpdated(updated: Opinion)
     {
         this.opinions$.next(
@@ -153,5 +172,22 @@ export class OpinionsComponent implements OnChanges
                 return old;
             })
         );
+    }
+
+    protected readonly comparatorFn = (o1: Opinion, o2: Opinion) =>
+    {
+        switch (this.currentlyUsedOrder)
+        {
+            case SortingOrder.BEST_TO_WORST:
+                return o2.rate - o1.rate;
+            case SortingOrder.WORST_TO_BEST:
+                return o1.rate - o2.rate;
+            case SortingOrder.NEWEST_TO_OLDEST:
+                return (new Date(o2.createdAt)).getTime() - (new Date(o1.createdAt)).getTime();
+            case SortingOrder.OLDEST_TO_NEWEST:
+                return (new Date(o1.createdAt)).getTime() - (new Date(o2.createdAt)).getTime();
+            default:
+                return -1;
+        }
     }
 }
