@@ -61,6 +61,14 @@ public class EventDTO {
             this.productID = castedEvent.getProductID();
             this.type = "productReport";
         }
+        else if (event instanceof AnwserNotifyEvent castedEvent) {
+            this.questionID = castedEvent.getQuestionID();
+            this.type = "answerNotify";
+        }
+        else if (event instanceof ProductSuggestionEvent castedEvent) {
+            this.productID = castedEvent.getProductID();
+            this.type = "productSuggestion";
+        }
     }
 
 }

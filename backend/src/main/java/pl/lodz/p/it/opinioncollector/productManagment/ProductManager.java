@@ -56,7 +56,7 @@ public class ProductManager implements IProductManager {
         product.setConstantProductId(UUID.randomUUID());
 
         productRepository.save(product);
-        eventManager.createProductReportEvent(user, "New product suggestion with name: \""
+        eventManager.createProductSuggestionEvent(user, "New product suggestion with name: \""
                         + product.getName() + "\" and description: \"" + product.getDescription() + "\"",
                 product.getProductId());
         return product;

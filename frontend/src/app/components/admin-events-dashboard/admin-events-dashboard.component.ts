@@ -4,6 +4,9 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {EventsService, OC} from "../../services/events.service";
 import {interval, Subscription} from "rxjs";
+import {QAService} from "../../services/qa.service";
+import {Router} from "@angular/router";
+import {ProductsService} from "../../services/products.service";
 
 @Component({
   selector: 'app-events',
@@ -26,6 +29,9 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private eventsService: EventsService,
+    private qaService: QAService,
+    private productService: ProductsService,
+    private router: Router,
   ) {
   }
 
@@ -72,6 +78,40 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
   clearFilter(): void {
     this.userFilter = "";
     this.getEvents();
+  }
+
+  answerEvent(eventID: string): void {
+    this.eventsService.getEvent(eventID).subscribe((event) => {
+      console.log(event)
+
+      if (event.type == 'answerReport'
+        || event.type == 'questionReport'
+        || event.type == 'questionNotify') {
+        this.qaService.getQuestion(event.questionID).subscribe((question) => {
+          let targetProductID = question.productId;
+          const url = this.router.serializeUrl(this.router.createUrlTree([`products/:${targetProductID}`]));
+          window.open(url, '_blank');
+        });
+      }
+      else if (event.type == 'opinionReport'){
+        let targetProductID = event.productID;
+        const url = this.router.serializeUrl(this.router.createUrlTree([`products/:${targetProductID}`]));
+        window.open(url, '_blank');
+      }
+      else if (event.type == 'productReport') {
+        this.productService.deleteProduct(event.productID);
+        this.closeEvent(event.eventID);
+      }
+      else if (event.type == 'productSuggestion') {
+        this.productService.confirmProduct(event.productID).subscribe((response) => {
+          if (response.status == 200)
+          {
+            this.closeEvent(event.eventID);
+          }
+        });
+      }
+
+    })
   }
 
 }

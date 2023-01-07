@@ -22,8 +22,7 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
 
     @Override
     public Optional<Event> getEvent(UUID ID) {
-        var foundEvent = eventsRepository.findById(ID);
-        return foundEvent;
+        return eventsRepository.findById(ID);
     }
 
     @Override
@@ -50,6 +49,13 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     }
 
     @Override
+    public ProductSuggestionEvent createProductSuggestionEvent(User user, String description, UUID productID) {
+        var newEvent = new ProductSuggestionEvent(UUID.randomUUID(), user, description, productID);
+        eventsRepository.save(newEvent);
+        return newEvent;
+    }
+
+    @Override
     public QuestionNotifyEvent createQuestionNotifyEvent(User user, String description, UUID questionID) {
         QuestionNotifyEvent newEvent = new QuestionNotifyEvent(UUID.randomUUID(), user, description, questionID);
         eventsRepository.save(newEvent);
@@ -66,6 +72,12 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     @Override
     public AnswerReportEvent createAnswerReportEvent(User user, String description, UUID questionID) {
         AnswerReportEvent newEvent = new AnswerReportEvent(UUID.randomUUID(), user, description, questionID);
+        eventsRepository.save(newEvent);
+        return newEvent;
+    }
+
+    public AnwserNotifyEvent createAnswerNotifyEvent(User user, String description, UUID questionID) {
+        var newEvent = new AnwserNotifyEvent(UUID.randomUUID(), user, description, questionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }

@@ -76,19 +76,11 @@ export class UserEventsDashboardComponent implements OnInit, OnDestroy {
 
   answerEvent(eventID: string): void {
     this.eventsService.getEvent(eventID).subscribe((event) => {
-      if (event.type == 'productReport') {
-        let targetProductID = event.productID;
-        this.router.navigate([`products/:${targetProductID}`]);
-      } else if (event.type == 'questionNotify'
-        || event.type == 'questionReport'
-        || event.type == 'answerReport') {
-        this.qaService.getQuestion(event.questionID).subscribe(question => {
+      if (event.type == 'answerNotify') {
+        this.qaService.getQuestion(event.questionID).subscribe((question) => {
           let targetProductID = question.productId;
           this.router.navigate([`products/:${targetProductID}`]);
-        });
-      } else if (event.type == 'opinionReport') {
-        let targetProductID = event.productID;
-        this.router.navigate([`products/:${targetProductID}`]);
+        })
       }
     })
   }

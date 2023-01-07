@@ -9,7 +9,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @ToString
-public class ProductReportEvent extends Event {
+public class ProductReportEvent extends Event implements AdminEvent {
     private UUID productID;
 
     public ProductReportEvent(UUID eventID, User user, String description, UUID productID) {
