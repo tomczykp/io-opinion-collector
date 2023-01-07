@@ -22,7 +22,11 @@ export class ProductsService {
     return this.httpClient.get<ProductFull>(this.baseUrl + '/' + uuid, {observe: 'response'});
   }
 
-	public getProducts(): Observable<ProductFull[]> {
+	public getProducts(): Observable<Product[]> {
+		return this.httpClient.get<Product[]>(this.baseUrl)
+	}
+
+	public getProductsFull(): Observable<ProductFull[]> {
 		return this.httpClient.get<ProductFull[]>(this.baseUrl)
 	}
 

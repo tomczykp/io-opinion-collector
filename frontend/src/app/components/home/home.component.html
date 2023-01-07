@@ -49,6 +49,49 @@
 				</p>
 			</div>
 		</div>
+		<form [formGroup]="propertiesForm">
+			<ng-container formArrayName="properties">
+				<!-- <div class="row">
+					<div *ngIf="properties.controls.length > 0" class="header">
+						<h5>Filter by properties</h5>
+					</div>
+					<ng-container *ngFor="let prop of properties.value; let i = index">
+						<div class="col-sm-2">
+							<div class="form-outline">
+								<mat-form-field appearance="fill">
+									<mat-label>Select {{ propertiesNames[i] }}</mat-label>
+									<mat-select name="property" (valueChange)="handlePropertyChange($event)">
+										<mat-option>None</mat-option>
+										<mat-option *ngFor="let possibleValue of prop" [value]="possibleValue">
+											{{ possibleValue }}
+										</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
+						</div>
+					</ng-container>
+				</div> -->
+
+				<div class="row">
+					<div *ngIf="properties.controls.length > 0" class="header">
+						<h5>Filter by properties</h5>
+					</div>
+					<ng-container *ngFor="let prop of properties.controls; let i = index">
+						<div class="col-sm-2">
+							<div class="form-outline">
+								<span class="form-label">{{ propertiesNames[i] }}</span>
+								<input
+									class="form-control form-control-lg"
+									formControlName="{{ i }}"
+									(ngModelChange)="handlePropertiesChange()"
+								/>
+							</div>
+						</div>
+					</ng-container>
+				</div>
+			</ng-container>
+		</form>
+
 		<div class="products-list-container mt-3 mb-3">
 			<table [dataSource]="data" mat-table matSort class="mat-elevation-z8">
 				<ng-container matColumnDef="productId">

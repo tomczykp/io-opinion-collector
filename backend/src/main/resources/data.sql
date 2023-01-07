@@ -33,17 +33,18 @@ VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'Yes', CURRENT_TIMESTAMP, '8d2f2
        ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'No', CURRENT_TIMESTAMP, '35c3863a-2241-4c05-942b-6df9dabdf193', 'Admin');
 
 
-INSERT INTO public.field (fieldid, name, type) VALUES ('e65b1f71-f3d8-4e16-ba55-df16a316f051', 'Numer', 'Int');
+
 -- INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'Category_2', null);
 -- INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'e65b1f71-f3d8-4e16-ba55-df16a316f051');
+INSERT INTO public.field (fieldid, name, type) VALUES ('e65b1f71-f3d8-4e16-ba55-df16a316f051', 'Property1', 'String');
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('b293013b-40da-4dde-a997-bce3068636ec', 'Category 1', null);
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('b293013b-40da-4dde-a997-bce3068636ec', 'e65b1f71-f3d8-4e16-ba55-df16a316f051');
 
-INSERT INTO public.field (fieldid, name, type) VALUES ('8c47ae46-8aa9-11ed-a1eb-0242ac120002', 'testParent', 'testParent');
+INSERT INTO public.field (fieldid, name, type) VALUES ('8c47ae46-8aa9-11ed-a1eb-0242ac120002', 'Property2', 'String');
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('82d58040-8aa9-11ed-a1eb-0242ac120002', 'Category 1.1', 'b293013b-40da-4dde-a997-bce3068636ec');
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('82d58040-8aa9-11ed-a1eb-0242ac120002', '8c47ae46-8aa9-11ed-a1eb-0242ac120002');
 
-INSERT INTO public.field (fieldid, name, type) VALUES ('f93af257-b5f2-4643-a844-5b2a7d75873f', 'testParent2', 'testParent2');
+INSERT INTO public.field (fieldid, name, type) VALUES ('f93af257-b5f2-4643-a844-5b2a7d75873f', 'Property3', 'String');
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('f93af257-b1c2-4643-a844-5b2a7d75873f', 'Category 1.1.1', '82d58040-8aa9-11ed-a1eb-0242ac120002');
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('f93af257-b1c2-4643-a844-5b2a7d75873f', 'f93af257-b5f2-4643-a844-5b2a7d75873f');
 
@@ -62,13 +63,14 @@ VALUES ('4811913c-b953-4856-979b-838488049d07', 'f93af257-b1c2-4643-a844-5b2a7d7
        ('c026f325-ebe7-43ea-8e02-f4df7fe6fe7b', '82d58040-8aa9-11ed-a1eb-0242ac120002', 'a675ee5e-57da-423b-9a69-dcd7a40a77af', 'Product7', 'Description2', false, true, CURRENT_TIMESTAMP),
        ('be2d4c14-e845-412a-b4f7-2986015a5fcd', 'f1bfd355-4bbe-48a4-9acd-c5e886f49277', '97ccb8f6-1f17-450e-9c77-f1f123b0d849', 'Product8', 'Description3', false, true, CURRENT_TIMESTAMP),
        ('208cd940-df14-4bc0-88eb-66524b213c92', 'fb909c3b-8f5a-4a54-be79-f9922bfdf1c8', 'bad729e9-10e8-4fc6-96c6-6e0f82b781e6', 'Product9', 'Description4', false, true, CURRENT_TIMESTAMP),
-       ('da913318-cfd5-4d04-b11f-170882903d29', 'fb909c3b-8f5a-4a54-be79-f9922bfdf1c8', '4dfd650a-b331-4076-8e26-66d9901c13fb', 'Product10', 'Description5', false, true, CURRENT_TIMESTAMP),
+       ('da913318-cfd5-4d04-b11f-170882903d29', 'f93af257-b1c2-4643-a844-5b2a7d75873f', '4dfd650a-b331-4076-8e26-66d9901c13fb', 'Product10', 'Description5', false, true, CURRENT_TIMESTAMP),
        ('8573d77a-0b3f-4d43-943d-f91e03c033e4', 'e78a56e4-6b3d-40e8-9eeb-4eceac8fc047', 'be0ebe75-d722-4070-beaa-3f3ba1e3bf3d', 'Kremowki', 'Pyszne kremowki', false, true, CURRENT_TIMESTAMP);
 
--- INSERT INTO PROPERTIES (PRODUCT_PRODUCT_ID, VALUE, KEY)
--- VALUES ('4811913c-b953-4856-979b-838488049d07', 'value1', 'key1'),
---        ('4811913c-b953-4856-979b-838488049d07', 'value2', 'key2'),
---        ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'value3', 'key3');
+INSERT INTO PROPERTIES (PRODUCT_PRODUCT_ID, VALUE, KEY)
+VALUES ('4811913c-b953-4856-979b-838488049d07', 'value1', 'Property1'),
+       ('da913318-cfd5-4d04-b11f-170882903d29', 'value13', 'Property1'),
+       ('4811913c-b953-4856-979b-838488049d07', 'value2', 'Property2'),
+       ('4811913c-b953-4856-979b-838488049d07', 'value3', 'Property3');
 
 INSERT INTO OPINION (OPINION_ID, PRODUCT_ID, DESCRIPTION, RATE, AUTHOR_ID)
 VALUES ('6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07', 'Test desc 1', 2, '12208864-7b61-4e6e-8573-53863bd93b35'), -- created by user1

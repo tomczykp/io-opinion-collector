@@ -8,24 +8,24 @@ import { ProductFull } from '../../model/Product'
 import { DeleteProductFormComponent } from '../products/delete-product-form/delete-product-form.component'
 import { CategoriesService } from 'src/app/services/categories.service'
 import { Category } from 'src/app/model/category'
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms'
 
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
-	styleUrls: ['./home.component.css'],
+	styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-	adminColumns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId', 'action']
+	adminColumns: string[] = ['name', 'description', 'deleted', 'categoryId', 'action']
 	userColumns: string[] = [
-		'productId',
 		'name',
 		'description',
 		'deleted',
 		'categoryId',
 		'makeUpdateForm',
-		'makeDeleteForm',
+		'makeDeleteForm'
 	]
-	columns: string[] = ['productId', 'name', 'description', 'categoryId']
+	columns: string[] = ['name', 'description', 'categoryId']
 	data: MatTableDataSource<ProductFull>
 	authenticated = false
 	text: string
@@ -38,6 +38,10 @@ export class HomeComponent implements OnInit {
 	selectedCategory: string = 'All categories'
 	parentCategory: string = 'All categories'
 	isCategorySelected: boolean = false
+	propertiesForm = new FormGroup({
+		properties: this.formBuilder.array([])
+	})
+	propertiesNames: any[]
 
 	@Inject(DeleteProductFormComponent) productFormComponent: DeleteProductFormComponent
 	@ViewChild(MatPaginator) paginator: MatPaginator
@@ -47,31 +51,108 @@ export class HomeComponent implements OnInit {
 		public productsService: ProductsService,
 		public categoriesService: CategoriesService,
 		public authService: AuthService,
+		public formBuilder: FormBuilder
 	) {}
+
+	get properties() {
+		return this.propertiesForm.get('properties') as FormArray
+	}
 
 	handleCategoryChange() {
 		if (this.selectedCategory === 'None') {
 			return
 		}
 		this.isCategorySelected = true
-		const found = this.allCategories.find((c) => c.name === this.selectedCategory)
+		let found = this.allCategories.find((c) => c.name === this.selectedCategory)
 		if (found?.parentCategory == null) {
 			this.parentCategory = 'All categories'
 		} else {
 			this.parentCategory = found.parentCategory.name
 		}
 		this.displayedCategories = this.allCategories.filter(
-			(c) => found?.categoryID === c.parentCategory?.categoryID,
+			(c) => found?.categoryID === c.parentCategory?.categoryID
 		)
-		this.updateDisplayedProducts()
+		this.updateDisplayedProducts(new Map())
+		// let properties: { [id: string]: any } = []
+		// while (found !== null) {
+		// 	found?.fields.forEach((field) => {
+		// 		const searchedKey = field.name
+		// 		const found: string[] = []
+		// 		this.displayedProducts.forEach((p) => {
+		// 			const props = p.properties as { [id: string]: any }
+		// 			Object.keys(props).forEach((key) => {
+		// 				if (key === searchedKey) {
+		// 					found.push(props[key])
+		// 				}
+		// 			})
+		// 		})
+		// 		properties[searchedKey] = [...new Set(found)]
+		// 	})
+		// 	found = found?.parentCategory as any
+		// }
+		// console.log(properties)
+
+		// this.propertiesNames = []
+		// this.propertiesForm.controls.properties.clear()
+		// Object.keys(properties).forEach((key) => {
+		// 	let value = properties[key]
+		// 	this.propertiesNames.push(key)
+		// 	this.propertiesForm.controls.properties.push(this.formBuilder.control(value))
+		// })
+
+		// console.log(this.propertiesForm)
+
+		let properties: { [id: string]: any } = []
+		while (found !== null) {
+			found?.fields.forEach((field) => {
+				properties[field.name] = ''
+			})
+			found = found?.parentCategory as any
+		}
+
+		this.propertiesForm.controls.properties.clear()
+		this.propertiesNames = []
+		Object.keys(properties).forEach((key) => {
+			let value = properties[key]
+			this.propertiesNames.push(key)
+			this.propertiesForm.controls.properties.push(this.formBuilder.control(value))
+		})
+	}
+
+	filterProduct(product: ProductFull, filters: Map<string, string>): boolean {
+		const productProperties = product.properties as { [id: string]: any }
+		for (let [key, value] of filters) {
+			const productKeys = Object.keys(productProperties)
+			if (value === '') continue
+			if (!productKeys.includes(key)) return false
+			if (productKeys.length == 0) return false
+			for (let productPropsKey of productKeys) {
+				if (productPropsKey === key) {
+					if (!productProperties[productPropsKey].toLowerCase().includes(value.toLowerCase()))
+						return false
+				}
+			}
+		}
+		return true
+	}
+
+	handlePropertiesChange() {
+		const updatedValues = this.propertiesForm.getRawValue().properties
+		const filters: Map<string, string> = new Map()
+		for (let i = 0; i < updatedValues.length; i++) {
+			filters.set(this.propertiesNames[i], updatedValues[i] as string)
+		}
+		this.updateDisplayedProducts(filters)
 	}
 
 	handleChangeToLastCategory() {
-		const found = this.allCategories.find((c) => c.name === this.selectedCategory)
+		let found = this.allCategories.find((c) => c.name === this.selectedCategory)
 		if (found?.parentCategory == null) {
 			this.selectedCategory = 'All categories'
 			this.isCategorySelected = false
 			this.displayedCategories = this.allCategories.filter((c) => c.parentCategory === null)
+			this.propertiesForm.controls.properties.clear()
+			this.updateDisplayedProducts(new Map())
 		} else {
 			this.selectedCategory = found.parentCategory.name
 			this.parentCategory =
@@ -80,10 +161,53 @@ export class HomeComponent implements OnInit {
 					: found.parentCategory.parentCategory.name
 
 			this.displayedCategories = this.allCategories.filter(
-				(c) => found?.parentCategory?.categoryID === c.parentCategory?.categoryID,
+				(c) => found?.parentCategory?.categoryID === c.parentCategory?.categoryID
 			)
+			this.updateDisplayedProducts(new Map())
+			// let properties: { [id: string]: any } = []
+			// found = found.parentCategory
+			// while (found !== null) {
+			// 	found?.fields.forEach((field) => {
+			// 		const searchedKey = field.name
+			// 		const found: string[] = []
+			// 		this.displayedProducts.forEach((p) => {
+			// 			const props = p.properties as { [id: string]: any }
+			// 			Object.keys(props).forEach((key) => {
+			// 				if (key === searchedKey) {
+			// 					found.push(props[key])
+			// 				}
+			// 			})
+			// 		})
+			// 		properties[searchedKey] = 'None'
+			// 	})
+			// 	found = found?.parentCategory as any
+			// }
+			// console.log(properties)
+
+			// this.propertiesNames = []
+			// this.propertiesForm.controls.properties.clear()
+			// Object.keys(properties).forEach((key) => {
+			// 	let value = properties[key]
+			// 	this.propertiesNames.push(key)
+			// 	this.propertiesForm.controls.properties.push(this.formBuilder.control(value))
+			// })
+			let properties: { [id: string]: any } = []
+			found = found.parentCategory
+			while (found !== null) {
+				found?.fields.forEach((field) => {
+					properties[field.name] = ''
+				})
+				found = found?.parentCategory as any
+			}
+
+			this.propertiesForm.controls.properties.clear()
+			this.propertiesNames = []
+			Object.keys(properties).forEach((key) => {
+				let value = properties[key]
+				this.propertiesNames.push(key)
+				this.propertiesForm.controls.properties.push(this.formBuilder.control(value))
+			})
 		}
-		this.updateDisplayedProducts()
 	}
 
 	ngOnInit(): void {
@@ -108,7 +232,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	getProducts(): void {
-		this.productsService.getProducts().subscribe((value) => {
+		this.productsService.getProductsFull().subscribe((value) => {
 			this.authenticated
 				? (this.allProducts = value)
 				: (this.allProducts = value.filter((p) => !p.deleted && p.confirmed))
@@ -119,12 +243,14 @@ export class HomeComponent implements OnInit {
 		})
 	}
 
-	updateDisplayedProducts(): void {
+	updateDisplayedProducts(filters: Map<string, string>): void {
 		this.displayedProducts = this.allProducts.filter(
 			(p) =>
 				p.name.toLowerCase().includes(this.search.toLowerCase()) &&
-				this.isInSelectedCategory(p.category),
+				this.isInSelectedCategory(p.category)
 		)
+		if (filters.size > 0)
+			this.displayedProducts = this.displayedProducts.filter((p) => this.filterProduct(p, filters))
 		this.data = new MatTableDataSource(this.displayedProducts)
 		this.data.paginator = this.paginator
 		this.data.sort = this.sort
@@ -139,9 +265,9 @@ export class HomeComponent implements OnInit {
 			current = current.parentCategory
 			allCategories.push(current.name)
 		}
-		const reversed = allCategories.reverse().join(' - ')
+		const reversed = allCategories.reverse().join(' > ')
 		if (reversed === '') return reversed
-		return ' - ' + reversed
+		return ' > ' + reversed
 	}
 
 	isInSelectedCategory(productCategory: Category): boolean {
@@ -165,6 +291,6 @@ export class HomeComponent implements OnInit {
 	}
 
 	handleChange() {
-		this.updateDisplayedProducts()
+		this.updateDisplayedProducts(new Map())
 	}
 }
