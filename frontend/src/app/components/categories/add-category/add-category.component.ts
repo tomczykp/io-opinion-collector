@@ -20,11 +20,18 @@ export class AddCategoryComponent implements OnInit {
     fieldsTypes: this.fb.array([])
   })
 
+  getFieldName(i : number) {
+    return this.getFieldsNames.at(i);
+  }
+  getFieldType(i : number) {
+    return this.getFieldsTypes.at(i);
+  }
+
   get getFieldsNames() {
     return this.addCategoryForm.get('fieldsNames') as FormArray;
   }
   addFieldsNames() {
-    this.getFieldsNames.push(this.fb.control(''));
+    this.getFieldsNames.push(new FormControl('', [Validators.required]));
   }
   removeFieldsNames(i : number) {
     this.getFieldsNames.removeAt(i);
@@ -33,7 +40,7 @@ export class AddCategoryComponent implements OnInit {
     return this.addCategoryForm.get('fieldsTypes') as FormArray;
   }
   addFieldsTypes() {
-    this.getFieldsTypes.push(this.fb.control(''));
+    this.getFieldsTypes.push(new FormControl('', [Validators.required]));
   }
   removeFieldsTypes(i : number) {
     this.getFieldsTypes.removeAt(i);

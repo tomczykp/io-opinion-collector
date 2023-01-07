@@ -3,8 +3,6 @@ import {HttpClient, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Category, Field} from "../model/category";
 import {environment} from "../../environments/environment";
-import {Product} from "../model/Product";
-import {CategoriesComponent} from "../components/categories/categories.component";
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +14,10 @@ export class CategoriesService {
   getCategories(): Observable<Category[]> {
       const url = `${environment.apiUrl}/category`;
       return this.http.get<Category[]>(url);
+  }
+
+  getCategoriesByName(name: string) {
+    return this.http.get<Category[]>(environment.apiUrl + "/category?categoryID=" + name);
   }
 
   getCategory(uuid: string): Observable<HttpResponse<Category>> {
