@@ -104,7 +104,7 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
       }
       else if (event.type == 'productSuggestion') {
         this.productService.confirmProduct(event.productID).subscribe((response) => {
-          if (response.status == 200)
+          if (response.status == 204)
           {
             this.closeEvent(event.eventID);
           }
