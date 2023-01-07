@@ -31,6 +31,12 @@ export class OpinionsComponent implements OnChanges
     selectedOrder: SortingOrder = SortingOrder.NONE;
     currentlyUsedOrder: SortingOrder = SortingOrder.NONE;
 
+    selectedMinRating = 0;
+    selectedMaxRating = 10;
+
+    usedMinRating = 0;
+    usedMaxRating = 10;
+
     opinions$ = new BehaviorSubject<Opinion[]>([]);
 
     constructor(
@@ -158,6 +164,33 @@ export class OpinionsComponent implements OnChanges
     {
         this.currentlyUsedOrder = this.selectedOrder;
         this.opinions$.next(this.opinions$.value.sort(this.comparatorFn))
+
+        this.usedMinRating = this.selectedMinRating;
+        this.usedMaxRating = this.selectedMaxRating;
+    }
+
+    onMinRatingChange()
+    {
+        if (!this.selectedMinRating && this.selectedMinRating !== 0)
+            this.selectedMinRating = 0;
+        else if (this.selectedMinRating < 0)
+            this.selectedMinRating = 0;
+        else if (this.selectedMinRating > 10)
+            this.selectedMinRating = 10;
+        else if (this.selectedMinRating > this.selectedMaxRating)
+            this.selectedMinRating = this.selectedMaxRating;
+    }
+
+    onMaxRatingChange()
+    {
+        if (!this.selectedMaxRating && this.selectedMaxRating !== 0)
+            this.selectedMaxRating = 10;
+        else if (this.selectedMaxRating > 10)
+            this.selectedMaxRating = 10;
+        else if (this.selectedMaxRating < 0)
+            this.selectedMaxRating = 0
+        else if (this.selectedMaxRating < this.selectedMinRating)
+            this.selectedMaxRating = this.selectedMinRating;
     }
 
     private replaceUpdated(updated: Opinion)
@@ -189,5 +222,10 @@ export class OpinionsComponent implements OnChanges
             default:
                 return -1;
         }
+    }
+
+    protected filterFn = (o: Opinion) =>
+    {
+        return o.rate >= this.usedMinRating && o.rate <= this.usedMaxRating;
     }
 }
