@@ -4,7 +4,7 @@ import {LoginComponent} from "./components/login/login.component";
 import {HomeComponent} from "./components/home/home.component";
 import {RegisterComponent} from "./components/register/register.component";
 import {ProfileComponent} from "./components/profile/profile.component";
-import {EventsComponent} from "./components/events/events.component";
+import {AdminEventsDashboardComponent} from "./components/admin-events-dashboard/admin-events-dashboard.component";
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ResetComponent } from './components/reset/reset.component';
 import { ResetConfirmComponent } from './components/reset/reset-confirm/reset-confirm.component';
@@ -19,6 +19,8 @@ import {UpdateProductComponent} from "./components/products/update-product/updat
 import {DeleteProductFormComponent} from "./components/products/delete-product-form/delete-product-form.component";
 import {AddCategoryComponent} from "./components/categories/add-category/add-category.component";
 import {EditCategoryComponent} from "./components/categories/edit-category/edit-category.component";
+import {UserEventsDashboardComponent} from "./components/user-events-dashboard/user-events-dashboard.component";
+
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -30,9 +32,12 @@ const routes: Routes = [
   {path: 'products/:uuid/update', component: UpdateProductComponent},
   {path: 'products/:uuid/delete', component: DeleteProductFormComponent},
   {path: 'suggestion', component: AddProductComponent},
+
   //Categories
   {path: 'categories/add', component: AddCategoryComponent},
   {path: 'categories/edit/:uuid', component: EditCategoryComponent},
+
+  {path: 'user-events', component: UserEventsDashboardComponent},
   {
     path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard, AdminGuard],
     children: [
@@ -42,7 +47,7 @@ const routes: Routes = [
       },
       {
         path: 'events',
-        component: EventsComponent,
+        component: AdminEventsDashboardComponent,
       },
       {
         path: 'categories',

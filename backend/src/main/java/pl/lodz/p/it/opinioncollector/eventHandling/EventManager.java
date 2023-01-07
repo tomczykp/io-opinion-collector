@@ -1,10 +1,9 @@
 package pl.lodz.p.it.opinioncollector.eventHandling;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.*;
+import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,44 +29,43 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     @Override
     public Optional<Event> modifyEvent(Event event) {
         var foundEvent = eventsRepository.findById(event.getEventID());
-        if (foundEvent.isPresent())
-        {
+        if (foundEvent.isPresent()) {
             eventsRepository.save(event);
         }
         return foundEvent;
     }
 
     @Override
-    public OpinionReportEvent createOpinionReportEvent(UUID userID, String description, UUID opinionID) {
-        OpinionReportEvent newEvent = new OpinionReportEvent(UUID.randomUUID(), userID, description, opinionID);
+    public OpinionReportEvent createOpinionReportEvent(User user, String description, UUID opinionID) {
+        OpinionReportEvent newEvent = new OpinionReportEvent(UUID.randomUUID(), user, description, opinionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }
 
     @Override
-    public ProductReportEvent createProductReportEvent(UUID userID, String description, UUID productID) {
-        ProductReportEvent newEvent = new ProductReportEvent(UUID.randomUUID(), userID, description, productID);
+    public ProductReportEvent createProductReportEvent(User user, String description, UUID productID) {
+        ProductReportEvent newEvent = new ProductReportEvent(UUID.randomUUID(), user, description, productID);
         eventsRepository.save(newEvent);
         return newEvent;
     }
 
     @Override
-    public QuestionNotifyEvent createQuestionNotifyEvent(UUID userID, String description, UUID questionID) {
-        QuestionNotifyEvent newEvent = new QuestionNotifyEvent(UUID.randomUUID(), userID, description, questionID);
+    public QuestionNotifyEvent createQuestionNotifyEvent(User user, String description, UUID questionID) {
+        QuestionNotifyEvent newEvent = new QuestionNotifyEvent(UUID.randomUUID(), user, description, questionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }
 
     @Override
-    public QuestionReportEvent createQuestionReportEvent(UUID userID, String description, UUID questionID) {
-        QuestionReportEvent newEvent = new QuestionReportEvent(UUID.randomUUID(), userID, description, questionID);
+    public QuestionReportEvent createQuestionReportEvent(User user, String description, UUID questionID) {
+        QuestionReportEvent newEvent = new QuestionReportEvent(UUID.randomUUID(), user, description, questionID);
         eventsRepository.save(newEvent);
         return null;
     }
 
     @Override
-    public AnswerReportEvent createAnswerReportEvent(UUID userID, String description, UUID questionID) {
-        AnswerReportEvent newEvent = new AnswerReportEvent(UUID.randomUUID(), userID, description, questionID);
+    public AnswerReportEvent createAnswerReportEvent(User user, String description, UUID questionID) {
+        AnswerReportEvent newEvent = new AnswerReportEvent(UUID.randomUUID(), user, description, questionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }
@@ -78,7 +76,7 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     }
 
     @Override
-    public Optional<Event> answerEvent( UUID eventID) {
+    public Optional<Event> answerEvent(UUID eventID) {
         var foundEvent = eventsRepository.findById(eventID);
 
         if (!foundEvent.isPresent()) {
@@ -102,5 +100,13 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
         }
 
         return result;
+    }
+
+    public List<Event> getUserEvents(User user) {
+        return eventsRepository.findByUser(user);
+    }
+
+    public int getUserEventsCount(User user) {
+        return eventsRepository.countByUserAndStatus(user, EventStatus.Open);
     }
 }

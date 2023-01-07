@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {EventsComponent} from './components/events/events.component';
+import {AdminEventsDashboardComponent} from './components/admin-events-dashboard/admin-events-dashboard.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
@@ -33,11 +33,18 @@ import {UpdateProductComponent} from "./components/products/update-product/updat
 import { DeleteProductFormComponent } from './components/products/delete-product-form/delete-product-form.component';
 import { AddCategoryComponent } from './components/categories/add-category/add-category.component';
 import { EditCategoryComponent } from './components/categories/edit-category/edit-category.component';
+import { EventsIconComponent } from './components/events-icon/events-icon.component';
+import { UserEventsDashboardComponent } from './components/user-events-dashboard/user-events-dashboard.component';
+import { OpinionReportModalComponent } from './components/opinions/opinion-report-modal/opinion-report-modal.component';
+import { OpinionModalComponent } from './components/opinions/opinion-modal/opinion-modal.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    EventsComponent,
+    AdminEventsDashboardComponent,
     HomeComponent,
     NavComponent,
     ProductsComponent,
@@ -58,6 +65,10 @@ import { EditCategoryComponent } from './components/categories/edit-category/edi
     DeleteProductFormComponent,
     AddCategoryComponent,
     EditCategoryComponent,
+    EventsIconComponent,
+    UserEventsDashboardComponent,
+    OpinionReportModalComponent,
+    OpinionModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,6 +88,8 @@ import { EditCategoryComponent } from './components/categories/edit-category/edi
     HttpClientModule,
     FormsModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }

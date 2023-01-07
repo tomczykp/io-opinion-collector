@@ -77,6 +77,12 @@ export class ProfileComponent implements OnInit {
         return;
       }
 
+      if (newP === oldP) {
+        this.passwordChangeStatus = 4;
+        this.newPassword?.setErrors({identicalPasswords: true});
+        return;
+      }
+
       this.userService.changePassword(oldP!.toString(), newP!.toString())
         .subscribe((result) => {
           if (result.status == 200) {
@@ -109,6 +115,7 @@ export class ProfileComponent implements OnInit {
     this.userService.changeUsername(this.newUsername).subscribe((result) => {
       if (result.status === 200) {
         this.usernameChangeStatus = 1;
+        this.authService.setUsername(this.newUsername);
         this.newUsername = "";
         this.getUser();
         this.showUsernameChangeInput = false;

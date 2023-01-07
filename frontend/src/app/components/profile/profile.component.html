@@ -113,6 +113,10 @@
                    class="alert alert-danger fade show m-3" role="alert" type="danger">
           <strong>Repeated new password doesn't match new password.</strong>
         </ngb-alert>
+        <ngb-alert (closed)="passwordChangeStatus = 0" *ngIf="passwordChangeStatus == 4" [dismissible]="true"
+                   class="alert alert-danger fade show m-3" role="alert" type="danger">
+          <strong>New password should be different than old password.</strong>
+        </ngb-alert>
       </div>
       <div class="page-content page-container m-3">
         <div class="justify-content-center">
@@ -133,7 +137,7 @@
                           <input class="form-control" formControlName="oldPassword" id="oldPassword" required placeholder="Old password"
                                  [type]="oldPasswordInputTextType ? 'text' : 'password'"
                                  [ngClass]="{
-                                 'is-invalid': (oldPassword && oldPassword.touched && oldPassword.getRawValue().length === 0) || (oldPassword?.hasError('wrongPassword')),
+                                 'is-invalid': (oldPassword && oldPassword.touched && oldPassword.getRawValue().length === 0) || (oldPassword?.hasError('wrongPassword')) || (oldPassword?.hasError('identicalPasswords')),
                                  'is-valid': oldPassword?.valid
                                  }"/>
                           <i class="hover-icon input-group-text bi" [ngClass]="{
@@ -153,7 +157,7 @@
                           <input class="form-control" formControlName="newPassword" id="newPassword" required placeholder="New password"
                                  [type]="newPasswordInputTextType ? 'text' : 'password'"
                                  [ngClass]="{
-                                 'is-invalid': (newPassword && newPassword.touched && newPassword.invalid),
+                                 'is-invalid': (newPassword && newPassword.touched && newPassword.invalid) || (oldPassword?.hasError('identicalPasswords')),
                                  'is-valid': newPassword?.valid}"/>
                           <i class="hover-icon input-group-text bi" [ngClass]="{
                        'bi-eye-slash': !newPasswordInputTextType,
@@ -162,11 +166,11 @@
                              (click)="newPasswordInputTextType = !newPasswordInputTextType">
                           </i>
                         </div>
-                        <span *ngIf="newPassword && newPassword.touched && newPassword.invalid" class="validation-message mb-3 w-100">
+                        <span *ngIf="newPassword && newPassword.touched && newPassword.invalid && !newPassword.hasError('identicalPasswords')" class="validation-message mb-3 w-100">
                       New password doesn't meet the strength requirements</span>
 
-                        <h6 *ngIf="(newPassword && newPassword.touched) && (newPassword?.getRawValue().length < 8) || (newPassword?.getRawValue().length > 20)" class="validation-message small form-text w-100" style="color: red">The password must be 8-20 characters, and must <em>not</em> contain spaces.</h6>
-                        <h6 *ngIf="!((newPassword && newPassword.touched) && (newPassword?.getRawValue().length < 8) || (newPassword?.getRawValue().length > 20))" class="form-text small text-muted w-100">The password must be 8-20 characters, and must <em>not</em> contain spaces.</h6>
+                        <h6 *ngIf="(newPassword && newPassword.touched) && (newPassword?.getRawValue()?.length < 8) || (newPassword?.getRawValue()?.length > 20)" class="validation-message small form-text w-100" style="color: red">The password must be 8-20 characters, and must <em>not</em> contain spaces.</h6>
+                        <h6 *ngIf="!((newPassword && newPassword.touched) && (newPassword?.getRawValue()?.length < 8) || (newPassword?.getRawValue()?.length > 20))" class="form-text small text-muted w-100">The password must be 8-20 characters, and must <em>not</em> contain spaces.</h6>
                       </div>
                       <hr>
                       <div class="mb-4">

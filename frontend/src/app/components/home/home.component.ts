@@ -15,7 +15,8 @@ import {DeleteProductFormComponent} from "../products/delete-product-form/delete
 export class HomeComponent implements OnInit {
 
   adminColumns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId', 'action'];
-  columns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId', 'makeUpdateForm', 'makeDeleteForm'];
+  userColumns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId', 'makeUpdateForm', 'makeDeleteForm'];
+  columns: string[] = ['productId', 'name', 'description', 'deleted', 'categoryId'];
   data: MatTableDataSource<Product>;
   authenticated = false;
   products: Product[];

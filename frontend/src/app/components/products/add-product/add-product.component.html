@@ -3,43 +3,67 @@
   <h1>
   ADD PRODUCT
   </h1>
-  <div class="col-md-8 p-lg-4 mx-lg-auto my-lg-4 bg-white border-4 border">
+  <div class="col-md-8 p-lg-4 mx-lg-auto my-lg-4 bg-white border-4 border p-4">
     <form [formGroup]="addProductForm" (ngSubmit)="addProduct()">
-      <div class="mat-form-field align-self-auto">
-        <input required type="text" id="categoryId" formControlName="categoryId" class="form-control form-control-lg" />
-        <div *ngIf="categoryId && categoryId?.touched && categoryId?.dirty">
-          <small class="text-danger" *ngIf="categoryId.errors?.['pattern']">
-            Not matching UUID pattern
-          </small>
-          <small class="text-danger" *ngIf="categoryId.errors?.['required']">
-            CategoryId is required
-          </small>
-        </div>
-        <label class="form-label" for="categoryId">Category ID</label>
-      </div>
 
-      <div class="mat-form-field align-self-auto">
-        <input required type="text" id="name" formControlName="name" class="form-control form-control-lg" />
+      <div class="form-outline mb-4">
+        <span class="form-label">Name</span>
+        <input required class="form-control form-control-lg" type="text" id="name" formControlName="name" pattern='^(\s+\S+\s*)*(?!\s).*$'/>
         <div *ngIf="name && name?.touched && name?.dirty">
-          <small class="text-danger" *ngIf="name.errors?.['required']">
+          <span class="text-danger" *ngIf="name.errors?.['required']">
             Name is required
-          </small>
+          </span>
+          <span class="text-danger" *ngIf="name.errors?.['pattern']">
+            Please enter valid name
+          </span>
         </div>
-        <label class="form-label" for="name">Name</label>
       </div>
 
-      <div class="mat-form-field align-self-auto">
-        <input required type="text" id="description" formControlName="description" class="form-control form-control-lg" />
+      <div class="form-outline mb-4">
+        <span class="form-label">Description</span>
+        <input required type="text" id="description" formControlName="description"
+               class="form-control form-control-lg" pattern='^(\s+\S+\s*)*(?!\s).*$'/>
         <div *ngIf="description && description?.touched && description?.dirty">
-          <small class="text-danger" *ngIf="description.errors?.['required']">
+          <span class="text-danger" *ngIf="description.errors?.['required']">
             Description is required
-          </small>
+          </span>
+          <span class="text-danger" *ngIf="description.errors?.['pattern']">
+                Please enter valid description
+          </span>
         </div>
-        <label class="form-label" for="description">Description</label>
       </div>
 
-      <input *ngIf="addProductForm.valid" type="submit" class="btn btn-primary btn-lg btn-block w-100" value="Add product">
-      <input *ngIf="!addProductForm.valid" type="submit" class="disabled btn btn-light btn-lg btn-block w-100" value="Add product">
+      <div class="form-row mb-4">
+        <div class="form-group">
+          <label class="form-label" for="categoryID">Categories</label>
+          <select #selectList formControlName="category" class="form-control"
+                  id="categoryID" (ngModelChange)="onCategoryChanged(selectList.value)">
+            <option disabled>Select Category</option>
+            <option *ngFor="let cat of categories" [ngValue]="cat.categoryID">{{cat.name}}</option>
+          </select>
+        </div>
+      </div>
+
+      <ng-container formArrayName="properties">
+        <ng-container *ngFor="let prop of properties.controls; let i = index">
+          <div class="form-outline">
+            <span class="form-label">{{propertyKeys[i]}}</span>
+            <input class="form-control form-control-lg"
+                   placeholder="{{propertyKeys[i]}}" formControlName="{{i}}" pattern='^(\s+\S+\s*)*(?!\s).*$'>
+            <div *ngIf="prop && prop?.touched && prop?.dirty">
+              <span class="text-danger" *ngIf="prop.errors?.['pattern']">
+                Please enter valid data
+              </span>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+
+
+      <input *ngIf="addProductForm.valid" type="submit"
+             class="mt-3 btn btn-primary btn-lg btn-block w-100" value="Add product">
+      <input *ngIf="!addProductForm.valid" type="submit"
+             class="mt-3 disabled btn btn-light btn-lg btn-block w-100" value="Add product">
 
     </form>
 

@@ -92,6 +92,13 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.PUT, "/products/{productId}/delete").hasAnyRole("USER", "ADMIN")
                                         .requestMatchers(HttpMethod.DELETE, "/products/{productId}").hasAnyRole("USER", "ADMIN")
 
+                                        // Events endpoints
+                                        .requestMatchers(HttpMethod.GET, "/events/{eventID}").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.GET, "/user/events").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/user/eventsCount").hasAnyRole("ADMIN", "USER")
+                                        .requestMatchers(HttpMethod.GET, "/events").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/events/{eventID}/close").hasRole("ADMIN")
+
                                         // Place for your secured endpoints
                                         .anyRequest().permitAll()
                                         .and()
@@ -101,6 +108,7 @@ public class SecurityConfig {
                                         .and()
                                         .redirectionEndpoint()
                                         .baseUri("/oauth2/code/*");
+
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }

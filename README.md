@@ -62,7 +62,7 @@ oraz zainstalować certyfikat:
 [opinoncollector.crt](res/opinioncollector.crt)
 
 * Windows:
-  wystarczy nacisnąć 2 razy
+  wystarczy nacisnąć 2 razy i zainstalować jako główny urząd certyfikacji
 * Unix:
   w 70% przypadków również, ale można to też zrobić za pomocą polecenia:
 
@@ -70,7 +70,7 @@ oraz zainstalować certyfikat:
 
 w obu przypadkach należy zrestartować przeglądarkę.
 
-# Uwaga!
+# Uwaga! #1
 
 Aby na systemach Unixowych (Linux i Mac OS) dać użytkownikom nieuprzywilejowanym dostęp do portów 443 należy wklepać w
 terminal komendę:
@@ -79,5 +79,6 @@ terminal komendę:
 
 która daje node.js dostęp do powyższego portu.
 
+# Uwaga! #2
 
-
+Firefox nie przyjmie tego certyfikatu więc trzeba korzystać z chromium

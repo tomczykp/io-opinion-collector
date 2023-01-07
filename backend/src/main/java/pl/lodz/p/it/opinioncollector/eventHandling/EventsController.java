@@ -1,64 +1,93 @@
 package pl.lodz.p.it.opinioncollector.eventHandling;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import pl.lodz.p.it.opinioncollector.eventHandling.dto.BasicEventDTO;
+import pl.lodz.p.it.opinioncollector.eventHandling.dto.EventDTO;
+import pl.lodz.p.it.opinioncollector.eventHandling.events.AnswerReportEvent;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.Event;
+import pl.lodz.p.it.opinioncollector.eventHandling.events.OpinionReportEvent;
+import pl.lodz.p.it.opinioncollector.eventHandling.events.ProductReportEvent;
+import pl.lodz.p.it.opinioncollector.userModule.user.User;
+import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @RestController
 @CrossOrigin
 public class EventsController {
     EventManager eventManager;
+    UserManager userManager;
 
     @Autowired
-    public EventsController(EventManager eventManager) {
+    public EventsController(EventManager eventManager, UserManager userManager) {
         this.eventManager = eventManager;
+        this.userManager = userManager;
     }
 
     @GetMapping("/events")
-    public List<Event> Events() {
-        return eventManager.getEvents();
+    public List<BasicEventDTO> Events() {
+        List<BasicEventDTO> result = new ArrayList<>();
+
+        for (var event : eventManager.getEvents()) {
+            result.add(new BasicEventDTO(event.getEventID(), event.getUser().getVisibleName(), event.getDescription(), event.getStatus()));
+        }
+
+        return result;
     }
 
     @GetMapping("/events/{eventID}")
-    public ResponseEntity<Event> GetEvent(@PathVariable("eventID") String eventID) {
-        var foundEvent = eventManager.getEvent(UUID.fromString(eventID));
+    public ResponseEntity<EventDTO> GetEvent(@PathVariable("eventID") UUID eventID) {
+        Optional<Event> foundEvent = eventManager.getEvent(eventID);
 
-        if (!foundEvent.isPresent())
+        if (foundEvent.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(foundEvent.get());
+        Event result = foundEvent.get();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.getId().equals(result.getUser().getId())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        return ResponseEntity.ok(new EventDTO(foundEvent.get()));
     }
 
-    // TODO: Rename according to users module
-    @GetMapping("/users/{userID}/events/")
-    public ResponseEntity<List<Event>> GetUserEvents(@PathVariable("userID") String userID) {
-        UUID userUUID = UUID.fromString(userID);
-        Predicate<Event> UserPredicate = event -> event.getUserID().equals(userUUID);
+    @GetMapping("/user/events")
+    public ResponseEntity<List<BasicEventDTO>> GetUserEvents() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Event> foundEvents = eventManager.getUserEvents(user);
 
-        List<Event> foundEvents = eventManager.getEvents(UserPredicate);
+        List<BasicEventDTO> eventDTOS = new ArrayList<>();
+        for (Event foundEvent : foundEvents) {
+            eventDTOS.add(new BasicEventDTO(foundEvent));
+        }
 
-        if (foundEvents.isEmpty())
-            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(eventDTOS);
+    }
 
-        return ResponseEntity.ok(foundEvents);
+    @GetMapping("/user/eventsCount")
+    public ResponseEntity<Integer> GetUserEventsCount() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int eventsCount = eventManager.getUserEventsCount(user);
+
+        return ResponseEntity.ok(eventsCount);
     }
 
     @PostMapping("/events/{eventID}/close")
-    public ResponseEntity<Object> CloseEvent(@PathVariable("eventID") String eventID)
-    {
+    public ResponseEntity<Object> CloseEvent(@PathVariable("eventID") String eventID) {
         var response = eventManager.answerEvent(UUID.fromString(eventID));
 
-        if (!response.isPresent())
+        if (response.isEmpty())
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok().build();
     }
-
 
 }

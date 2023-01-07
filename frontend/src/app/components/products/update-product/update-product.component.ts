@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Product} from "../../../model/Product";
+import {Product, ProductFull} from "../../../model/Product";
 import {ProductsService} from "../../../services/products.service";
+import {CategoriesService} from "../../../services/categories.service";
 import {HttpResponse} from "@angular/common/http";
 
 
@@ -12,55 +13,84 @@ import {HttpResponse} from "@angular/common/http";
 })
 export class UpdateProductComponent implements OnInit {
   product: Product = <Product>{};
+  propertyKeys: any = [];
   match: RegExpMatchArray | null;
   uuid: string;
 
-  regexForm: RegExp = new RegExp('^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$');
-  regexGet: RegExp = new RegExp('[0-9a-f\-]+$');
+  patternValidate: RegExp = new RegExp('^(\s+\S+\s*)*(?!\s).*$'); //Zero-width space works
 
 
-  updateProductForm = new FormGroup({
-    categoryId: new FormControl('', [Validators.required, Validators.pattern(this.regexForm)]),
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required])
-    // ,
-    // properties: new FormControl('')
+
+  updateProductForm = this.fb.group({
+    name: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
+    description: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
+    propertiesValues: this.fb.array([]),
   })
 
+
   constructor(private productService: ProductsService,
+              private categoryService: CategoriesService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private fb: FormBuilder) {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) =>
-    {this.uuid = params.get('uuid')!.toString()});
-    this.productService.getProduct(this.uuid).subscribe((data: HttpResponse<Product>) => {
-      console.log(data);
-      this.product = data.body!;
-      this.updateProductForm.setValue({
-        categoryId: this.product.categoryId,
-        name: this.product.name,
-        description: this.product.description
-        // ,
-        // properties: 'test'
+
+    this.route.paramMap.subscribe((params) => {
+      this.uuid = params.get('uuid')!.toString()
+    });
+
+    this.productService.getProductFull(this.uuid).subscribe((data: HttpResponse<ProductFull>) => {
+      let apiProd = data.body!;
+      this.product = {
+        productId: apiProd.productId,
+        name: apiProd.name,
+        description: apiProd.description,
+        properties: apiProd.properties,
+        deleted: apiProd.deleted,
+        confirmed: apiProd.confirmed,
+        categoryId: apiProd.category.categoryID
+      } as Product;
+
+      let properties: {[id: string]: any} = this.product.properties;
+      Object.keys(properties).forEach(key => {
+        let value = properties[key];
+        this.propertyKeys.push(key);
+        this.updateProductForm.controls.propertiesValues.push(this.fb.control(
+          value, [Validators.required, Validators.pattern(this.patternValidate)]
+        ));
       })
+
+      this.updateProductForm.setValue({
+        name: this.product.name,
+        description: this.product.description,
+        propertiesValues: this.product.properties,
+      })
+
     });
   }
 
-
   updateProduct(): void {
     if (this.updateProductForm.valid) {
-      const ProductDTO: object = {
-        "categoryId": this.updateProductForm.getRawValue().categoryId,
+
+      let propertiesValues = this.updateProductForm.getRawValue().propertiesValues;
+      const pMap: Map<string, string> = new Map();
+
+      for (let i = 0; i < propertiesValues.length; i++) {
+        pMap.set(this.propertyKeys[i], propertiesValues[i] as string)
+
+      }
+
+      const properties = Object.fromEntries(pMap);
+
+      const productDTO = {
+        "categoryId": this.product.categoryId,
         "name": this.updateProductForm.getRawValue().name,
         "description": this.updateProductForm.getRawValue().description,
-        "properties": {
-          "test": "test" //fixme
-        }
+        "properties": properties
       }
-      console.log(ProductDTO);
-      this.productService.updateProduct(this.uuid, ProductDTO)
+      this.productService.updateProduct(this.uuid, productDTO)
         .subscribe((result) => {
             if (result.status === 200) {
               this.router.navigate(['/']);
@@ -69,6 +99,8 @@ export class UpdateProductComponent implements OnInit {
         )
     }
   }
+
+
 
   get categoryId() {
     return this.updateProductForm.get('categoryId');
@@ -82,7 +114,7 @@ export class UpdateProductComponent implements OnInit {
     return this.updateProductForm.get('description');
   }
 
-  get properties() {
-    return this.updateProductForm.get('properties');
+  get propertiesValues() {
+    return this.updateProductForm.get('propertiesValues') as FormArray;
   }
 }
