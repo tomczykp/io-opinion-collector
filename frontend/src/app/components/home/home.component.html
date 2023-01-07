@@ -20,17 +20,24 @@
 			</div>
 			<div>
 				<mat-form-field appearance="fill">
-					<mat-label>Select category</mat-label>
+					<mat-label *ngIf="selectedCategory === 'All categories'">Select category</mat-label>
+					<mat-label *ngIf="selectedCategory !== 'All categories'">Select subcategory</mat-label>
 					<mat-select
 						[(ngModel)]="selectedCategory"
 						name="category"
 						(ngModelChange)="handleCategoryChange()"
 					>
+						<mat-option
+							disabled="true"
+							*ngIf="displayedCategories != undefined && displayedCategories.length == 0"
+							>None</mat-option
+						>
 						<mat-option *ngFor="let category of displayedCategories" [value]="category.name"
 							>{{ category.name }}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
+
 				<p *ngIf="isCategorySelected">
 					back to
 					<a

@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
 	displayedCategories: Category[]
 	allProducts: ProductFull[]
 	displayedProducts: ProductFull[]
-	selectedCategory: string = ''
+	selectedCategory: string = 'All categories'
 	parentCategory: string = 'All categories'
 	isCategorySelected: boolean = false
 
@@ -50,7 +50,9 @@ export class HomeComponent implements OnInit {
 	) {}
 
 	handleCategoryChange() {
-		if (this.selectedCategory == null) return
+		if (this.selectedCategory === 'None') {
+			return
+		}
 		this.isCategorySelected = true
 		const found = this.allCategories.find((c) => c.name === this.selectedCategory)
 		if (found?.parentCategory == null) {
