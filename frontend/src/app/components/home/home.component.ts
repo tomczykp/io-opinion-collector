@@ -59,9 +59,6 @@ export class HomeComponent implements OnInit {
 	}
 
 	handleCategoryChange() {
-		if (this.selectedCategory === 'None') {
-			return
-		}
 		this.isCategorySelected = true
 		let found = this.allCategories.find((c) => c.name === this.selectedCategory)
 		if (found?.parentCategory == null) {
@@ -72,35 +69,8 @@ export class HomeComponent implements OnInit {
 		this.displayedCategories = this.allCategories.filter(
 			(c) => found?.categoryID === c.parentCategory?.categoryID
 		)
+
 		this.updateDisplayedProducts(new Map())
-		// let properties: { [id: string]: any } = []
-		// while (found !== null) {
-		// 	found?.fields.forEach((field) => {
-		// 		const searchedKey = field.name
-		// 		const found: string[] = []
-		// 		this.displayedProducts.forEach((p) => {
-		// 			const props = p.properties as { [id: string]: any }
-		// 			Object.keys(props).forEach((key) => {
-		// 				if (key === searchedKey) {
-		// 					found.push(props[key])
-		// 				}
-		// 			})
-		// 		})
-		// 		properties[searchedKey] = [...new Set(found)]
-		// 	})
-		// 	found = found?.parentCategory as any
-		// }
-		// console.log(properties)
-
-		// this.propertiesNames = []
-		// this.propertiesForm.controls.properties.clear()
-		// Object.keys(properties).forEach((key) => {
-		// 	let value = properties[key]
-		// 	this.propertiesNames.push(key)
-		// 	this.propertiesForm.controls.properties.push(this.formBuilder.control(value))
-		// })
-
-		// console.log(this.propertiesForm)
 
 		let properties: { [id: string]: any } = []
 		while (found !== null) {
@@ -152,7 +122,6 @@ export class HomeComponent implements OnInit {
 			this.isCategorySelected = false
 			this.displayedCategories = this.allCategories.filter((c) => c.parentCategory === null)
 			this.propertiesForm.controls.properties.clear()
-			this.updateDisplayedProducts(new Map())
 		} else {
 			this.selectedCategory = found.parentCategory.name
 			this.parentCategory =
@@ -163,34 +132,6 @@ export class HomeComponent implements OnInit {
 			this.displayedCategories = this.allCategories.filter(
 				(c) => found?.parentCategory?.categoryID === c.parentCategory?.categoryID
 			)
-			this.updateDisplayedProducts(new Map())
-			// let properties: { [id: string]: any } = []
-			// found = found.parentCategory
-			// while (found !== null) {
-			// 	found?.fields.forEach((field) => {
-			// 		const searchedKey = field.name
-			// 		const found: string[] = []
-			// 		this.displayedProducts.forEach((p) => {
-			// 			const props = p.properties as { [id: string]: any }
-			// 			Object.keys(props).forEach((key) => {
-			// 				if (key === searchedKey) {
-			// 					found.push(props[key])
-			// 				}
-			// 			})
-			// 		})
-			// 		properties[searchedKey] = 'None'
-			// 	})
-			// 	found = found?.parentCategory as any
-			// }
-			// console.log(properties)
-
-			// this.propertiesNames = []
-			// this.propertiesForm.controls.properties.clear()
-			// Object.keys(properties).forEach((key) => {
-			// 	let value = properties[key]
-			// 	this.propertiesNames.push(key)
-			// 	this.propertiesForm.controls.properties.push(this.formBuilder.control(value))
-			// })
 			let properties: { [id: string]: any } = []
 			found = found.parentCategory
 			while (found !== null) {
@@ -208,6 +149,7 @@ export class HomeComponent implements OnInit {
 				this.propertiesForm.controls.properties.push(this.formBuilder.control(value))
 			})
 		}
+		this.updateDisplayedProducts(new Map())
 	}
 
 	ngOnInit(): void {
