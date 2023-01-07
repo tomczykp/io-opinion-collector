@@ -1,32 +1,84 @@
-<div class="container custom-container mt-2">
-  <div class="card">
-    <div class="header">
-      <h3 class="mb-4 text-center">Categories</h3>
+<div class="">
+  <div class="card-title">
+    <div class="row">
+      <div class="col-sm-12 text-md-start pt-3">
+        <h2 class="">Categories <b>Administration</b></h2>
+        <div class="d-flex">
+          <input [(ngModel)]="nameFilter" (ngModelChange)="getCategories()" class="d-inline-block form-control w-50" placeholder="Find by name"
+                 type="text">
+          <button (click)="clearFilter()" class="btn btn-primary ms-2">Clear input</button>
+          <button routerLink="/categories/add" class="btn btn-dark ms-2">
+            <i class="bi bi-plus-circle me-2"></i>
+            Add category
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="card">
+    <div class="table-responsive">
+      <table [dataSource]="dataSource" class="table mb-0 bg-light table-hover table-striped text-center align-middle"
+             mat-table>
+        <ng-container matColumnDef="name">
+          <th *matHeaderCellDef class="align-middle" mat-header-cell
+              style="font-size: large; font-weight: bold; color: black; text-align: center">Name
+          </th>
+          <td *matCellDef="let element" mat-cell>{{element.name}}</td>
+        </ng-container>
 
-    <div class="justify-content-center">
+        <ng-container matColumnDef="categoryID">
+          <th *matHeaderCellDef class="align-middle" mat-header-cell
+              style="font-size: large; font-weight: bold; color: black; text-align: center">
+            Id
+          </th>
+          <td *matCellDef="let element" mat-cell>{{element.categoryID}}</td>
+        </ng-container>
 
-      <table class="table table-bordered">
-        <thead>
-          <th>Name</th>
-          <th>Parent category</th>
-          <th>Fields</th>
-        </thead>
-        <tbody>
-        <tr *ngFor="let category of categories$ | async">
-          <td>{{ category.name }}</td>
-          <td>{{ category.parentCategory?.name || "None" }}</td>
-          <td>
+        <ng-container matColumnDef="parentCategory">
+          <th *matHeaderCellDef class="align-middle" mat-header-cell
+              style="font-size: large; font-weight: bold; color: black; text-align: center">
+            Parent category
+          </th>
+          <td *matCellDef="let element" mat-cell>{{element.parentCategory?.name}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="fields">
+          <th *matHeaderCellDef class="align-middle" mat-header-cell
+              style="font-size: large; font-weight: bold; color: black; text-align: center">
+            Fields
+          </th>
+          <td class="p-2" *matCellDef="let element" mat-cell style="text-align: left;">
             <ul>
-              <li *ngFor="let field of category.fields">
+              <li *ngFor="let field of element.fields">
                 {{field.name}}: {{field.type}}
               </li>
             </ul>
           </td>
-        </tr>
+        </ng-container>
 
-        </tbody>
+        <ng-container matColumnDef="edit" >
+          <th *matHeaderCellDef class="align-middle" mat-header-cell
+              style="font-size: large; font-weight: bold; color: black; text-align: center">Edit</th>
+          <td mat-cell *matCellDef="let element">
+            <i [routerLink]="['/categories/edit', element.categoryID]" type="button" class="bi bi-pencil-square hover-icon"
+               style="font-size: 30px; color: darkred;"></i>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete" >
+          <th *matHeaderCellDef class="align-middle" mat-header-cell
+              style="font-size: large; font-weight: bold; color: black; text-align: center">Delete</th>
+          <td mat-cell *matCellDef="let element">
+            <i type="button" (click)="deleteCategory(element.categoryID)" class="bi bi-trash hover-icon"
+               style="font-size: 30px; color: darkred;"></i>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
     </div>
+    <mat-paginator #paginator [pageSizeOptions]="[5,10,15]" [pageSize]="10" class="bg-light"
+                   showFirstLastButtons></mat-paginator>
   </div>
 </div>
