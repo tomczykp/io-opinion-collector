@@ -47,6 +47,8 @@ INSERT INTO public.field (fieldid, name, type) VALUES ('f93af257-b5f2-4643-a844-
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('f93af257-b1c2-4643-a844-5b2a7d75873f', 'Category_4', '82d58040-8aa9-11ed-a1eb-0242ac120002');
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('f93af257-b1c2-4643-a844-5b2a7d75873f', 'f93af257-b5f2-4643-a844-5b2a7d75873f');
 
+INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('82dd8040-8aa9-11ed-a1eb-0255ac120002', 'test_cat', null);
+
 
 INSERT INTO iodb.public.product (product_id, category_id, constant_product_id,  name, description, deleted, confirmed, created_at)
 VALUES ('4811913c-b953-4856-979b-838488049d07', 'b293013b-40da-4dde-a997-bce3068636ec', 'a64b3ef4-9dee-4088-8e99-bf7e7904d529', 'Product1', 'Description1', false, true, CURRENT_TIMESTAMP),

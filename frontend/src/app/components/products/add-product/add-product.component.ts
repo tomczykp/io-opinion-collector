@@ -58,7 +58,12 @@ export class AddProductComponent implements OnInit {
       for (let i = 0; i < propertiesValues.length; i++) {
         pMap.set(this.propertyKeys[i], propertiesValues[i] as string)
       }
-      const properties = Object.fromEntries(pMap);
+      let properties;
+      if(pMap.size == 0) {
+        properties = null;
+      } else {
+        properties = Object.fromEntries(pMap);
+      }
       const ProductDTO: object = {
         "categoryId": this.categoryId,
         "name": this.addProductForm.getRawValue().name,

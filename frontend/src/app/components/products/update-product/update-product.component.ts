@@ -54,18 +54,26 @@ export class UpdateProductComponent implements OnInit {
       } as Product;
 
       let properties: {[id: string]: any} = this.product.properties;
-      Object.keys(properties).forEach(key => {
-        let value = properties[key];
-        this.propertyKeys.push(key);
-        this.updateProductForm.controls.propertiesValues.push(this.fb.control(
-          value, [Validators.required, Validators.pattern(this.patternValidate)]
-        ));
-      })
-
+      let propertyKeys = Object.keys(properties);
+      console.log(this.product.properties);
+      if(propertyKeys.length != 0) {
+        propertyKeys.forEach(key => {
+          let value = properties[key];
+          this.propertyKeys.push(key);
+          this.updateProductForm.controls.propertiesValues.push(this.fb.control(
+            value, [Validators.required, Validators.pattern(this.patternValidate)]
+          ));
+        });
+        this.updateProductForm.setValue({
+          name: this.product.name,
+          description: this.product.description,
+          propertiesValues: this.product.properties,
+        })
+      }
       this.updateProductForm.setValue({
         name: this.product.name,
         description: this.product.description,
-        propertiesValues: this.product.properties,
+        propertiesValues: []
       })
 
     });
@@ -81,8 +89,12 @@ export class UpdateProductComponent implements OnInit {
         pMap.set(this.propertyKeys[i], propertiesValues[i] as string)
 
       }
-
-      const properties = Object.fromEntries(pMap);
+      let properties;
+      if(pMap.size == 0) {
+        properties = null;
+      } else {
+        properties = Object.fromEntries(pMap);
+      }
 
       const productDTO = {
         "categoryId": this.product.categoryId,

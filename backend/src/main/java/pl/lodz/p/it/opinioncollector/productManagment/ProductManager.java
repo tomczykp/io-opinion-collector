@@ -47,8 +47,10 @@ public class ProductManager implements IProductManager {
         }
 
         // Putting properties from DTO to a new product
-        for (Map.Entry<String, String> entry : productDTO.properties.entrySet()) {
-            product.addProperty(entry.getKey(), entry.getValue());
+        if (productDTO.properties != null) {
+            for (Map.Entry<String, String> entry : productDTO.properties.entrySet()) {
+                product.addProperty(entry.getKey(), entry.getValue());
+            }
         }
 
         product.setConstantProductId(UUID.randomUUID());
@@ -82,7 +84,10 @@ public class ProductManager implements IProductManager {
             Product newProduct = new Product(productDTO);
 
             newProduct.setCategory(originalProduct.get().getCategory());
-            newProduct.setProperties(productDTO.getProperties());
+            if(productDTO.getProperties() != null) {
+                newProduct.setProperties(productDTO.getProperties());
+            }
+
             newProduct.setConstantProductId(originalProduct.get().getConstantProductId());
 
 
