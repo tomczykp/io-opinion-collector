@@ -22,12 +22,10 @@ export class ProductsComponent implements OnInit {
     let href = this.router.url;
     let match = href.match(this.regex);
     this.getProduct(match![0]);
-    console.log(match!.toString());
   }
 
   getProduct(uuid: string) {
     this.productService.getProduct(uuid).subscribe((data: HttpResponse<Product>) => {
-      console.log(data)
       this.product = data.body!;
       this.product.createdAt = this.product.createdAt.split('T').join(" ").split('.')[0]
       // if (this.product.editedAt != null) {

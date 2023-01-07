@@ -65,6 +65,18 @@ public class Product implements Serializable {
         this.setCreatedAt(LocalDateTime.now());
     }
 
+    public Product(Product product) {
+        this.productId = product.productId;
+        this.constantProductId = product.constantProductId;
+        this.category = product.category;
+        this.name = product.name;
+        this.description = product.description;
+        this.deleted = product.deleted;
+        this.confirmed = product.confirmed;
+        this.createdAt = product.createdAt;
+        this.properties = product.properties;
+    }
+
     public void addProperty(String key, String value) {
         properties.put(key, value);
     }

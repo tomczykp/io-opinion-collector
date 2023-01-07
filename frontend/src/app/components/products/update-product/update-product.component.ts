@@ -55,7 +55,6 @@ export class UpdateProductComponent implements OnInit {
 
       let properties: {[id: string]: any} = this.product.properties;
       let propertyKeys = Object.keys(properties);
-      console.log(this.product.properties);
       if(propertyKeys.length != 0) {
         propertyKeys.forEach(key => {
           let value = properties[key];

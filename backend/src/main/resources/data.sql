@@ -51,13 +51,13 @@ INSERT INTO public.category (categoryid, name, parent_category_category_id) VALU
 
 
 INSERT INTO iodb.public.product (product_id, category_id, constant_product_id,  name, description, deleted, confirmed, created_at)
-VALUES ('4811913c-b953-4856-979b-838488049d07', 'b293013b-40da-4dde-a997-bce3068636ec', 'a64b3ef4-9dee-4088-8e99-bf7e7904d529', 'Product1', 'Description1', false, true, CURRENT_TIMESTAMP),
-       ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'b293013b-40da-4dde-a997-bce3068636ec', 'a675ee5e-57da-423b-9a69-dcd7a40a77af', 'Product2', 'Description2', false, true, CURRENT_TIMESTAMP),
-       ('2f335bfb-6805-4a40-ae9c-53b43f22b3ce', 'b293013b-40da-4dde-a997-bce3068636ec', '97ccb8f6-1f17-450e-9c77-f1f123b0d849', 'Product3', 'Description3', false, true, CURRENT_TIMESTAMP),
-       ('b71a95ef-3f19-4ced-a0f4-ebdca10a7668', 'b293013b-40da-4dde-a997-bce3068636ec', 'bad729e9-10e8-4fc6-96c6-6e0f82b781e6', 'Product4', 'Description4', false, true, CURRENT_TIMESTAMP),
-       ('4950d349-1127-4690-82a0-94fdc81b019b', 'b293013b-40da-4dde-a997-bce3068636ec', '4dfd650a-b331-4076-8e26-66d9901c13fb', 'Product5', 'Description5', false, true, CURRENT_TIMESTAMP),
-       ('b4c7b393-2e26-49e2-9783-785583bd4c66', 'b293013b-40da-4dde-a997-bce3068636ec', '313d9397-b6f8-452d-9f01-5e87004c43fb', 'Product6', 'Description6', true, true, CURRENT_TIMESTAMP),
-       ('8573d77a-0b3f-4d43-943d-f91e03c033e4', 'b293013b-40da-4dde-a997-bce3068636ec', 'be0ebe75-d722-4070-beaa-3f3ba1e3bf3d', 'Kremowki', 'Pyszne kremowki', true, true, CURRENT_TIMESTAMP);
+VALUES ('4811913c-b953-4856-979b-838488049d07', 'b293013b-40da-4dde-a997-bce3068636ec', '4811913c-b953-4856-979b-838488049d07', 'Product1', 'Description1', false, true, CURRENT_TIMESTAMP),
+       ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'b293013b-40da-4dde-a997-bce3068636ec', 'cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'Product2', 'Description2', false, true, CURRENT_TIMESTAMP),
+       ('2f335bfb-6805-4a40-ae9c-53b43f22b3ce', 'b293013b-40da-4dde-a997-bce3068636ec', '2f335bfb-6805-4a40-ae9c-53b43f22b3ce', 'Product3', 'Description3', false, true, CURRENT_TIMESTAMP),
+       ('b71a95ef-3f19-4ced-a0f4-ebdca10a7668', 'b293013b-40da-4dde-a997-bce3068636ec', 'b71a95ef-3f19-4ced-a0f4-ebdca10a7668', 'Product4', 'Description4', false, true, CURRENT_TIMESTAMP),
+       ('4950d349-1127-4690-82a0-94fdc81b019b', 'b293013b-40da-4dde-a997-bce3068636ec', '4950d349-1127-4690-82a0-94fdc81b019b', 'Product5', 'Description5', false, true, CURRENT_TIMESTAMP),
+       ('b4c7b393-2e26-49e2-9783-785583bd4c66', 'b293013b-40da-4dde-a997-bce3068636ec', 'b4c7b393-2e26-49e2-9783-785583bd4c66', 'Product6', 'Description6', true, true, CURRENT_TIMESTAMP),
+       ('8573d77a-0b3f-4d43-943d-f91e03c033e4', 'b293013b-40da-4dde-a997-bce3068636ec', '8573d77a-0b3f-4d43-943d-f91e03c033e4', 'Kremowki', 'Pyszne kremowki', true, true, CURRENT_TIMESTAMP);
 
 INSERT INTO PROPERTIES (PRODUCT_PRODUCT_ID, VALUE, KEY)
 VALUES ('4811913c-b953-4856-979b-838488049d07', 'value1', 'Int'),

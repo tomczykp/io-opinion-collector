@@ -20,7 +20,7 @@
       </ul>
 
       <span *ngIf="authenticated" class="me-2">Hi, {{username}}</span>
-      <button routerLink="/suggestion" class="btn btn-dark me-3" *ngIf="authenticated">
+      <button routerLink="/suggestion" class="btn btn-dark me-3" *ngIf="authenticated && role=='USER'">
         <i class="bi bi-plus-circle fs-6 me-2"></i>
         <div class="d-none d-sm-inline">Add product</div></button>
       <i routerLink="/profile" class="bi bi-person me-3 fa-2xl" *ngIf="authenticated"></i>
