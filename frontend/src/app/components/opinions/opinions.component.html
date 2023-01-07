@@ -41,17 +41,31 @@
             Apply
         </button>
     </div>
-    <div
-        [ngbTooltip]="isUser() ? null : 'You need to sign in to create opinions.'"
-        placement="right"
-        class="mb-2">
-        <button
-            [disabled]="!isUser()"
-            class="btn btn-success"
-            (click)="openCreateOpinionModal()">
-            Add new opinion
-        </button>
-    </div>
+    <ng-container *ngIf="isUser(); else unathenticated">
+        <div
+            [ngbTooltip]="hasCreatedOpinion ? 'You can create only one opinion for given product.' : null"
+            placement="right"
+            class="mb-2 d-inline-block">
+            <button
+                [disabled]="hasCreatedOpinion"
+                class="btn btn-success"
+                (click)="openCreateOpinionModal()">
+                Add your opinion
+            </button>
+        </div>
+    </ng-container>
+    <ng-template #unathenticated>
+        <div
+            ngbTooltip="You need to sign in to create opinions."
+            placement="right"
+            class="mb-2 d-inline-block">
+            <button
+                disabled
+                class="btn btn-success">
+                Add your opinion
+            </button>
+        </div>
+    </ng-template>
     <div class="container">
         <ng-container *ngIf="opinions.length; else noOpinions">
             <div *ngFor="let opinion of opinions.filter(filterFn)">

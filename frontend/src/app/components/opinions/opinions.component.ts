@@ -24,6 +24,8 @@ export enum SortingOrder
 })
 export class OpinionsComponent implements OnChanges
 {
+    hasCreatedOpinion = false;
+
     ORDER = SortingOrder;
 
     @Input() productId: string;
@@ -54,6 +56,7 @@ export class OpinionsComponent implements OnChanges
                 .subscribe(data =>
                 {
                     this.opinions$.next(data);
+                    this.hasCreatedOpinion = data.some(o => o.authorName === this.authService.getUsername());
                 });
         }
     }
@@ -117,7 +120,13 @@ export class OpinionsComponent implements OnChanges
             {
                 this.opinionService
                     .createOpinion(this.productId, dto)
-                    .subscribe(u => this.opinions$.value.push(u));
+                    .subscribe(u =>
+                    {
+                        this.opinions$.value.push(u);
+                        this.hasCreatedOpinion = true;
+                        this.resetFiltersAndSortingOrder();
+                        this.applyFiltersAndSortingOrder();
+                    });
             })
             .catch(() => { });
     }
@@ -133,7 +142,12 @@ export class OpinionsComponent implements OnChanges
             {
                 this.opinionService
                     .updateOpinion(opinion.productId, opinion.opinionId, dto)
-                    .subscribe(u => this.replaceUpdated(u));
+                    .subscribe(u =>
+                    {
+                        this.replaceUpdated(u);
+                        this.resetFiltersAndSortingOrder();
+                        this.applyFiltersAndSortingOrder();
+                    })
             })
             .catch(() => { });
     }
@@ -155,6 +169,9 @@ export class OpinionsComponent implements OnChanges
                     this.opinions$.next(
                         this.opinions$.value.filter(o => o.opinionId !== opinion.opinionId)
                     );
+                    this.hasCreatedOpinion = false;
+                    this.resetFiltersAndSortingOrder();
+                    this.applyFiltersAndSortingOrder();
                 }
             })
             .catch(() => { });
@@ -205,6 +222,13 @@ export class OpinionsComponent implements OnChanges
                 return old;
             })
         );
+    }
+
+    private resetFiltersAndSortingOrder()
+    {
+        this.selectedMinRating = 0;
+        this.selectedMaxRating = 10;
+        this.selectedOrder = this.ORDER.NONE;
     }
 
     protected readonly comparatorFn = (o1: Opinion, o2: Opinion) =>
