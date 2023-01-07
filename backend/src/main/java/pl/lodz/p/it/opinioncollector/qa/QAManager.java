@@ -5,6 +5,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
+import pl.lodz.p.it.opinioncollector.userModule.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class QAManager {
         question.setDate(LocalDateTime.now());
         question.setAuthor(((User) SecurityContextHolder.getContext()
                 .getAuthentication()
-                .getPrincipal()).getVisibleName());
+                .getPrincipal()));
         return questionRepository.save(question);
     }
 
@@ -57,7 +58,7 @@ public class QAManager {
         answer.setDate(LocalDateTime.now());
         answer.setAuthor(((User) SecurityContextHolder.getContext()
                 .getAuthentication()
-                .getPrincipal()).getVisibleName());
+                .getPrincipal()));
         return answerRepository.save(answer);
     }
 

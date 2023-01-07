@@ -20,17 +20,17 @@ INSERT INTO public.app_user (id, active, email, locked, password, role, visible_
 INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name, provider, deleted) VALUES ('62908864-7b61-4e6e-8573-53863bd93b35', true, 'user16', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'User16', 'LOCAL', true);
 INSERT INTO public.app_user (id, active, email, locked, password, role, visible_name, provider, deleted) VALUES ('6ddee1ee-9eba-4222-a031-463a849e1886', true, 'Karok2137', false, '$2a$10$76lL2cTtJS1bt3/97Czo0elebu5Lv0oNZytMBBZzqHPgAgyNcSSQG', 'USER', 'Karol2137', 'LOCAL', false);
 
-INSERT INTO iodb.public.question (question_id, content, date, product_id, author)
+INSERT INTO iodb.public.question (question_id, content, date, product_id, author_id)
 VALUES ('8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
-        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07', 'User'),
+        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07', '66208864-7b61-4e6e-8573-53863bd93b35'),
        ('35c3863a-2241-4c05-942b-6df9dabdf193', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
-        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07', 'User'),
+        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07', '66208864-7b61-4e6e-8573-53863bd93b35'),
        ('95bc5f23-ac70-4c7e-a01f-4d9e92fad63d', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet consequat dui. In sit amet libero sed orci malesuada consectetur nec quis nibh. Vestibulum porttitor, nisl et posuere cursus?',
-        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07', 'User');
+        CURRENT_TIMESTAMP, '4811913c-b953-4856-979b-838488049d07', '66208864-7b61-4e6e-8573-53863bd93b35');
 
-INSERT INTO iodb.public.answer (answer_id, content, date, question_id, author)
-VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'Yes', CURRENT_TIMESTAMP, '8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6', 'Admin'),
-       ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'No', CURRENT_TIMESTAMP, '35c3863a-2241-4c05-942b-6df9dabdf193', 'Admin');
+INSERT INTO iodb.public.answer (answer_id, content, date, question_id, author_id)
+VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'Yes', CURRENT_TIMESTAMP, '8d2f2aaf-1b98-4d87-b7e3-97bacd955bc6', '8378b753-6d05-454b-8447-efb125846fc7'),
+       ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'No', CURRENT_TIMESTAMP, '35c3863a-2241-4c05-942b-6df9dabdf193', '8378b753-6d05-454b-8447-efb125846fc7');
 
 
 

@@ -1,9 +1,12 @@
 package pl.lodz.p.it.opinioncollector.qa;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -21,8 +24,7 @@ public class Answer {
     private String content;
     private LocalDateTime date;
     private UUID questionId;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String author;
+    @ManyToOne
+    private User author;
 
 }

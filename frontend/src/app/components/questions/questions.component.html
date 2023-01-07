@@ -1,75 +1,69 @@
 <div class="header mt-5">
-  <h4>Questions ({{ questions.length }})</h4>
+	<h4>Questions ({{ questions.length }})</h4>
 </div>
 <div class="body">
-  <div class="question-container">
-    <h5 *ngIf="!authenticated">You must be logged in to ask question.</h5>
-    <div class="question-form" *ngIf="authenticated">
-      <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <textarea
-            class="form-control"
-            placeholder="Ask question about product"
-            formControlName="question"
-            [ngClass]="{
-              'is-invalid':
-                submitted && questionForm.controls['question'].errors
-            }"
-          ></textarea>
-          <div
-            class="invalid-feedback fs-6"
-            *ngIf="submitted && questionForm.controls['question'].errors"
-          >
-            <div *ngIf="questionForm.controls['question'].errors['required']">
-              Question cannnot be empty
-            </div>
-            <div *ngIf="questionForm.controls['question'].errors['minlength']">
-              Question must be at least 6 characters
-            </div>
-            <div *ngIf="questionForm.controls['question'].errors['maxlength']">
-              Question must be at most 100 characters
-            </div>
-          </div>
-        </div>
-        <div class="m-2">
-          <button type="submit" class="btn btn-success">Ask question</button>
-        </div>
-      </form>
-    </div>
-  </div>
+	<div class="question-container">
+		<h5 *ngIf="!authenticated">You must be logged in to ask question.</h5>
+		<div class="question-form" *ngIf="authenticated">
+			<form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+				<div class="form-group">
+					<textarea
+						class="form-control"
+						placeholder="Ask question about product"
+						formControlName="question"
+						[ngClass]="{
+							'is-invalid': submitted && questionForm.controls['question'].errors
+						}"
+					></textarea>
+					<div
+						class="invalid-feedback fs-6"
+						*ngIf="submitted && questionForm.controls['question'].errors"
+					>
+						<div *ngIf="questionForm.controls['question'].errors['required']">
+							Question cannnot be empty
+						</div>
+						<div *ngIf="questionForm.controls['question'].errors['minlength']">
+							Question must be at least 6 characters
+						</div>
+						<div *ngIf="questionForm.controls['question'].errors['maxlength']">
+							Question must be at most 100 characters
+						</div>
+					</div>
+				</div>
+				<div class="m-2">
+					<button type="submit" class="btn btn-success">Ask question</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 <div class="questions" *ngIf="questions !== undefined">
-  <h5 *ngIf="questions.length < 1">No questions found</h5>
-  <ul *ngIf="questions.length > 0">
-    <li *ngFor="let q of questions">
-      <div class="question-container m-3">
-        <span
-          ><b>{{ q.author }}</b></span
-        >
-        <p class="fs-6">{{ q.content }}</p>
-        <div class="actions">
-          <span>{{ q.date | date : "dd/MM/yyyy hh:mm:ss a" }}</span>
-          <div class="actions d-inline">
-            <div
-              class="delete d-inline"
-              *ngIf="
-                role == 'ADMIN' || (role == 'USER' && username == q.author)
-              "
-            >
-              <span class="divider"></span>
-              <button
-                class="btn btn-sm btn-danger"
-                (click)="deleteQuestion(q.questionId)"
-              >
-                <i class="bi bi-trash"></i>
-              </button>
-            </div>
+	<h5 *ngIf="questions.length < 1">No questions found</h5>
+	<ul *ngIf="questions.length > 0">
+		<li *ngFor="let q of questions">
+			<div class="question-container m-3">
+				<span
+					><b>{{ q.author.visibleName }}</b></span
+				>
+				<p class="fs-6">{{ q.content }}</p>
+				<div class="actions">
+					<span>{{ q.date | date : 'dd/MM/yyyy hh:mm:ss a' }}</span>
+					<div class="actions d-inline">
+						<div
+							class="delete d-inline"
+							*ngIf="role == 'ADMIN' || (role == 'USER' && username == q.author.visibleName)"
+						>
+							<span class="divider"></span>
+							<button class="btn btn-sm btn-danger" (click)="deleteQuestion(q.questionId)">
+								<i class="bi bi-trash"></i>
+							</button>
+						</div>
 
-            <app-answers [questionId]="q.questionId"></app-answers>
-          </div>
-        </div>
-      </div>
-    </li>
-  </ul>
+						<app-answers [questionId]="q.questionId"></app-answers>
+					</div>
+				</div>
+			</div>
+		</li>
+	</ul>
 </div>
