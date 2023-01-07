@@ -4,14 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.category.managers.CategoryManager;
+import pl.lodz.p.it.opinioncollector.category.model.Field;
 import pl.lodz.p.it.opinioncollector.eventHandling.IProductEventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProductManager implements IProductManager {
@@ -65,6 +63,17 @@ public class ProductManager implements IProductManager {
     public Product getProduct(UUID uuid) {
         Optional<Product> product = productRepository.findById(uuid);
         return product.orElse(null);
+        //            if (rProduct.getProperties().isEmpty()) {
+        //                List<Field> fields = product.get().getCategory().getFields();
+        //                Map<String, String> properties = new HashMap<>();
+        //
+        //                for (Field f :
+        //                        fields) {
+        //                    properties.put(f.getName(), f.getType());
+        //                }
+        //                rProduct.setProperties(properties);
+        //            }
+
     }
 
     public Product updateProduct(UUID uuid, ProductDTO productDTO) {

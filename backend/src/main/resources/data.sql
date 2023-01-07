@@ -57,10 +57,9 @@ VALUES ('4811913c-b953-4856-979b-838488049d07', 'b293013b-40da-4dde-a997-bce3068
        ('b4c7b393-2e26-49e2-9783-785583bd4c66', 'b293013b-40da-4dde-a997-bce3068636ec', '313d9397-b6f8-452d-9f01-5e87004c43fb', 'Product6', 'Description6', true, true, CURRENT_TIMESTAMP),
        ('8573d77a-0b3f-4d43-943d-f91e03c033e4', 'b293013b-40da-4dde-a997-bce3068636ec', 'be0ebe75-d722-4070-beaa-3f3ba1e3bf3d', 'Kremowki', 'Pyszne kremowki', true, true, CURRENT_TIMESTAMP);
 
--- INSERT INTO PROPERTIES (PRODUCT_PRODUCT_ID, VALUE, KEY)
--- VALUES ('4811913c-b953-4856-979b-838488049d07', 'value1', 'key1'),
---        ('4811913c-b953-4856-979b-838488049d07', 'value2', 'key2'),
---        ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'value3', 'key3');
+INSERT INTO PROPERTIES (PRODUCT_PRODUCT_ID, VALUE, KEY)
+VALUES ('4811913c-b953-4856-979b-838488049d07', 'value1', 'Int'),
+       ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'value3', 'Int');
 
 INSERT INTO OPINION (OPINION_ID, PRODUCT_ID, DESCRIPTION, RATE, AUTHOR_ID)
 VALUES ('6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07', 'Test desc 1', 2, '12208864-7b61-4e6e-8573-53863bd93b35'),
