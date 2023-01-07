@@ -49,7 +49,9 @@
             <ul class="pros-and-cons-list">
                 <li *ngFor="let p of opinion.pros; let i = index">
                     {{ p }}
-                    <span (click)="this.opinion.pros.splice(i, 1)">
+                    <span
+                        (click)="this.opinion.pros.splice(i, 1)"
+                        [style.cursor]="'pointer'">
                         <i class="bi bi-trash-fill text-danger fs-5"></i>
                     </span>
                 </li>
@@ -83,7 +85,9 @@
             <ul class="pros-and-cons-list">
                 <li *ngFor="let c of opinion.cons; let i = index">
                     {{ c }}
-                    <span (click)="this.opinion.cons.splice(i, 1)">
+                    <span
+                        (click)="this.opinion.cons.splice(i, 1)"
+                        [style.cursor]="'pointer'">
                         <i class="bi bi-trash-fill text-danger fs-5"></i>
                     </span>
                 </li>

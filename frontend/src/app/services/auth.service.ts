@@ -97,6 +97,7 @@ export class AuthService {
     localStorage.removeItem("jwt")
     localStorage.removeItem("refreshToken")
     localStorage.removeItem("provider")
+    localStorage.removeItem("username")
   }
 
   loginWithGoogle() {
