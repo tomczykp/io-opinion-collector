@@ -28,6 +28,8 @@ public class ProductController {
         return productManager.getAllProducts();
     }
 
+
+
     @GetMapping("/{uuid}")
     public ResponseEntity<Product> getProductById(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
         Product product = productManager.getProduct(uuid);
@@ -41,6 +43,12 @@ public class ProductController {
     public List<Product> getProductsByCategory(@PathVariable("uuid") UUID uuid) {
         return productManager.getProductsByCategory(uuid);
     }
+
+    @GetMapping("/constant/{uuid}")
+    public List<Product> getProductsByConstantId(@PathVariable("uuid") UUID uuid) {
+        return productManager.getProductsByConstantId(uuid);
+    }
+
 
     @GetMapping("/unconfirmed")
     public List<Product> getUnconfirmedSuggestions() {

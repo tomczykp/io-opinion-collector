@@ -11,7 +11,7 @@ import {CategoriesService} from "../../../services/categories.service";
 })
 export class AddProductComponent implements OnInit {
   // regex: RegExp = new RegExp('^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$');
-  patternValidate: RegExp = new RegExp('^(\s+\S+\s*)*(?!\s).*$'); //Zero-width space works
+  patternValidate: RegExp = new RegExp('^( )*[^ ].*( )*$');
 
   categories: Category[];
   categoryId: string;

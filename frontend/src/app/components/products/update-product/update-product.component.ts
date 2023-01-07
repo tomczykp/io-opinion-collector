@@ -17,7 +17,7 @@ export class UpdateProductComponent implements OnInit {
   match: RegExpMatchArray | null;
   uuid: string;
 
-  patternValidate: RegExp = new RegExp('^(\s+\S+\s*)*(?!\s).*$'); //Zero-width space works
+  patternValidate: RegExp = new RegExp('^( )*[^ ].*( )*$'); //Zero-width space works
 
 
 

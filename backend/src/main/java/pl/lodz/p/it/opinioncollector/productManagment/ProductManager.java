@@ -67,16 +67,6 @@ public class ProductManager implements IProductManager {
     public Product getProduct(UUID uuid) {
         Optional<Product> product = productRepository.findById(uuid);
         return product.orElse(null);
-        //            if (rProduct.getProperties().isEmpty()) {
-        //                List<Field> fields = product.get().getCategory().getFields();
-        //                Map<String, String> properties = new HashMap<>();
-        //
-        //                for (Field f :
-        //                        fields) {
-        //                    properties.put(f.getName(), f.getType());
-        //                }
-        //                rProduct.setProperties(properties);
-        //            }
 
     }
 
@@ -212,8 +202,8 @@ public class ProductManager implements IProductManager {
         return productRepository.findProductsByConfirmedTrueAndDeletedFalse();
     }
 
-    public List<Product> getLatestVersionProduct(UUID uuid) {
-        return productRepository.findByConstantProductIdAndDeletedFalse(uuid);
+    public List<Product> getProductsByConstantId(UUID uuid) {
+        return productRepository.findByConstantProductId(uuid);
     }
 
 
