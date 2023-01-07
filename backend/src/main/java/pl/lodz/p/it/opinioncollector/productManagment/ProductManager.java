@@ -7,6 +7,7 @@ import pl.lodz.p.it.opinioncollector.category.managers.CategoryManager;
 import pl.lodz.p.it.opinioncollector.category.model.Field;
 import pl.lodz.p.it.opinioncollector.eventHandling.IProductEventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.products.ProductCannotBeEditedException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 import java.time.LocalDateTime;
@@ -70,10 +71,13 @@ public class ProductManager implements IProductManager {
 
     }
 
-    public Product updateProduct(UUID uuid, ProductDTO productDTO) {
+    public Product updateProduct(UUID uuid, ProductDTO productDTO) throws ProductCannotBeEditedException {
         Optional<Product> originalProduct = productRepository.findById(uuid);
         if (originalProduct.isPresent()) {
             Product oldProduct = originalProduct.get();
+            if (oldProduct.isDeleted()) {
+                throw new ProductCannotBeEditedException();
+            }
             Product newProduct = new Product(productDTO);
 
             newProduct.setCategory(oldProduct.getCategory());
@@ -108,12 +112,15 @@ public class ProductManager implements IProductManager {
             return false;
         }
         Optional<Product> productOptional = productRepository.findById(suggestion.getConstantProductId());
-        if(productOptional.isEmpty()) {
-            return false;
+        if(productOptional.isEmpty()) { //
+            suggestion.setConfirmed(true);
+            productRepository.save(suggestion);
+            return true;
         }
 
         Product product = productOptional.get();
         suggestion.setConfirmed(true);
+        product.setDeleted(true);
 
         swapProducts(product, suggestion);
 

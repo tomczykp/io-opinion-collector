@@ -81,6 +81,10 @@ export class UpdateProductComponent implements OnInit {
   updateProduct(): void {
     if (this.updateProductForm.valid) {
 
+      if (this.product.deleted) {
+        this.router.navigate(['/']);
+      }
+
       let propertiesValues = this.updateProductForm.getRawValue().propertiesValues;
       const pMap: Map<string, string> = new Map();
 

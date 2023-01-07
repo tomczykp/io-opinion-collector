@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ProductsService} from "../../services/products.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Product, ProductFull} from "../../model/Product";
 import {HttpResponse} from "@angular/common/http";
 
@@ -17,8 +17,10 @@ export class ProductsComponent implements OnInit {
   regex: RegExp = new RegExp('[0-9a-f\-]+$');
   role: string;
 
-  constructor(private productService: ProductsService, private router: Router) {
-
+  constructor(private productService: ProductsService, private router: Router, private activeRoute: ActivatedRoute) {
+    this.activeRoute.params.subscribe(routeParams => {
+      this.ngOnInit();
+    });
   }
 
   ngOnInit() {

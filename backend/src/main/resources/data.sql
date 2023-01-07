@@ -39,11 +39,11 @@ INSERT INTO public.field (fieldid, name, type) VALUES ('e65b1f71-f3d8-4e16-ba55-
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('b293013b-40da-4dde-a997-bce3068636ec', 'Category_2', null);
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('b293013b-40da-4dde-a997-bce3068636ec', 'e65b1f71-f3d8-4e16-ba55-df16a316f051');
 
-INSERT INTO public.field (fieldid, name, type) VALUES ('8c47ae46-8aa9-11ed-a1eb-0242ac120002', 'testParent', 'testParent');
+INSERT INTO public.field (fieldid, name, type) VALUES ('8c47ae46-8aa9-11ed-a1eb-0242ac120002', 'valueParent', 'keyParent');
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('82d58040-8aa9-11ed-a1eb-0242ac120002', 'Category_3', 'b293013b-40da-4dde-a997-bce3068636ec');
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('82d58040-8aa9-11ed-a1eb-0242ac120002', '8c47ae46-8aa9-11ed-a1eb-0242ac120002');
 
-INSERT INTO public.field (fieldid, name, type) VALUES ('f93af257-b5f2-4643-a844-5b2a7d75873f', 'testParent2', 'testParent2');
+INSERT INTO public.field (fieldid, name, type) VALUES ('f93af257-b5f2-4643-a844-5b2a7d75873f', 'valueParent2', 'keyParent2');
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('f93af257-b1c2-4643-a844-5b2a7d75873f', 'Category_4', '82d58040-8aa9-11ed-a1eb-0242ac120002');
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('f93af257-b1c2-4643-a844-5b2a7d75873f', 'f93af257-b5f2-4643-a844-5b2a7d75873f');
 

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
+import pl.lodz.p.it.opinioncollector.exceptions.products.ProductCannotBeEditedException;
 import pl.lodz.p.it.opinioncollector.exceptions.products.ProductNotFoundException;
 
 import java.util.List;
@@ -72,7 +73,7 @@ public class ProductController {
     //PutMapping
     @PutMapping("/{uuid}")
     public ResponseEntity<Product> updateProduct(@PathVariable("uuid") UUID uuid,
-                                                 @Valid @RequestBody ProductDTO productDTO) throws ProductNotFoundException {
+                                                 @Valid @RequestBody ProductDTO productDTO) throws ProductNotFoundException, ProductCannotBeEditedException {
         Product product = productManager.updateProduct(uuid, productDTO);
         if (product == null) {
             throw new ProductNotFoundException();
