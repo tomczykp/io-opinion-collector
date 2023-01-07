@@ -40,7 +40,7 @@ export class AddCategoryComponent implements OnInit {
     return this.addCategoryForm.get('fieldsTypes') as FormArray;
   }
   addFieldsTypes() {
-    this.getFieldsTypes.push(new FormControl('', [Validators.required]));
+    this.getFieldsTypes.push(new FormControl('Int', [Validators.required]));
   }
   removeFieldsTypes(i : number) {
     this.getFieldsTypes.removeAt(i);

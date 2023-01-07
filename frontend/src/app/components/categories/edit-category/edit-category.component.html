@@ -58,7 +58,7 @@
             <div class="container modal-dialog-centered" style="height: 56px" *ngFor="let type of getOldFieldsTypes.controls; let i = index">
               <label class="form-label me-1" for="type-{{ i }}">Type: </label>
               <select id="{{ i }}" [formControlName]="i" >
-                <option value="Int">Int</option>
+                <option  selected="selected" value="Int">Int</option>
                 <option value="Double">Double</option>
                 <option value="String">String</option>
               </select>

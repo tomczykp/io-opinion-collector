@@ -1,21 +1,21 @@
-<div class="container custom-container mt-2">
+<div class="">
   <div class="card-title">
     <div class="row">
       <div class="col-sm-12 text-md-start pt-3">
-        <h2 class="mb-4 text-center">Categories</h2>
+        <h2 class="">Categories <b>Administration</b></h2>
         <div class="d-flex">
-          <input [(ngModel)]="nameFilter" (ngModelChange)="getCategories()" class="form-control w-50" placeholder="Find by name"
+          <input [(ngModel)]="nameFilter" (ngModelChange)="getCategories()" class="d-inline-block form-control w-50" placeholder="Find by name"
                  type="text">
           <button (click)="clearFilter()" class="btn btn-primary ms-2">Clear input</button>
-        </div>
-        <div class="mt-2 mb-2">
-          <button routerLink="/categories/add" class="btn btn-primary ms-2">
+          <button routerLink="/categories/add" class="btn btn-dark ms-2">
+            <i class="bi bi-plus-circle me-2"></i>
             Add category
           </button>
         </div>
       </div>
     </div>
-<div class="card">
+  </div>
+  <div class="card">
     <div class="table-responsive">
       <table [dataSource]="dataSource" class="table mb-0 bg-light table-hover table-striped text-center align-middle"
              mat-table>
@@ -47,7 +47,7 @@
               style="font-size: large; font-weight: bold; color: black; text-align: center">
             Fields
           </th>
-          <td *matCellDef="let element" mat-cell style="text-align: left">
+          <td class="p-2" *matCellDef="let element" mat-cell style="text-align: left;">
             <ul>
               <li *ngFor="let field of element.fields">
                 {{field.name}}: {{field.type}}
@@ -80,6 +80,5 @@
     </div>
     <mat-paginator #paginator [pageSizeOptions]="[5,10,15]" [pageSize]="10" class="bg-light"
                    showFirstLastButtons></mat-paginator>
-</div>
-</div>
+  </div>
 </div>

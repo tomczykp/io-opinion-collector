@@ -38,9 +38,9 @@ export class CategoriesComponent implements OnInit, AfterViewInit {
 
   getCategories() {
     console.log(this.nameFilter)
-    this.categoriesService.getCategoriesByName(this.nameFilter).subscribe((categories) => {
-      this.categories = categories.filter(function (category){
-        return category.name != null;
+    this.categoriesService.getCategories().subscribe((categories) => {
+      this.categories = categories.filter((category) => {
+        return category.name.includes(this.nameFilter);
       });
       this.categories = _.sortBy(this.categories, 'name');
       this.dataSource = new MatTableDataSource(this.categories);
