@@ -18,12 +18,16 @@ export class ProductsService {
     return this.httpClient.get<Product>(this.baseUrl + '/' + uuid, {observe: 'response'});
   }
 
+  public getProducts(): Observable<Product[]> {
+    return this.httpClient.get<Product[]>(this.baseUrl);
+  }
+
   public getProductFull(uuid: string): Observable<HttpResponse<ProductFull>> {
     return this.httpClient.get<ProductFull>(this.baseUrl + '/' + uuid, {observe: 'response'});
   }
 
-  public getProducts(): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(this.baseUrl);
+  public getProductsByConstantId(uuid: string): Observable<ProductFull[]> {
+    return this.httpClient.get<ProductFull[]>(this.baseUrl + '/' + "constant" + '/' + uuid);
   }
 
   public addProduct(ProductDTO: object): Observable<HttpResponse<Product>> {

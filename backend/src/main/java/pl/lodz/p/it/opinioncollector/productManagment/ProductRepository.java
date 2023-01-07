@@ -14,7 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     List<Product> findByConfirmedFalse();
 
-    List<Product> findByConstantProductIdAndDeletedFalse(UUID constantProductId);
+    List<Product> findByConstantProductId(UUID constantProductId);
 
     List<Product> findProductsByConfirmedTrueAndDeletedFalse();
 

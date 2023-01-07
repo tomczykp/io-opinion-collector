@@ -21,6 +21,7 @@ export interface ProductFull {
   description: string,
   deleted: boolean,
   confirmed: boolean,
+  createdAt: string,
   properties: Array<string>;
 }
 
