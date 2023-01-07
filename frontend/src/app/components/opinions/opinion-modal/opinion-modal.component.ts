@@ -4,8 +4,7 @@ import { CreateUpdateOpinionDto } from 'src/app/model/Opinion';
 
 @Component({
     selector: 'app-opinion-modal',
-    templateUrl: './opinion-modal.component.html',
-    styleUrls: ['./opinion-modal.component.css']
+    templateUrl: './opinion-modal.component.html'
 })
 export class OpinionModalComponent
 {

@@ -39,7 +39,7 @@ import { OpinionReportModalComponent } from './components/opinions/opinion-repor
 import { OpinionModalComponent } from './components/opinions/opinion-modal/opinion-modal.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-
+import { DeleteOpinionModalComponent } from './components/opinions/delete-opinion-modal/delete-opinion-modal.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +69,7 @@ import {MatInputModule} from "@angular/material/input";
     UserEventsDashboardComponent,
     OpinionReportModalComponent,
     OpinionModalComponent,
+    DeleteOpinionModalComponent,
   ],
   imports: [
     BrowserModule,

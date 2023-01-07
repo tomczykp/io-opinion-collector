@@ -33,3 +33,8 @@ ngb-alert {
 .hover-icon:hover {
   cursor: pointer;
 }
+
+.pros-and-cons-list {
+  max-height: 12vh;
+  overflow-y: scroll;
+}
