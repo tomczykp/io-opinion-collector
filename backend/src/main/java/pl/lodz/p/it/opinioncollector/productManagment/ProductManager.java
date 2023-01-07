@@ -166,9 +166,10 @@ public class ProductManager implements IProductManager {
         if (productOptional.isPresent()) {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+            Product product = getProduct(uuid);
 
             eventManager.createProductReportEvent(user,"User requested deletion of" +
-                    " a product with description: \"" + productDF.getDescription() + "\"", uuid);
+                    " a product: " + product.getName() + " with description: \"" + productDF.getDescription() + "\"", uuid);
             return true;
         }
         return false;
