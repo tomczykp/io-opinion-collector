@@ -11,10 +11,12 @@ import java.util.UUID;
 @ToString
 public class OpinionReportEvent extends Event {
     private UUID opinionID;
+    private UUID productID;
 
-    public OpinionReportEvent(UUID eventID, User user, String description, UUID opinionID) {
+    public OpinionReportEvent(UUID eventID, User user, String description, UUID opinionID, UUID productID) {
         super(eventID, user, description);
         this.opinionID = opinionID;
+        this.productID = productID;
     }
 
     public OpinionReportEvent() {

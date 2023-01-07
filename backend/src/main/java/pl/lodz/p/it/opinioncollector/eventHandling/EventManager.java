@@ -36,8 +36,8 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     }
 
     @Override
-    public OpinionReportEvent createOpinionReportEvent(User user, String description, UUID opinionID) {
-        OpinionReportEvent newEvent = new OpinionReportEvent(UUID.randomUUID(), user, description, opinionID);
+    public OpinionReportEvent createOpinionReportEvent(User user, String description, UUID opinionID, UUID productID) {
+        OpinionReportEvent newEvent = new OpinionReportEvent(UUID.randomUUID(), user, description, opinionID, productID);
         eventsRepository.save(newEvent);
         return newEvent;
     }

@@ -53,7 +53,8 @@ public class EventDTO {
             this.type = "questionNotify";
         }
         else if (event instanceof OpinionReportEvent castedEvent) {
-            this.questionID = castedEvent.getOpinionID();
+            this.opinionID = castedEvent.getOpinionID();
+            this.productID = castedEvent.getProductID();
             this.type = "opinionReport";
         }
         else if (event instanceof ProductReportEvent castedEvent) {
