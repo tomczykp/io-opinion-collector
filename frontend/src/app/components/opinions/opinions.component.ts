@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 import { CreateUpdateOpinionDto, Opinion } from 'src/app/model/Opinion';
@@ -22,7 +22,7 @@ export enum SortingOrder
     templateUrl: './opinions.component.html',
     styleUrls: ['./opinions.component.css']
 })
-export class OpinionsComponent implements OnChanges
+export class OpinionsComponent implements OnInit
 {
     hasCreatedOpinion = false;
 
@@ -47,18 +47,17 @@ export class OpinionsComponent implements OnChanges
         private modalService: NgbModal
     ) { }
 
-    ngOnChanges(changes: SimpleChanges): void
+
+
+    ngOnInit(): void
     {
-        if (!changes['productId'].isFirstChange())
+      this.opinionService
+        .getOpinions(this.productId)
+        .subscribe(data =>
         {
-            this.opinionService
-                .getOpinions(this.productId)
-                .subscribe(data =>
-                {
-                    this.opinions$.next(data);
-                    this.hasCreatedOpinion = data.some(o => o.authorName === this.authService.getUsername());
-                });
-        }
+          this.opinions$.next(data);
+          this.hasCreatedOpinion = data.some(o => o.authorName === this.authService.getUsername());
+        });
     }
 
     onReactionClick(opinion: Opinion, positive: boolean)

@@ -1,4 +1,4 @@
-<div class="container custom-container">
+<div *ngIf="(product | json) != ({} | json)" class="container custom-container">
   <div class="card">
     <div class="header">
       <h3 class="mb-4 text-center">Product</h3>
