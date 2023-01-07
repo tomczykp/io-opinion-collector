@@ -33,17 +33,17 @@ VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'Yes', CURRENT_TIMESTAMP, '8d2f2
        ('3cafa9ca-f18c-404a-9c1d-d5d1c853eec5', 'No', CURRENT_TIMESTAMP, '35c3863a-2241-4c05-942b-6df9dabdf193');
 
 
-INSERT INTO public.field (fieldid, name, type) VALUES ('e65b1f71-f3d8-4e16-ba55-df16a316f051', 'Numer', 'Int');
+INSERT INTO public.field (fieldid, type, name) VALUES ('e65b1f71-f3d8-4e16-ba55-df16a316f051', 'Numer', 'Int');
 -- INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'Category_2', null);
 -- INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'e65b1f71-f3d8-4e16-ba55-df16a316f051');
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('b293013b-40da-4dde-a997-bce3068636ec', 'Category_2', null);
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('b293013b-40da-4dde-a997-bce3068636ec', 'e65b1f71-f3d8-4e16-ba55-df16a316f051');
 
-INSERT INTO public.field (fieldid, name, type) VALUES ('8c47ae46-8aa9-11ed-a1eb-0242ac120002', 'valueParent', 'keyParent');
+INSERT INTO public.field (fieldid, type, name) VALUES ('8c47ae46-8aa9-11ed-a1eb-0242ac120002', 'keyParent', 'valueParent');
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('82d58040-8aa9-11ed-a1eb-0242ac120002', 'Category_3', 'b293013b-40da-4dde-a997-bce3068636ec');
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('82d58040-8aa9-11ed-a1eb-0242ac120002', '8c47ae46-8aa9-11ed-a1eb-0242ac120002');
 
-INSERT INTO public.field (fieldid, name, type) VALUES ('f93af257-b5f2-4643-a844-5b2a7d75873f', 'valueParent2', 'keyParent2');
+INSERT INTO public.field (fieldid, type, name) VALUES ('f93af257-b5f2-4643-a844-5b2a7d75873f', 'keyParent2', 'valueParent2');
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('f93af257-b1c2-4643-a844-5b2a7d75873f', 'Category_4', '82d58040-8aa9-11ed-a1eb-0242ac120002');
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('f93af257-b1c2-4643-a844-5b2a7d75873f', 'f93af257-b5f2-4643-a844-5b2a7d75873f');
 
@@ -59,7 +59,7 @@ VALUES ('4811913c-b953-4856-979b-838488049d07', 'b293013b-40da-4dde-a997-bce3068
        ('b4c7b393-2e26-49e2-9783-785583bd4c66', 'b293013b-40da-4dde-a997-bce3068636ec', 'b4c7b393-2e26-49e2-9783-785583bd4c66', 'Product6', 'Description6', true, true, CURRENT_TIMESTAMP),
        ('8573d77a-0b3f-4d43-943d-f91e03c033e4', 'b293013b-40da-4dde-a997-bce3068636ec', '8573d77a-0b3f-4d43-943d-f91e03c033e4', 'Kremowki', 'Pyszne kremowki', true, true, CURRENT_TIMESTAMP);
 
-INSERT INTO PROPERTIES (PRODUCT_PRODUCT_ID, VALUE, KEY)
+INSERT INTO PROPERTIES (PRODUCT_PRODUCT_ID, KEY, VALUE)
 VALUES ('4811913c-b953-4856-979b-838488049d07', 'value1', 'Int'),
        ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'value3', 'Int');
 
