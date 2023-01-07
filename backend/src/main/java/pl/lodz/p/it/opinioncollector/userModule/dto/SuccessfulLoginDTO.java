@@ -12,5 +12,6 @@ public class SuccessfulLoginDTO {
     private String jwt;
     private String refreshToken;
     private String email;
+    private String visibleName;
     private UserProvider provider;
 }

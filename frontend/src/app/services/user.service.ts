@@ -50,8 +50,8 @@ export class UserService {
     return this.http.put(environment.apiUrl + "/users/unlock?email=" + email, {}, {observe: 'response'});
   }
 
-  confirmResetPassword(newPassword: string, resetToken: string) {
-    return this.http.put(environment.apiUrl + "/users/confirm/reset?password=" + newPassword + "&token=" + resetToken, null, {observe: 'response'});
+  confirmResetPassword(password: string, token: string) {
+    return this.http.put(environment.apiUrl + "/users/confirm/reset" , {password, token}, {observe: 'response'});
   }
 
   resetPassword(email: string) {

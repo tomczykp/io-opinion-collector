@@ -62,8 +62,8 @@ VALUES ('4811913c-b953-4856-979b-838488049d07', 'value1', 'Int'),
        ('cbee1685-9b16-47ae-8c34-afa94e4f1a8f', 'value3', 'Int');
 
 INSERT INTO OPINION (OPINION_ID, PRODUCT_ID, DESCRIPTION, RATE, AUTHOR_ID)
-VALUES ('6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07', 'Test desc 1', 2, '12208864-7b61-4e6e-8573-53863bd93b35'),
-       ('dc0dac8a-797b-11ed-a1eb-0242ac120002', '4811913c-b953-4856-979b-838488049d07', 'desc 2', 3, '66208864-7b61-4e6e-8573-53863bd93b35'),
+VALUES ('6c3a61be-955c-411b-9942-e746cfd0e75b', '4811913c-b953-4856-979b-838488049d07', 'Test desc 1', 2, '12208864-7b61-4e6e-8573-53863bd93b35'), -- created by user1
+       ('dc0dac8a-797b-11ed-a1eb-0242ac120002', '4811913c-b953-4856-979b-838488049d07', 'desc 2', 3, '66208864-7b61-4e6e-8573-53863bd93b35'), -- created by user
        ('6ddee1ee-9eba-4222-a031-463a849e1886', '8573d77a-0b3f-4d43-943d-f91e03c033e4', 'Pyszne kremówki najlepsze jakie w życiu jadłem', 5, '6ddee1ee-9eba-4222-a031-463a849e1886');
 
 INSERT INTO ADVANTAGE (ID, VALUE, OPINION_OPINION_ID, OPINION_PRODUCT_ID)
@@ -75,9 +75,9 @@ VALUES ('43ddbb7a-7995-11ed-a1eb-0242ac120002', 'Lorem Ipsum', '6c3a61be-955c-41
 
 
 INSERT INTO REACTION (AUTHOR_ID, PRODUCT_ID, OPINION_ID, POSITIVE)
-VALUES ('22208864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', TRUE),
-       ('62308864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', FALSE),
-       ('62808864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', TRUE);
+VALUES ('22208864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', TRUE), -- user2
+       ('62308864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', FALSE), -- user10
+       ('62808864-7b61-4e6e-8573-53863bd93b35', '4811913c-b953-4856-979b-838488049d07', '6c3a61be-955c-411b-9942-e746cfd0e75b', TRUE); -- user15
 
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, opinionid)
 VALUES ('OpinionReportEvent', 'e8a5b357-db44-4a9a-8118-a35448145e2c', '🐶', 0, '66208864-7b61-4e6e-8573-53863bd93b35',
@@ -85,17 +85,16 @@ VALUES ('OpinionReportEvent', 'e8a5b357-db44-4a9a-8118-a35448145e2c', '🐶', 0,
        ('OpinionReportEvent', '455db3e7-abfd-4d78-9eb4-399625c88959', '😺', 1, '66208864-7b61-4e6e-8573-53863bd93b35',
         'db784192-9c14-43af-a895-1ef504e092f0'),
        ('OpinionReportEvent', 'f238c3bd-1b75-43b2-b89e-a47f3fa103cb', 'OpinionReport: TEST', 0, '32208864-7b61-4e6e-8573-53863bd93b35',
-        'f48bec69-1995-48c0-8ab4-aaee3734f809');
+        'b9cd38e3-9bbf-47b2-bdb0-d82dd1e39e03');
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, questionid)
 VALUES ('QuestionNotifyEvent', '1991023d-8ee5-41fb-b5e3-4076ea49417b', 'New question!!!', 0, '32208864-7b61-4e6e-8573-53863bd93b35',
         '0338ce3f-b8d3-4cf2-b814-b7ddffc17632');
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, productid)
-VALUES ('ProductReportEvent', '1bc29679-fc39-4a1d-b4b7-0f45b45690ed', 'Bad product', 0, '32208864-7b61-4e6e-8573-53863bd93b35',
-        '7eb2fb7b-9e40-4150-ab16-d1d462e06405');
+VALUES ('ProductReportEvent', '1bc29679-fc39-4a1d-b4b7-0f45b45690ed', 'Produkt zbyt kremowy', 0, '32208864-7b61-4e6e-8573-53863bd93b35',
+        'b9cd38e3-9bbf-47b2-bdb0-d82dd1e39e03');
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, questionid)
 VALUES ('AnswerReportEvent', 'b12ac4f9-9e79-4420-987e-039d3f64bc56', 'Not Good Answer', 0, '82208864-7b61-4e6e-8573-53863bd93b35',
         'd60e9ea8-129f-4b8f-b9ab-5cdcd6aee228');
 INSERT INTO iodb.public.event (dtype, eventid, description, status, userid, questionid)
 VALUES ('QuestionReportEvent', 'd60e9ea8-129f-4b8f-b9ab-5cdcd6aee228', 'Not Good Answer', 0, '62908864-7b61-4e6e-8573-53863bd93b35',
         '0338ce3f-b8d3-4cf2-b814-b7ddffc17632');
-

@@ -26,7 +26,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Transactional
 public class UserManager implements UserDetailsService {
-    //TODO validate tokens expiration date and create cron to clear expired tokens + delete account if verification token expired and user is not active
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
@@ -67,7 +66,7 @@ public class UserManager implements UserDetailsService {
 
         if (token.isPresent()) {
             if (token.get().getExpiresAt().isAfter(Instant.now())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
             } else {
                 this.tokenRepository.deleteByToken(token.get().getToken());
             }
@@ -84,7 +83,6 @@ public class UserManager implements UserDetailsService {
         String resetPasswordToken = generateAndSaveToken(user, TokenType.PASSWORD_RESET_TOKEN).getToken();
         String link = frontendUrl + "/resetConfirm/" + resetPasswordToken;
         mailManager.resetPasswordEmail(email, "your email " + email, link);
-
     }
 
     public void resetPassword(String newPassword, String resetToken) throws TokenExpiredException {
@@ -102,7 +100,9 @@ public class UserManager implements UserDetailsService {
     }
 
     public void changePassword(String oldPassword, String newPassword) throws PasswordNotMatchesException {
-        //TODO check if password is strong enough
+        if (newPassword.length() < 8) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (encoder.matches(oldPassword, user.getPassword())) {
@@ -157,10 +157,10 @@ public class UserManager implements UserDetailsService {
         mailManager.adminActionEmail(user.getEmail(), user.getVisibleName(), "unlocked");
     }
 
-    public List<User> getAllUsers(String email) {
-        if (email == null || email.equals("")) {
+    public List<User> getAllUsers(String keyword) {
+        if (keyword == null || keyword.equals("")) {
             return userRepository.findAll();
         }
-        return userRepository.findByEmailContainingIgnoreCase(email);
+        return userRepository.findByEmailContainingIgnoreCaseOrVisibleNameContainingIgnoreCase(keyword, keyword);
     }
 }

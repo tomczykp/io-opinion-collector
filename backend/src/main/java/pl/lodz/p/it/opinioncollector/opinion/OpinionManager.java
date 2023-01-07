@@ -17,6 +17,7 @@ import pl.lodz.p.it.opinioncollector.opinion.model.Disadvantage;
 import pl.lodz.p.it.opinioncollector.opinion.model.Opinion;
 import pl.lodz.p.it.opinioncollector.opinion.model.OpinionId;
 import pl.lodz.p.it.opinioncollector.opinion.model.Reaction;
+import pl.lodz.p.it.opinioncollector.opinion.model.ReactionId;
 import pl.lodz.p.it.opinioncollector.opinion.repositories.OpinionRepository;
 import pl.lodz.p.it.opinioncollector.opinion.repositories.ReactionRepository;
 import pl.lodz.p.it.opinioncollector.productManagment.ProductRepository;
@@ -31,17 +32,21 @@ public class OpinionManager {
     private final ProductRepository productRepository;
     private final ReactionRepository reactionRepository;
 
-    public List<Opinion> getOpinions(UUID productId) {
-        return opinionRepository.findById_ProductId(productId);
+    public List<OpinionDetailsDto> getOpinions(UUID productId) {
+        return opinionRepository.findById_ProductId(productId)
+                                .stream()
+                                .map(this::mapOpinionToDto)
+                                .toList();
     }
 
-    public Opinion getOpinion(UUID productId, UUID opinionId)
+    public OpinionDetailsDto getOpinion(UUID productId, UUID opinionId)
         throws OpinionNotFoundException {
         return opinionRepository.findOne(productId, opinionId)
+                                .map(this::mapOpinionToDto)
                                 .orElseThrow(OpinionNotFoundException::new);
     }
 
-    public Opinion create(UUID productId, CreateOpinionDto createOpinionDto) throws ProductNotFoundException {
+    public OpinionDetailsDto create(UUID productId, CreateOpinionDto createOpinionDto) throws ProductNotFoundException {
         return productRepository.findById(productId)
                                 .map(product -> {
                                     User user = (User) SecurityContextHolder.getContext()
@@ -54,7 +59,7 @@ public class OpinionManager {
                                     opinion.setProduct(product);
                                     opinion.setAuthor(user);
                                     opinion.setId(opinionId);
-                                    return opinionRepository.save(opinion);
+                                    return mapOpinionToDto(opinionRepository.save(opinion));
                                 })
                                 .orElseThrow(ProductNotFoundException::new);
     }
@@ -80,7 +85,7 @@ public class OpinionManager {
     }
 
     @Transactional
-    public Opinion update(UUID productId, UUID opinionId, CreateOpinionDto dto)
+    public OpinionDetailsDto update(UUID productId, UUID opinionId, CreateOpinionDto dto)
         throws OpinionNotFoundException, OpinionOperationAccessForbiddenException {
 
         Opinion opinion = opinionRepository.findOne(productId, opinionId)
@@ -104,7 +109,7 @@ public class OpinionManager {
         opinion.getCons().addAll(dto.getCons().stream()
                                     .map(value -> new Disadvantage(value, opinion))
                                     .collect(Collectors.toSet()));
-        return opinionRepository.save(opinion);
+        return mapOpinionToDto(opinionRepository.save(opinion));
     }
 
     public boolean existsById(UUID productId, UUID opinionId) {
@@ -112,7 +117,7 @@ public class OpinionManager {
     }
 
     @Transactional
-    public Opinion addReaction(UUID productId, UUID opinionId, boolean positive)
+    public OpinionDetailsDto addReaction(UUID productId, UUID opinionId, boolean positive)
         throws OpinionNotFoundException {
         return opinionRepository.findOne(productId, opinionId)
                                 .map(opinion -> {
@@ -128,7 +133,23 @@ public class OpinionManager {
                                         opinion.getReactions().add(saved);
                                     }
                                     opinion.setLikesCounter(reactionRepository.calculateLikesCounter(opinion.getId()));
-                                    return opinion;
+                                    return mapOpinionToDto(opinion);
+                                })
+                                .orElseThrow(OpinionNotFoundException::new);
+    }
+
+    @Transactional
+    public OpinionDetailsDto removeReaction(UUID productId, UUID opinionId) throws OpinionNotFoundException {
+        return opinionRepository.findOne(productId, opinionId)
+                                .map(o -> {
+                                    UUID userId = getCurrentUserId();
+
+                                    ReactionId reactionId = new ReactionId(o.getId(), userId);
+
+                                    reactionRepository.deleteById(reactionId);
+                                    o.setLikesCounter(reactionRepository.calculateLikesCounter(o.getId()));
+
+                                    return mapOpinionToDto(o);
                                 })
                                 .orElseThrow(OpinionNotFoundException::new);
     }
@@ -150,5 +171,39 @@ public class OpinionManager {
                                       .collect(Collectors.toSet()));
 
         return built;
+    }
+
+    private OpinionDetailsDto mapOpinionToDto(Opinion opinion) {
+        Boolean liked = reactionRepository.findReaction(opinion.getId().getProductId(),
+                                                        opinion.getId().getOpinionId(),
+                                                        getCurrentUserId());
+        return OpinionDetailsDto.builder()
+                                .productId(opinion.getId().getProductId())
+                                .opinionId(opinion.getId().getOpinionId())
+                                .createdAt(opinion.getCreatedAt())
+                                .rate(opinion.getRate())
+                                .description(opinion.getDescription())
+                                .likesCounter(opinion.getLikesCounter())
+                                .authorName(opinion.getAuthor().getVisibleName())
+                                .pros(opinion.getPros())
+                                .cons(opinion.getCons())
+                                .isLiked(liked != null && liked)
+                                .isDisliked(liked != null && !liked)
+                                .build();
+    }
+
+    /**
+     * Helper method to get current user's id from SecurityContextHolder.
+     *
+     * @return ID of the current user or null.
+     */
+    private UUID getCurrentUserId() {
+        var user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        if (user != null) {
+            return user.getId();
+        }
+
+        return null;
     }
 }

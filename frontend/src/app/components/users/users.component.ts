@@ -36,7 +36,6 @@ export class UsersComponent implements OnInit {
 
 
   getUsers() {
-    console.log(this.emailFilter)
     this.userService.getUsers(this.emailFilter).subscribe((users) => {
       this.users = users.filter(function (user) {
         return user.role != 'ADMIN';

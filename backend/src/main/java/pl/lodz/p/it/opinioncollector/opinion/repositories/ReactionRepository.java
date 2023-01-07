@@ -1,5 +1,6 @@
 package pl.lodz.p.it.opinioncollector.opinion.repositories;
 
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import pl.lodz.p.it.opinioncollector.opinion.model.OpinionId;
@@ -18,4 +19,13 @@ public interface ReactionRepository extends JpaRepository<Reaction, ReactionId> 
             WHERE r.id.opinionId = :opinionId
         """)
     int calculateLikesCounter(OpinionId opinionId);
+
+    @Query("""
+        SELECT r.positive
+        FROM Reaction r
+        WHERE r.id.opinionId.productId = :productId
+              AND r.id.opinionId.opinionId = :opinionId
+              AND r.id.authorId = :authorId
+        """)
+    Boolean findReaction(UUID productId, UUID opinionId, UUID authorId);
 }

@@ -36,9 +36,9 @@
       <div class="form-row mb-4">
         <div class="form-group">
           <label class="form-label" for="categoryID">Categories</label>
-          <select #selectList formControlName="category" class="form-control"
-                  id="categoryID" (ngModelChange)="onCategoryChanged(selectList.value)">
-            <option disabled>Select Category</option>
+          <select #selectList formControlName="category" class="form-control form-select"
+                  id="categoryID" (ngModelChange)="onCategoryChanged(selectList.value)" >
+            <option value="" selected disabled>Select Category</option>
             <option *ngFor="let cat of categories" [ngValue]="cat.categoryID">{{cat.name}}</option>
           </select>
         </div>

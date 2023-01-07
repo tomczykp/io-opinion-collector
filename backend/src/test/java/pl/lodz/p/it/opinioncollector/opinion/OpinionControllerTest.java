@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -56,22 +57,63 @@ class OpinionControllerTest {
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
               .body("$.size()", equalTo(2))
-              .body("[0].id.opinionId", equalTo("6c3a61be-955c-411b-9942-e746cfd0e75b"),
-                    "[0].id.productId", equalTo(PRODUCT_ID),
+              .body("[0].opinionId", equalTo("6c3a61be-955c-411b-9942-e746cfd0e75b"),
+                    "[0].productId", equalTo(PRODUCT_ID),
                     "[0].description", equalTo("Test desc 1"),
                     "[0].likesCounter", equalTo(1),
                     "[0].rate", equalTo(2),
                     "[0].pros", hasSize(2),
                     "[0].cons", hasSize(1),
-                    "[0].author.id", equalTo("12208864-7b61-4e6e-8573-53863bd93b35"))
-              .body("[1].id.opinionId", equalTo("dc0dac8a-797b-11ed-a1eb-0242ac120002"),
-                    "[1].id.productId", equalTo(PRODUCT_ID),
+                    "[0].authorName", equalTo("User1"),
+                    "[0].liked", is(false),
+                    "[0].disliked", is(false),
+                    "[0].createdAt", not(empty()),
+                    "[0].createdAt", not("null"))
+              .body("[1].opinionId", equalTo("dc0dac8a-797b-11ed-a1eb-0242ac120002"),
+                    "[1].productId", equalTo(PRODUCT_ID),
                     "[1].description", equalTo("desc 2"),
                     "[1].likesCounter", equalTo(0),
                     "[1].rate", equalTo(3),
                     "[1].pros", empty(),
                     "[1].cons", empty(),
-                    "[1].author.id", equalTo("66208864-7b61-4e6e-8573-53863bd93b35"));
+                    "[1].authorName", equalTo("User"),
+                    "[1].liked", is(false),
+                    "[1].disliked", is(false),
+                    "[0].createdAt", not(empty()),
+                    "[0].createdAt", not("null"));
+    }
+
+    @Test
+    @WithUserDetails("user2")
+    void shouldGetAllWithStatusCode200WhenUserIsAuthenticatedAndHasReactionsTest() {
+        String url = BASE_OPINIONS_URL.format(new Object[] { PRODUCT_ID });
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("$.size()", equalTo(2))
+              .body("[0].opinionId", equalTo("6c3a61be-955c-411b-9942-e746cfd0e75b"),
+                    "[0].productId", equalTo(PRODUCT_ID),
+                    "[0].description", equalTo("Test desc 1"),
+                    "[0].likesCounter", equalTo(1),
+                    "[0].rate", equalTo(2),
+                    "[0].pros", hasSize(2),
+                    "[0].cons", hasSize(1),
+                    "[0].authorName", equalTo("User1"),
+                    "[0].liked", is(true),
+                    "[0].disliked", is(false))
+              .body("[1].opinionId", equalTo("dc0dac8a-797b-11ed-a1eb-0242ac120002"),
+                    "[1].productId", equalTo(PRODUCT_ID),
+                    "[1].description", equalTo("desc 2"),
+                    "[1].likesCounter", equalTo(0),
+                    "[1].rate", equalTo(3),
+                    "[1].pros", empty(),
+                    "[1].cons", empty(),
+                    "[1].authorName", equalTo("User"),
+                    "[1].liked", is(false),
+                    "[1].disliked", is(false),
+                    "[1].createdAt", not(empty()),
+                    "[1].createdAt", not("null"));
     }
 
     @Test
@@ -104,14 +146,64 @@ class OpinionControllerTest {
         when().get(url)
               .then()
               .status(HttpStatus.OK)
-              .body("id.opinionId", is("6c3a61be-955c-411b-9942-e746cfd0e75b"),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is("6c3a61be-955c-411b-9942-e746cfd0e75b"),
+                    "productId", is(PRODUCT_ID),
                     "description", equalTo("Test desc 1"),
                     "likesCounter", equalTo(1),
                     "rate", equalTo(2),
                     "pros", hasSize(2),
                     "cons", hasSize(1),
-                    "author.id", equalTo("12208864-7b61-4e6e-8573-53863bd93b35"));
+                    "authorName", equalTo("User1"),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"),
+                    "liked", is(false),
+                    "disliked", is(false));
+    }
+
+    @Test
+    @WithUserDetails("user15")
+    void shouldGetOneWithStatusCode200WhenUserIsAuthenticatedAndHasLikeTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        String url = SPECIFIC_OPINION_URL.format(new Object[] { PRODUCT_ID, opinionId });
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .body("opinionId", is("6c3a61be-955c-411b-9942-e746cfd0e75b"),
+                    "productId", is(PRODUCT_ID),
+                    "description", equalTo("Test desc 1"),
+                    "likesCounter", equalTo(1),
+                    "rate", equalTo(2),
+                    "pros", hasSize(2),
+                    "cons", hasSize(1),
+                    "authorName", equalTo("User1"),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"),
+                    "liked", is(true),
+                    "disliked", is(false));
+    }
+
+    @Test
+    @WithUserDetails("user10")
+    void shouldGetOneWithStatusCode200WhenUserIsAuthenticatedAndHasDislikeTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        String url = SPECIFIC_OPINION_URL.format(new Object[] { PRODUCT_ID, opinionId });
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .body("opinionId", is("6c3a61be-955c-411b-9942-e746cfd0e75b"),
+                    "productId", is(PRODUCT_ID),
+                    "description", equalTo("Test desc 1"),
+                    "likesCounter", equalTo(1),
+                    "rate", equalTo(2),
+                    "pros", hasSize(2),
+                    "cons", hasSize(1),
+                    "authorName", equalTo("User1"),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"),
+                    "liked", is(false),
+                    "disliked", is(true));
     }
 
     @Test
@@ -144,14 +236,20 @@ class OpinionControllerTest {
                .post(url)
                .then()
                .status(HttpStatus.CREATED)
-               .body("id.productId", is(productId),
+               .body("productId", is(productId),
+                     "opinionId", not(empty()),
                      "rate", is(5),
                      "description", is("test desc 123"),
+                     "likesCounter", is(0),
+                     "liked", is(false),
+                     "disliked", is(false),
                      "pros.size()", is(2),
                      "pros.value", hasItems("p111", "p112"),
                      "cons.size()", is(3),
                      "cons.value", hasItems("c111", "c112", "c113"),
-                     "author.email", is("user3"));
+                     "authorName", is("User3"),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
     }
 
     @Test
@@ -191,7 +289,11 @@ class OpinionControllerTest {
                      "description", is("test 321"),
                      "pros.size()", is(0),
                      "cons.size()", is(0),
-                     "author.email", is("user4"));
+                     "liked", is(false),
+                     "disliked", is(false),
+                     "authorName", is("User4"),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
     }
 
     @Test
@@ -214,7 +316,11 @@ class OpinionControllerTest {
                      "description", is("1234"),
                      "pros.size()", is(0),
                      "cons.size()", is(3),
-                     "author.email", is("user5"));
+                     "liked", is(false),
+                     "disliked", is(false),
+                     "authorName", is("User5"),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
     }
 
     @Test
@@ -237,7 +343,9 @@ class OpinionControllerTest {
                      "description", is("ddd"),
                      "pros.size()", is(4),
                      "cons.size()", is(0),
-                     "author.email", is("user6"));
+                     "authorName", is("User6"),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
     }
 
     @Test
@@ -352,27 +460,35 @@ class OpinionControllerTest {
                .then()
                .status(HttpStatus.OK)
                .contentType(ContentType.JSON)
-               .body("id.opinionId", is(opinionId),
-                     "id.productId", is(PRODUCT_ID),
+               .body("opinionId", is(opinionId),
+                     "productId", is(PRODUCT_ID),
                      "rate", is(5),
                      "description", is("updated description 1"),
                      "pros.size()", is(2),
                      "cons.size()", is(3),
+                     "liked", is(false),
+                     "disliked", is(false),
                      "pros.value", hasItems("updated p1", "updated p2"),
-                     "cons.value", hasItems("updated c1", "updated c2", "updated c3"));
+                     "cons.value", hasItems("updated c1", "updated c2", "updated c3"),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
 
         when().get(url)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
                     "rate", is(5),
                     "description", is("updated description 1"),
                     "pros.size()", is(2),
                     "cons.size()", is(3),
+                    "liked", is(false),
+                    "disliked", is(false),
                     "pros.value", hasItems("updated p1", "updated p2"),
-                    "cons.value", hasItems("updated c1", "updated c2", "updated c3"));
+                    "cons.value", hasItems("updated c1", "updated c2", "updated c3"),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
     }
 
     @Test
@@ -492,20 +608,26 @@ class OpinionControllerTest {
                .then()
                .status(HttpStatus.OK)
                .contentType(ContentType.JSON)
-               .body("id.opinionId", is(opinionId),
-                     "id.productId", is(PRODUCT_ID),
+               .body("opinionId", is(opinionId),
+                     "productId", is(PRODUCT_ID),
                      "rate", is(0),
+                     "liked", is(false),
+                     "disliked", is(false),
                      "description", is("Updated description"),
                      "pros.size()", is(0),
-                     "cons.size()", is(0));
+                     "cons.size()", is(0),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
 
         when().get(url)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
                     "rate", is(0),
+                    "liked", is(false),
+                    "disliked", is(false),
                     "description", is("Updated description"),
                     "pros.size()", is(0),
                     "cons.size()", is(0));
@@ -528,20 +650,26 @@ class OpinionControllerTest {
                .then()
                .status(HttpStatus.OK)
                .contentType(ContentType.JSON)
-               .body("id.opinionId", is(opinionId),
-                     "id.productId", is(PRODUCT_ID),
+               .body("opinionId", is(opinionId),
+                     "productId", is(PRODUCT_ID),
                      "rate", is(1),
+                     "liked", is(false),
+                     "disliked", is(false),
                      "description", is("Update"),
                      "pros.size()", is(0),
-                     "cons.size()", is(5));
+                     "cons.size()", is(5),
+                     "createdAt", not(empty()),
+                     "createdAt", not("null"));
 
         when().get(url)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
                     "rate", is(1),
+                    "liked", is(false),
+                    "disliked", is(false),
                     "description", is("Update"),
                     "pros.size()", is(0),
                     "cons.size()", is(5));
@@ -564,8 +692,8 @@ class OpinionControllerTest {
                .then()
                .status(HttpStatus.OK)
                .contentType(ContentType.JSON)
-               .body("id.opinionId", is(opinionId),
-                     "id.productId", is(PRODUCT_ID),
+               .body("opinionId", is(opinionId),
+                     "productId", is(PRODUCT_ID),
                      "rate", is(2),
                      "description", is("Updated description"),
                      "pros.size()", is(2),
@@ -575,8 +703,8 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
                     "rate", is(2),
                     "description", is("Updated description"),
                     "pros.size()", is(2),
@@ -631,7 +759,7 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId));
+              .body("opinionId", is(opinionId));
 
         when().delete(url)
               .then()
@@ -653,7 +781,7 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId));
+              .body("opinionId", is(opinionId));
 
         when().delete(url)
               .then()
@@ -663,7 +791,7 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId));
+              .body("opinionId", is(opinionId));
     }
 
     @Test
@@ -675,7 +803,7 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId));
+              .body("opinionId", is(opinionId));
 
         when().delete(url)
               .then()
@@ -685,7 +813,7 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId));
+              .body("opinionId", is(opinionId));
     }
 
     @Test
@@ -698,7 +826,7 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId));
+              .body("opinionId", is(opinionId));
 
         when().delete(url)
               .then()
@@ -783,42 +911,56 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(false),
                     "likesCounter", is(1));
 
         when().put(likeUrl)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
-                    "likesCounter", is(2));
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(2),
+                    "liked", is(true),
+                    "disliked", is(false),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
-                    "likesCounter", is(2));
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(2),
+                    "liked", is(true),
+                    "disliked", is(false));
 
         // liking again should not change like counter
         when().put(likeUrl)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
-                    "likesCounter", is(2));
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(2),
+                    "liked", is(true),
+                    "disliked", is(false),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
-                    "likesCounter", is(2));
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(2),
+                    "liked", is(true),
+                    "disliked", is(false));
     }
 
     @Test
@@ -856,24 +998,32 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(true),
                     "likesCounter", is(1));
 
         when().put(likeUrl)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
-                    "likesCounter", is(3));
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(true),
+                    "disliked", is(false),
+                    "likesCounter", is(3),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(true),
+                    "disliked", is(false),
                     "likesCounter", is(3));
     }
     // endregion
@@ -891,24 +1041,32 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(false),
                     "likesCounter", is(1));
 
         when().put(dislikeUrl)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
-                    "likesCounter", is(0));
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(true),
+                    "likesCounter", is(0),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(true),
                     "likesCounter", is(0));
 
         // disliking again should not change like counter
@@ -916,16 +1074,22 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
-                    "likesCounter", is(0));
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(true),
+                    "likesCounter", is(0),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(true),
                     "likesCounter", is(0));
     }
 
@@ -940,8 +1104,10 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(false),
                     "likesCounter", is(1));
 
         when().put(dislikeUrl)
@@ -952,8 +1118,10 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(false),
                     "likesCounter", is(1));
     }
 
@@ -969,8 +1137,8 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
                     "likesCounter", is(1));
 
         when().put(dislikeUrl)
@@ -981,8 +1149,8 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
                     "likesCounter", is(1));
     }
 
@@ -998,25 +1166,233 @@ class OpinionControllerTest {
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(true),
+                    "disliked", is(false),
                     "likesCounter", is(1));
 
         when().put(dislikeUrl)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
-                    "likesCounter", is(-1));
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(true),
+                    "likesCounter", is(-1),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
 
         when().get(url)
               .then()
               .status(HttpStatus.OK)
               .contentType(ContentType.JSON)
-              .body("id.opinionId", is(opinionId),
-                    "id.productId", is(PRODUCT_ID),
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(true),
                     "likesCounter", is(-1));
+    }
+    // endregion
+
+    // region DELETE /products/{productId}/opinions/{opinionId}/like
+    @Test
+    @WithUserDetails("user2")
+    void shouldRemoveLikeWithStatusCode200Test() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String likeUrl = LIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(true),
+                    "disliked", is(false),
+                    "likesCounter", is(1));
+
+        when().delete(likeUrl)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(false),
+                    "likesCounter", is(0),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(false),
+                    "likesCounter", is(0));
+    }
+
+    @Test
+    void shouldRemoveLikeFailWithStatusCode403WhenUserIsUnauthenticatedTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String likeUrl = LIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().delete(likeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+    }
+
+    @Test
+    @WithUserDetails("admin")
+    void shouldRemoveLikeFailWithStatusCode403WhenUserIsAdminTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String likeUrl = LIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().delete(likeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+    }
+    // endregion
+
+    // region DELETE /products/{productId}/opinions/{opinionId}/dislike
+    @Test
+    @WithUserDetails("user10")
+    void shouldRemoveDislikeWithStatusCode200Test() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String dislikeUrl = DISLIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(true),
+                    "likesCounter", is(1));
+
+        when().delete(dislikeUrl)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(false),
+                    "likesCounter", is(2),
+                    "createdAt", not(empty()),
+                    "createdAt", not("null"));
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "liked", is(false),
+                    "disliked", is(false),
+                    "likesCounter", is(2));
+    }
+
+    @Test
+    void shouldRemoveDislikeFailWithStatusCode403WhenUserIsUnauthenticatedTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String dislikeUrl = DISLIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().delete(dislikeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+    }
+
+    @Test
+    @WithUserDetails("admin")
+    void shouldRemoveDislikeFailWithStatusCode403WhenUserIsAdminTest() {
+        String opinionId = "6c3a61be-955c-411b-9942-e746cfd0e75b";
+        var formatObject = new Object[] { PRODUCT_ID, opinionId };
+        String url = SPECIFIC_OPINION_URL.format(formatObject);
+        String dislikeUrl = DISLIKE_OPINION_URL.format(formatObject);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
+
+        when().delete(dislikeUrl)
+              .then()
+              .status(HttpStatus.FORBIDDEN);
+
+        when().get(url)
+              .then()
+              .status(HttpStatus.OK)
+              .contentType(ContentType.JSON)
+              .body("opinionId", is(opinionId),
+                    "productId", is(PRODUCT_ID),
+                    "likesCounter", is(1));
     }
     // endregion
 }

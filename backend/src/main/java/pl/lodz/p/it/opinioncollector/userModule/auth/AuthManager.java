@@ -93,9 +93,9 @@ public class AuthManager {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
-        String jwt = jwtProvider.generateJWT(user.getEmail(), user.getRole());
+        String jwt = jwtProvider.generateJWT(user.getEmail());
         Token refreshToken = generateAndSaveToken(user, TokenType.REFRESH_TOKEN);
-        return new SuccessfulLoginDTO(user.getRole(), jwt, refreshToken.getToken(), user.getEmail(), user.getProvider());
+        return new SuccessfulLoginDTO(user.getRole(), jwt, refreshToken.getToken(), user.getEmail(), user.getVisibleName(), user.getProvider());
     }
 
     public User register(RegisterUserDTO dto) throws Exception {
@@ -161,11 +161,11 @@ public class AuthManager {
 
         User user = t.getUser();
 
-        String newJWT = jwtProvider.generateJWT(user.getEmail(), user.getRole());
+        String newJWT = jwtProvider.generateJWT(user.getEmail());
         Token newRefreshToken = generateAndSaveToken(user, TokenType.REFRESH_TOKEN);
         tokenRepository.deleteByToken(token);
         tokenRepository.save(newRefreshToken);
-        return new SuccessfulLoginDTO(user.getRole(), newJWT, newRefreshToken.getToken(), user.getEmail(), user.getProvider());
+        return new SuccessfulLoginDTO(user.getRole(), newJWT, newRefreshToken.getToken(), user.getEmail(), user.getVisibleName(), user.getProvider());
     }
 
     public void confirmDeletion(String token) throws TokenExpiredException {
@@ -207,9 +207,9 @@ public class AuthManager {
         }
         User user = getExistingOrRegisterUser(idToken.getPayload().getEmail(), UserProvider.GOOGLE);
 
-        String jwt = jwtProvider.generateJWT(user.getEmail(), user.getRole());
+        String jwt = jwtProvider.generateJWT(user.getEmail());
         Token refreshToken = generateAndSaveToken(user, TokenType.REFRESH_TOKEN);
-        return new SuccessfulLoginDTO(user.getRole(), jwt, refreshToken.getToken(), user.getEmail(), user.getProvider());
+        return new SuccessfulLoginDTO(user.getRole(), jwt, refreshToken.getToken(), user.getEmail(), user.getVisibleName(), user.getProvider());
     }
 
     private String exchangeGoogleCodeForIdToken(String code) {
@@ -242,9 +242,9 @@ public class AuthManager {
         }
         User user = getExistingOrRegisterUser(email, UserProvider.FACEBOOK);
 
-        String jwt = jwtProvider.generateJWT(user.getEmail(), user.getRole());
+        String jwt = jwtProvider.generateJWT(user.getEmail());
         Token refreshToken = generateAndSaveToken(user, TokenType.REFRESH_TOKEN);
-        return new SuccessfulLoginDTO(user.getRole(), jwt, refreshToken.getToken(), user.getEmail(), user.getProvider());
+        return new SuccessfulLoginDTO(user.getRole(), jwt, refreshToken.getToken(), user.getEmail(), user.getVisibleName(), user.getProvider());
     }
 
     private String exchangeFacebookCodeForAccessToken(String code) {
