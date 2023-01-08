@@ -1,4 +1,5 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 import { CreateUpdateOpinionDto, Opinion } from 'src/app/model/Opinion';
@@ -22,7 +23,7 @@ export enum SortingOrder
     templateUrl: './opinions.component.html',
     styleUrls: ['./opinions.component.css']
 })
-export class OpinionsComponent implements OnChanges
+export class OpinionsComponent implements OnInit, OnChanges
 {
     hasCreatedOpinion = false;
 
@@ -39,25 +40,39 @@ export class OpinionsComponent implements OnChanges
     usedMinRating = 0;
     usedMaxRating = 10;
 
+    highlightedId = '';
+
     opinions$ = new BehaviorSubject<Opinion[]>([]);
 
     constructor(
         private opinionService: OpinionService,
         protected authService: AuthService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        protected route: ActivatedRoute
     ) { }
 
-
+    ngOnInit(): void
+    {
+        this.route
+            .queryParamMap
+            .subscribe(params =>
+            {
+                console.log(params);
+                this.highlightedId = params.get('highlightOpinion') || '';
+            });
+    }
 
     ngOnChanges(): void
     {
-      this.opinionService
-        .getOpinions(this.productId)
-        .subscribe(data =>
-        {
-          this.opinions$.next(data);
-          this.hasCreatedOpinion = data.some(o => o.authorName === this.authService.getUsername());
-        });
+        this.opinionService
+            .getOpinions(this.productId)
+            .subscribe(data =>
+            {
+                this.opinions$.next(data);
+                this.hasCreatedOpinion = data.some(o => o.authorName === this.authService.getUsername());
+                console.log(data);
+
+            });
     }
 
     onReactionClick(opinion: Opinion, positive: boolean)
@@ -99,6 +114,11 @@ export class OpinionsComponent implements OnChanges
     isUser(): boolean
     {
         return this.authService.getRole() === 'USER';
+    }
+
+    isAdmin(): boolean
+    {
+        return this.authService.getRole() === 'ADMIN';
     }
 
     openReportModal(opinion: Opinion)
