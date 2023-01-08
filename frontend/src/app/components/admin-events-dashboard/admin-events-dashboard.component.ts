@@ -77,8 +77,9 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
   }
 
   dismissEvent(id: string): void {
-    this.eventsService.closeEvent(id);
-    this.getEvents();
+    this.eventsService.closeEvent(id).subscribe(() => {
+      this.getEvents();
+    });
   }
 
   goToEvent(eventID: string): void {

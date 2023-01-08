@@ -60,7 +60,11 @@ public class QAManager {
         answer.setDate(LocalDateTime.now());
         User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         answer.setAuthor(user);
-        eventManager.createAnswerNotifyEvent(user, answer.getContent(), answer.getQuestionId());
+
+        Question question = getQuestion(answer.getQuestionId()).get();
+        String description = String.format("New answer to your question: %s", answer.getContent());
+        eventManager.createAnswerNotifyEvent(question.getAuthor(), description, answer.getQuestionId());
+
         return answerRepository.save(answer);
     }
 

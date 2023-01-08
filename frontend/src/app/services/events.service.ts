@@ -29,9 +29,8 @@ export class EventsService {
     return this.httpClient.get<OC.Event>(`${environment.apiUrl}/events/${eventID}`);
   }
 
-  public closeEvent(id: string): void {
-    this.httpClient.post(`${environment.apiUrl}/events/${id}/close`, null).subscribe(value => {
-    })
+  public closeEvent(id: string): Observable<any> {
+    return this.httpClient.post(`${environment.apiUrl}/events/${id}/close`, null);
   }
 
 }

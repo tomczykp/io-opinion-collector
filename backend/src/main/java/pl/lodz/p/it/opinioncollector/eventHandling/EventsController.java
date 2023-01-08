@@ -82,6 +82,9 @@ public class EventsController {
             if (foundEvent instanceof AdminEvent)
                 continue;
 
+            if (foundEvent.getStatus() == EventStatus.Closed)
+                continue;
+
             eventsCount++;
         }
 
@@ -89,9 +92,17 @@ public class EventsController {
     }
 
     @PostMapping("/events/{eventID}/close")
-    public ResponseEntity<Object> CloseEvent(@PathVariable("eventID") String eventID) {
-        var response = eventManager.answerEvent(UUID.fromString(eventID));
+    public ResponseEntity<Object> CloseEvent(@PathVariable("eventID") UUID eventID) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var event = eventManager.getEvent(eventID);
 
+        if (event.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        if (!user.getId().equals(event.get().getUser().getId()) && user.getRole() == UserType.USER)
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+        var response = eventManager.answerEvent(eventID);
         if (response.isEmpty())
             return ResponseEntity.notFound().build();
 
