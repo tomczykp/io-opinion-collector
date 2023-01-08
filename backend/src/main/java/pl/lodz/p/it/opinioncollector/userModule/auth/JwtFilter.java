@@ -70,7 +70,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         if (user.isDeleted()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
 
         if (user.isLocked()) {
