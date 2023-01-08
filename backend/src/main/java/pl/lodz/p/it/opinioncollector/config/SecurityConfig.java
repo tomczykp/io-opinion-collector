@@ -70,6 +70,14 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.DELETE, "/products/{productId}/opinions/{opinionId}").hasAnyRole("USER", "ADMIN")
                                         .requestMatchers("/products/{productId}/opinions/**").hasRole("USER")
 
+                                        // qa endpoints
+                                        .requestMatchers(HttpMethod.GET, "/questions/**").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/answers/**").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/questions/**").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/answers/**").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE, "/questions/{questionId}").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE, "/answers/{answerId}").hasAnyRole("USER", "ADMIN")
+
                                         // category and field endpoints
                                         .requestMatchers(HttpMethod.GET, "/category").permitAll()
                                         .requestMatchers(HttpMethod.POST, "/category").hasRole("ADMIN")

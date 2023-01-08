@@ -20,6 +20,7 @@ import {DeleteProductFormComponent} from "./components/products/delete-product-f
 import {AddCategoryComponent} from "./components/categories/add-category/add-category.component";
 import {EditCategoryComponent} from "./components/categories/edit-category/edit-category.component";
 import {UserEventsDashboardComponent} from "./components/user-events-dashboard/user-events-dashboard.component";
+import { InfoComponent } from './components/info/info.component';
 
 
 const routes: Routes = [
@@ -38,6 +39,7 @@ const routes: Routes = [
   {path: 'categories/edit/:uuid', component: EditCategoryComponent},
 
   {path: 'user-events', component: UserEventsDashboardComponent},
+  {path: 'info', component: InfoComponent},
   {
     path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard, AdminGuard],
     children: [

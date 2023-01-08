@@ -2,7 +2,11 @@ package pl.lodz.p.it.opinioncollector.qa;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import pl.lodz.p.it.opinioncollector.eventHandling.EventManager;
+import pl.lodz.p.it.opinioncollector.userModule.user.User;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,18 +18,20 @@ import java.util.function.Predicate;
 public class QAManager {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final EventManager eventManager;
 
     @Autowired
-    public QAManager(QuestionRepository questionRepository, AnswerRepository answerRepository) {
+    public QAManager(QuestionRepository questionRepository, AnswerRepository answerRepository, EventManager eventManager) {
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
+        this.eventManager = eventManager;
     }
 
     public Question createQuestion(Question question) {
         question.setDate(LocalDateTime.now());
-        // tutaj coś typu:
-        // productRepository.findById(question.getProductId).addQuestion(question)
-        // zeby powiazac produkt z pytaniem?
+        User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        question.setAuthor(user);
+        eventManager.createQuestionNotifyEvent(user, question.getContent(), question.getQuestionId());
         return questionRepository.save(question);
     }
 
@@ -52,6 +58,9 @@ public class QAManager {
 
     public Answer createAnswer(Answer answer) {
         answer.setDate(LocalDateTime.now());
+        User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        answer.setAuthor(user);
+        eventManager.createAnswerNotifyEvent(user, answer.getContent(), answer.getQuestionId());
         return answerRepository.save(answer);
     }
 
@@ -75,6 +84,7 @@ public class QAManager {
         return true;
 
     }
+
 
 
 }
