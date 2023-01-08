@@ -22,7 +22,7 @@ export enum SortingOrder
     templateUrl: './opinions.component.html',
     styleUrls: ['./opinions.component.css']
 })
-export class OpinionsComponent implements OnInit
+export class OpinionsComponent implements OnChanges
 {
     hasCreatedOpinion = false;
 
@@ -49,7 +49,7 @@ export class OpinionsComponent implements OnInit
 
 
 
-    ngOnInit(): void
+    ngOnChanges(): void
     {
       this.opinionService
         .getOpinions(this.productId)
