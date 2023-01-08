@@ -1,17 +1,17 @@
 package pl.lodz.p.it.opinioncollector.productManagment;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.category.managers.CategoryManager;
-import pl.lodz.p.it.opinioncollector.category.model.Field;
 import pl.lodz.p.it.opinioncollector.eventHandling.IProductEventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.products.ProductCannotBeEditedException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
-
-import java.time.LocalDateTime;
-import java.util.*;
 
 @Service
 public class ProductManager implements IProductManager {
@@ -56,12 +56,12 @@ public class ProductManager implements IProductManager {
             }
         }
 
+        productRepository.save(product);
         product.setConstantProductId(product.getProductId());
-
         productRepository.save(product);
         eventManager.createProductSuggestionEvent(user, "New product suggestion with name: \""
-                        + product.getName() + "\" and description: \"" + product.getDescription() + "\"",
-                product.getProductId());
+                                                        + product.getName() + "\" and description: \"" + product.getDescription() + "\"",
+                                                  product.getProductId());
         return product;
     }
 
@@ -81,22 +81,22 @@ public class ProductManager implements IProductManager {
             Product newProduct = new Product(productDTO);
 
             newProduct.setCategory(oldProduct.getCategory());
-            if(productDTO.getProperties() != null) {
+            if (productDTO.getProperties() != null) {
                 newProduct.setProperties(productDTO.getProperties());
             }
 
             newProduct.setConstantProductId(oldProduct.getConstantProductId());
 
 
-//            originalProduct.get().setEditedAt(LocalDateTime.now());
+            //            originalProduct.get().setEditedAt(LocalDateTime.now());
 
             productRepository.save(oldProduct);
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             productRepository.save(newProduct);
             eventManager.createProductSuggestionEvent(user,
-                    "User requested update of product: " + productDTO, newProduct.getProductId());
+                                                      "User requested update of product: " + productDTO,
+                                                      newProduct.getProductId());
             return newProduct;
-
         }
         return null;
     }
@@ -108,17 +108,22 @@ public class ProductManager implements IProductManager {
         }
         Product suggestion = suggestionOptional.get();
 
-        if(suggestion.isConfirmed()) {
+        if (suggestion.isConfirmed()) {
             return false;
         }
         Optional<Product> productOptional = productRepository.findById(suggestion.getConstantProductId());
-        if(productOptional.isEmpty()) { //
+        if (productOptional.isEmpty()) { //
             suggestion.setConfirmed(true);
             productRepository.save(suggestion);
             return true;
         }
 
         Product product = productOptional.get();
+        if (suggestion.getProductId() == product.getProductId()) {
+            suggestion.setConfirmed(true);
+            productRepository.save(suggestion);
+            return true;
+        }
         suggestion.setConfirmed(true);
         product.setDeleted(true);
 
@@ -168,8 +173,9 @@ public class ProductManager implements IProductManager {
 
             Product product = getProduct(uuid);
 
-            eventManager.createProductReportEvent(user,"User requested deletion of" +
-                    " a product: " + product.getName() + " with description: \"" + productDF.getDescription() + "\"", uuid);
+            eventManager.createProductReportEvent(user, "User requested deletion of" +
+                                                        " a product: " + product.getName() + " with description: \"" + productDF.getDescription() + "\"",
+                                                  uuid);
             return true;
         }
         return false;
@@ -216,11 +222,11 @@ public class ProductManager implements IProductManager {
 
 
     //FIXME both are not working
-//    public List<Product> getByPropertyValues(String value) {
-//        return productRepository.getByPropertyValues(value);
-//    }
+    //    public List<Product> getByPropertyValues(String value) {
+    //        return productRepository.getByPropertyValues(value);
+    //    }
 
-//    public List<Product> getByPropertyKey(String key) {
-//        return productRepository.getByPropertyKey(key);
-//    }
+    //    public List<Product> getByPropertyKey(String key) {
+    //        return productRepository.getByPropertyKey(key);
+    //    }
 }
