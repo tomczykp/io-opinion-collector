@@ -31,7 +31,7 @@ public class QAManager {
         question.setDate(LocalDateTime.now());
         User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         question.setAuthor(user);
-        eventManager.createQuestionNotifyEvent(user, question.getContent(), question.getQuestionId());
+        eventManager.createQuestionNotifyEvent(user, "New question: " + question.getContent(), question.getQuestionId());
         return questionRepository.save(question);
     }
 
