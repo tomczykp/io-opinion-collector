@@ -162,10 +162,8 @@ public class AuthManager {
         User user = t.getUser();
 
         String newJWT = jwtProvider.generateJWT(user.getEmail());
-        Token newRefreshToken = generateAndSaveToken(user, TokenType.REFRESH_TOKEN);
-        tokenRepository.deleteByToken(token);
-        tokenRepository.save(newRefreshToken);
-        return new SuccessfulLoginDTO(user.getRole(), newJWT, newRefreshToken.getToken(), user.getEmail(), user.getVisibleName(), user.getProvider());
+
+        return new SuccessfulLoginDTO(user.getRole(), newJWT, token, user.getEmail(), user.getVisibleName(), user.getProvider());
     }
 
     public void confirmDeletion(String token) throws TokenExpiredException {
@@ -183,7 +181,11 @@ public class AuthManager {
     }
 
     public void dropToken(String token) {
-        tokenRepository.deleteByToken(token);
+        try {
+            tokenRepository.deleteByToken(token);
+        } catch (Exception ignored) {
+
+        }
     }
 
     public void dropAllRefreshTokens() {

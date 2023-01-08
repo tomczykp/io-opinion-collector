@@ -80,7 +80,7 @@ public class MailManager {
     public void adminActionEmail(String to, String name, String action) {
         this.send(to,
                 name,
-                "We would like to report that Administrator has " + action + " your accout.",
+                "We would like to report that Administrator has " + action + " your account.",
                 "Opinion Collector team.",
                 "",
                 "",
