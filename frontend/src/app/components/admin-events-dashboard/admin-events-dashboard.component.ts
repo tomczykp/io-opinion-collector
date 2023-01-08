@@ -92,7 +92,7 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
           const url = this.router.serializeUrl(this.router.createUrlTree([`products/${targetProductID}`], {queryParams: {'highlightAnswer': event.answerID}}));
           window.open(url, '_blank');
         });
-      } else if (event.type == 'questionReport' || event.type == 'questionNotify') {
+      } else if (event.type == 'questionReport' || event.type == 'questionNotify' || event.type == 'answerNotify') {
         this.qaService.getQuestion(event.questionID).subscribe((question) => {
           let targetProductID = question.productId;
           const url = this.router.serializeUrl(this.router.createUrlTree([`products/${targetProductID}`], {queryParams: {'highlightQuestion': event.questionID}}));

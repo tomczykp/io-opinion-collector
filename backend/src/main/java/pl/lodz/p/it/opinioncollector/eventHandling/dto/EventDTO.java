@@ -42,6 +42,7 @@ public class EventDTO {
 
         if (event instanceof AnswerReportEvent castedEvent) {
             this.answerID = castedEvent.getAnswerID();
+            this.questionID = castedEvent.getQuestionID();
             this.type = "answerReport";
         }
         else if (event instanceof QuestionNotifyEvent castedEvent) {
@@ -63,6 +64,7 @@ public class EventDTO {
         }
         else if (event instanceof AnswerNotifyEvent castedEvent) {
             this.answerID = castedEvent.getAnswerID();
+            this.questionID = castedEvent.getQuestionID();
             this.type = "answerNotify";
         }
         else if (event instanceof ProductSuggestionEvent castedEvent) {

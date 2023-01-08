@@ -63,7 +63,7 @@ public class QAManager {
 
         Question question = getQuestion(answer.getQuestionId()).get();
         String description = String.format("New answer to your question: %s", answer.getContent());
-        eventManager.createAnswerNotifyEvent(question.getAuthor(), description, answer.getQuestionId());
+        eventManager.createAnswerNotifyEvent(question.getAuthor(), description, answer.getAnswerId(), answer.getQuestionId());
 
         return answerRepository.save(answer);
     }
