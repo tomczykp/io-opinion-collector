@@ -41,12 +41,9 @@ export class QuestionsComponent implements OnInit, OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['productId'].isFirstChange()) {
-			this.qaService.getQuestionsOfProduct(this.productId).subscribe((value) => {
-				this.questions = value
-				console.log(value)
-			})
-		}
+		this.qaService.getQuestionsOfProduct(this.productId).subscribe((value) => {
+			this.questions = value
+		})
 	}
 
 	onSubmit() {
