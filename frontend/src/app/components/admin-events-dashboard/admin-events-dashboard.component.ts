@@ -86,19 +86,29 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
 
   goToEvent(eventID: string): void {
     this.eventsService.getEvent(eventID).subscribe((event) => {
-      if (event.type == 'answerReport' || event.type == 'questionReport' || event.type == 'questionNotify') {
+      if (event.type == 'answerReport') {
         this.qaService.getQuestion(event.questionID).subscribe((question) => {
           let targetProductID = question.productId;
-          const url = this.router.serializeUrl(this.router.createUrlTree([`products/:${targetProductID}`]));
+          const url = this.router.serializeUrl(this.router.createUrlTree([`products/${targetProductID}`], {queryParams: {'highlightAnswer': event.answerID}}));
           window.open(url, '_blank');
         });
-      } else if (event.type == 'opinionReport' || event.type == 'productReport' || event.type == 'productSuggestion') {
+      } else if (event.type == 'questionReport' || event.type == 'questionNotify') {
+        this.qaService.getQuestion(event.questionID).subscribe((question) => {
+          let targetProductID = question.productId;
+          const url = this.router.serializeUrl(this.router.createUrlTree([`products/${targetProductID}`], {queryParams: {'highlightQuestion': event.questionID}}));
+          window.open(url, '_blank');
+        });
+      } else if (event.type == 'opinionReport') {
         let targetProductID = event.productID;
-        const url = this.router.serializeUrl(this.router.createUrlTree([`products/:${targetProductID}`]));
+        const url = this.router.serializeUrl(this.router.createUrlTree([`products/${targetProductID}`], {queryParams: {'highlightOpinion': event.opinionID}}));
+        window.open(url, '_blank');
+      } else if (event.type == 'productReport' || event.type == 'productSuggestion') {
+        let targetProductID = event.productID;
+        const url = this.router.serializeUrl(this.router.createUrlTree([`products/${targetProductID}`]));
         window.open(url, '_blank');
       }
-    })
-  }
+  })
+}
 
   applyEvent(eventID: string) {
     this.eventsService.getEvent(eventID).subscribe((event) => {
