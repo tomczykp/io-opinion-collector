@@ -92,9 +92,9 @@ public class ProductManager implements IProductManager {
 
             productRepository.save(oldProduct);
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            eventManager.createProductSuggestionEvent(user,
-                    "User requested update of product: " + productDTO, oldProduct.getProductId());
             productRepository.save(newProduct);
+            eventManager.createProductSuggestionEvent(user,
+                    "User requested update of product: " + productDTO, newProduct.getProductId());
             return newProduct;
 
         }
