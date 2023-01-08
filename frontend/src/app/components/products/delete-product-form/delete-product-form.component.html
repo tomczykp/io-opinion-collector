@@ -5,7 +5,7 @@
     </h1>
     <form [formGroup]="deleteProductForm" (ngSubmit)="deleteProduct()">
       <div class="mat-form-field align-self-auto  w-100">
-        <textarea required type="text" id="description" formControlName="description"
+        <textarea [maxLength]="255" required type="text" id="description" formControlName="description"
                   class="form-control form-control-lg" pattern='^( )*[^ ].{19,}( )*$'></textarea>
         <div *ngIf="description && description?.touched && description?.dirty">
           <small class="text-danger" *ngIf="description.errors?.['required']">

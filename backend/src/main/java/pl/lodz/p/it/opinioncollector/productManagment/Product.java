@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.checkerframework.checker.units.qual.C;
 import pl.lodz.p.it.opinioncollector.category.model.Category;
 
 import java.io.Serializable;
@@ -32,6 +33,7 @@ public class Product implements Serializable {
 
     private String name;
 
+    @Column(length = 4000)
     private String description;
 
     private boolean deleted;

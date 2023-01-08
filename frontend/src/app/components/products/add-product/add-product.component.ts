@@ -20,7 +20,7 @@ export class AddProductComponent implements OnInit {
   addProductForm = new FormGroup({
     category: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
     name: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
-    description: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
+    description: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate), Validators.maxLength(4000)]),
     properties: this.fb.array([])
   })
 
