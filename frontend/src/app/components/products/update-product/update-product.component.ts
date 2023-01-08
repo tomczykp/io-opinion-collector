@@ -23,7 +23,7 @@ export class UpdateProductComponent implements OnInit {
 
   updateProductForm = this.fb.group({
     name: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
-    description: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate)]),
+    description: this.fb.control('', [Validators.required, Validators.pattern(this.patternValidate), Validators.maxLength(4000)]),
     propertiesValues: this.fb.array([]),
   })
 

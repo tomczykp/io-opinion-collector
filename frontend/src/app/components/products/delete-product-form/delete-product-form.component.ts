@@ -15,7 +15,7 @@ export class DeleteProductFormComponent implements OnInit {
 
   deleteProductForm = new FormGroup({
     description: new FormControl('', [Validators.required,
-      Validators.pattern(this.patternValidate)]),
+      Validators.pattern(this.patternValidate), Validators.maxLength(255)]),
   });
 
   get description() {
