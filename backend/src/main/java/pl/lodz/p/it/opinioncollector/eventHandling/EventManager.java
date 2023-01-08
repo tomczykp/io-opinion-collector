@@ -76,8 +76,8 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
         return newEvent;
     }
 
-    public AnwserNotifyEvent createAnswerNotifyEvent(User user, String description, UUID questionID) {
-        var newEvent = new AnwserNotifyEvent(UUID.randomUUID(), user, description, questionID);
+    public AnswerNotifyEvent createAnswerNotifyEvent(User user, String description, UUID questionID) {
+        var newEvent = new AnswerNotifyEvent(UUID.randomUUID(), user, description, questionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }

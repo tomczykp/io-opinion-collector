@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {EventsService, OC} from "../../services/events.service";
@@ -70,47 +70,46 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
     })
   }
 
-  closeEvent(id: string): void {
-    this.eventsService.closeEvent(id);
-    this.getEvents();
-  }
 
   clearFilter(): void {
     this.userFilter = "";
     this.getEvents();
   }
 
-  answerEvent(eventID: string): void {
-    this.eventsService.getEvent(eventID).subscribe((event) => {
+  dismissEvent(id: string): void {
+    this.eventsService.closeEvent(id);
+    this.getEvents();
+  }
 
-      if (event.type == 'answerReport'
-        || event.type == 'questionReport'
-        || event.type == 'questionNotify') {
+  goToEvent(eventID: string): void {
+    this.eventsService.getEvent(eventID).subscribe((event) => {
+      if (event.type == 'answerReport' || event.type == 'questionReport' || event.type == 'questionNotify') {
         this.qaService.getQuestion(event.questionID).subscribe((question) => {
           let targetProductID = question.productId;
           const url = this.router.serializeUrl(this.router.createUrlTree([`products/:${targetProductID}`]));
           window.open(url, '_blank');
         });
-      }
-      else if (event.type == 'opinionReport'){
+      } else if (event.type == 'opinionReport' || event.type == 'productReport' || event.type == 'productSuggestion') {
         let targetProductID = event.productID;
         const url = this.router.serializeUrl(this.router.createUrlTree([`products/:${targetProductID}`]));
         window.open(url, '_blank');
       }
-      else if (event.type == 'productReport') {
+    })
+  }
+
+  applyEvent(eventID: string) {
+    this.eventsService.getEvent(eventID).subscribe((event) => {
+      if (event.type == 'productReport') {
         this.productService.deleteProduct(event.productID);
-        this.closeEvent(event.eventID);
-      }
-      else if (event.type == 'productSuggestion') {
+        this.dismissEvent(event.eventID);
+      } else if (event.type == 'productSuggestion') {
         this.productService.confirmProduct(event.productID).subscribe((response) => {
-          if (response.status == 204)
-          {
-            this.closeEvent(event.eventID);
+          if (response.status == 204) {
+            this.dismissEvent(event.eventID);
           }
         });
       }
-
-    })
+    });
   }
 
 }

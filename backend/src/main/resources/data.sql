@@ -35,7 +35,7 @@ VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'Yes', CURRENT_TIMESTAMP, '8d2f2
 
 
 
-INSERT INTO public.field (fieldid, name, type) VALUES ('e65b1f71-f3d8-4e16-ba55-df16a316f051', 'Numer', 'Int');
+-- INSERT INTO public.field (fieldid, name, type) VALUES ('e65b1f71-f3d8-4e16-ba55-df16a316f051', 'Numer', 'Int');
 
 -- INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'Category_2', null);
 -- INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'e65b1f71-f3d8-4e16-ba55-df16a316f051');

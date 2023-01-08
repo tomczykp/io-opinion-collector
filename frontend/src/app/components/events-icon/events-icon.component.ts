@@ -12,6 +12,7 @@ import {interval, Subscription} from "rxjs";
 export class EventsIconComponent implements OnInit, OnDestroy{
 
   authenticated = false;
+  role = ""
   eventsCount: number;
   userID : string;
 
@@ -34,6 +35,7 @@ export class EventsIconComponent implements OnInit, OnDestroy{
   getEventsCount(): void {
     this.authService.authenticated.subscribe((change) => {
       this.authenticated = change;
+      this.role = this.authService.getRole()!;
       if (this.authenticated) {
         this.eventsService.getEventsCount().subscribe((eventsCount) => {
           this.eventsCount = eventsCount;

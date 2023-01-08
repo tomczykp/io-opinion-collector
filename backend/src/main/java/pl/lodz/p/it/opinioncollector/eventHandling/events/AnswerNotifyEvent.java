@@ -10,15 +10,15 @@ import java.util.UUID;
 @Entity
 @Getter
 @ToString
-public class AnwserNotifyEvent extends Event {
-    private UUID questionID;
+public class AnswerNotifyEvent extends Event {
+    private UUID answerID;
 
-    public AnwserNotifyEvent(UUID eventID, User user, String description, UUID questionID) {
+    public AnswerNotifyEvent(UUID eventID, User user, String description, UUID answerID) {
         super(eventID, user, description);
-        this.questionID = questionID;
+        this.answerID = answerID;
     }
 
-    public AnwserNotifyEvent() {
+    public AnswerNotifyEvent() {
         super();
     }
 }

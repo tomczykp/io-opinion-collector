@@ -34,7 +34,7 @@ public class EventsController {
         List<BasicEventDTO> result = new ArrayList<>();
 
         for (var event : eventManager.getEvents()) {
-            result.add(new BasicEventDTO(event.getEventID(), event.getUser().getVisibleName(), event.getDescription(), event.getStatus()));
+            result.add(new BasicEventDTO(event));
         }
 
         return result;

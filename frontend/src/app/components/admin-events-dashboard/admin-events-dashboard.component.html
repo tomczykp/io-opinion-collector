@@ -9,7 +9,8 @@
   <div class="card">
     <div style="display: flex; padding: 20px;">
       <div class="d-flex">
-        <input [(ngModel)]="userFilter" (ngModelChange)="getEvents()" class="form-control w-50" placeholder="Find by user"
+        <input [(ngModel)]="userFilter" (ngModelChange)="getEvents()" class="form-control w-50"
+               placeholder="Find by user"
                type="text">
         <button (click)="clearFilter()" class="btn btn-primary ms-2">Clear input</button>
       </div>
@@ -39,12 +40,15 @@
         <ng-container matColumnDef="action">
           <th *matHeaderCellDef mat-sort-header>Action</th>
           <td mat-cell *matCellDef="let element">
-            <div *ngIf="element.status == 'Open'">
-                <button type="button" class="btn btn-primary m-1" (click)="closeEvent(element.eventID)">Closed</button>
-                <button type="button" class="btn btn-primary m-1" (click)="answerEvent(element.eventID)">Anwser</button>
-            </div>
-            <div *ngIf="element.status != 'Open'">
-              <button type="button" class="btn btn-primary" disabled >Closed</button>
+            <div *ngIf="element.status == 'Open'" class="nav">
+              <button type="button" class="btn btn-primary m-1" (click)="dismissEvent(element.eventID)">Dismiss</button>
+              <div *ngIf="element.type == 'productReport'">
+                <button type="button" class="btn btn-danger m-1" (click)="applyEvent(element.eventID)">Delete</button>
+              </div>
+              <div *ngIf="element.type == 'productSuggestion'">
+                <button type="button" class="btn btn-success m-1" (click)="applyEvent(element.eventID)">Accept</button>
+              </div>
+              <button type="button" class="btn btn-primary m-1" (click)="goToEvent(element.eventID)">Go to</button>
             </div>
           </td>
         </ng-container>

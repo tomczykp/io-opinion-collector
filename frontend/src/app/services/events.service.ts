@@ -42,6 +42,7 @@ export namespace OC {
     userName: string;
     description: string;
     status: string;
+    type: string;
   }
 
   export interface Event {
