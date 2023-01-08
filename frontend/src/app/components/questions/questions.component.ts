@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { Question } from 'src/app/model/Question'
 import { AuthService } from 'src/app/services/auth.service'
@@ -29,7 +29,8 @@ export class QuestionsComponent implements OnInit, OnChanges, AfterViewInit {
 		private formBuilder: FormBuilder,
 		private authService: AuthService,
 		private modalService: NgbModal,
-		protected route: ActivatedRoute
+		protected route: ActivatedRoute,
+		protected router: Router
 	) {}
 
 	ngOnInit(): void {
@@ -77,7 +78,15 @@ export class QuestionsComponent implements OnInit, OnChanges, AfterViewInit {
 			question.productId = this.productId
 			this.qaService.addQuestion(question)
 		}
-		location.reload()
+		this.router
+			.navigate([], {
+				relativeTo: this.route,
+				queryParams: { highlightQuestion: null, highlightOpinion: null, highlightAnswer: null },
+				queryParamsHandling: 'merge'
+			})
+			.then(() => {
+				location.reload()
+			})
 		return true
 	}
 
