@@ -73,8 +73,8 @@ public class SecurityConfig {
                                         // qa endpoints
                                         .requestMatchers(HttpMethod.GET, "/questions/**").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/answers/**").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/questions").hasAnyRole("USER", "ADMIN")
-                                        .requestMatchers(HttpMethod.POST, "/answers").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/questions/**").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/answers/**").hasAnyRole("USER", "ADMIN")
                                         .requestMatchers(HttpMethod.DELETE, "/questions/{questionId}").hasAnyRole("USER", "ADMIN")
                                         .requestMatchers(HttpMethod.DELETE, "/answers/{answerId}").hasAnyRole("USER", "ADMIN")
 

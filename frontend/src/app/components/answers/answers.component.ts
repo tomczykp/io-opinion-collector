@@ -1,8 +1,10 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { Answer } from 'src/app/model/Answer'
 import { AuthService } from 'src/app/services/auth.service'
 import { QAService } from 'src/app/services/qa.service'
+import { AnswerReportModalComponent } from './report/answer-report-modal.component'
 
 @Component({
 	selector: 'app-answers',
@@ -22,7 +24,8 @@ export class AnswersComponent implements OnInit, OnChanges {
 	constructor(
 		private qaService: QAService,
 		private formBuilder: FormBuilder,
-		private authService: AuthService
+		private authService: AuthService,
+		private modalService: NgbModal
 	) {}
 
 	ngOnInit(): void {
@@ -66,5 +69,11 @@ export class AnswersComponent implements OnInit, OnChanges {
 
 	onReply() {
 		this.reply = !this.reply
+	}
+
+	openReportModal(id: string) {
+		const modalRef = this.modalService.open(AnswerReportModalComponent, { centered: true })
+
+		;(modalRef.componentInstance as AnswerReportModalComponent).answerId = id
 	}
 }

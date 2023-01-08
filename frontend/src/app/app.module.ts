@@ -42,6 +42,8 @@ import { MatInputModule } from '@angular/material/input'
 import { DeleteOpinionModalComponent } from './components/opinions/delete-opinion-modal/delete-opinion-modal.component'
 import { InfoComponent } from './components/info/info.component'
 import { MatSelectModule } from '@angular/material/select'
+import { QuestionReportModalComponent } from './components/questions/report/question-report-modal.component'
+import { AnswerReportModalComponent } from './components/answers/report/answer-report-modal.component'
 
 @NgModule({
 	declarations: [
@@ -72,7 +74,9 @@ import { MatSelectModule } from '@angular/material/select'
 		InfoComponent,
 		AddCategoryComponent,
 		EditCategoryComponent,
-		DeleteOpinionModalComponent
+		DeleteOpinionModalComponent,
+		QuestionReportModalComponent,
+		AnswerReportModalComponent
 	],
 	imports: [
 		BrowserModule,

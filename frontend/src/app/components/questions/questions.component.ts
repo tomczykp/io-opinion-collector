@@ -1,8 +1,10 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core'
+import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { Question } from 'src/app/model/Question'
 import { AuthService } from 'src/app/services/auth.service'
 import { QAService } from 'src/app/services/qa.service'
+import { QuestionReportModalComponent } from './report/question-report-modal.component'
 
 @Component({
 	selector: 'app-questions',
@@ -23,7 +25,8 @@ export class QuestionsComponent implements OnInit, OnChanges {
 	constructor(
 		private qaService: QAService,
 		private formBuilder: FormBuilder,
-		private authService: AuthService
+		private authService: AuthService,
+		private modalService: NgbModal
 	) {}
 
 	ngOnInit(): void {
@@ -63,5 +66,11 @@ export class QuestionsComponent implements OnInit, OnChanges {
 	deleteQuestion(id: string): void {
 		this.qaService.deleteQuestion(id)
 		location.reload()
+	}
+
+	openReportModal(id: string) {
+		const modalRef = this.modalService.open(QuestionReportModalComponent, { centered: true })
+
+		;(modalRef.componentInstance as QuestionReportModalComponent).questionId = id
 	}
 }

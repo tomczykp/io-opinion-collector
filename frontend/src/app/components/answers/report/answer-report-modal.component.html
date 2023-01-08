@@ -1,0 +1,22 @@
+<div class="container mt-2">
+	<form (submit)="onSubmit()" #form="ngForm">
+		<div class="mb-2">
+			<label for="reason" class="form-label"> What is wrong with this answer? </label>
+			<input
+				type="text"
+				class="form-control"
+				[(ngModel)]="reason"
+				id="reason"
+				name="reason"
+				placeholder="Please provide reason for reporting."
+				required
+				#reasonInput="ngModel"
+			/>
+			<div class="text-danger" *ngIf="reasonInput.invalid">Report reason is required.</div>
+		</div>
+		<div class="mb-2 d-flex justify-content-end gap-3">
+			<button class="btn btn-secondary" type="button" (click)="activeModal.close()">Cancel</button>
+			<button [disabled]="form.invalid" class="btn btn-danger" type="submit">Report</button>
+		</div>
+	</form>
+</div>
