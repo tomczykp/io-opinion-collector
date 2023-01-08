@@ -103,8 +103,8 @@ public class QAController {
 
         if (qaManager.getQuestion(questionId).isEmpty())
             return ResponseEntity.notFound().build();
+        eventManager.createQuestionReportEvent(user, "Question reported with reason: " + reason, questionId);
 
-        eventManager.createQuestionReportEvent(user, reason, questionId);
         return ResponseEntity.ok().build();
     }
 
@@ -117,7 +117,7 @@ public class QAController {
         if (qaManager.getAnswer(answerId).isEmpty())
             return ResponseEntity.notFound().build();
 
-        eventManager.createAnswerReportEvent(user, reason, answerId);
+        eventManager.createAnswerReportEvent(user, "Answer reported with reason: " + reason, answerId);
         return ResponseEntity.ok().build();
     }
 

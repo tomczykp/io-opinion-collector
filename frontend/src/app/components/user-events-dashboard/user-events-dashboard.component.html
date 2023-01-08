@@ -34,8 +34,22 @@
           <ng-container matColumnDef="action">
             <th *matHeaderCellDef mat-sort-header>Action</th>
             <td mat-cell *matCellDef="let element">
-              <button type="button" class="btn btn-primary" (click)="answerEvent(element.eventID)" *ngIf="element.status == 'Open'">Answer</button>
-              <button type="button" class="btn btn-primary" disabled *ngIf="element.status != 'Open'">Answer</button>
+              <div *ngIf="element.status != 'Open'" class="nav">
+                <div class="m-1">
+                  <button type="button" class="btn btn-primary" disabled>Dismiss</button>
+                </div>
+                <div class="m-1">
+                  <button type="button" class="btn btn-primary" disabled>Answer</button>
+                </div>
+              </div>
+              <div *ngIf="element.status == 'Open'" class="nav">
+                <div class="m-1">
+                  <button type="button" class="btn btn-primary" (click)="dismissEvent(element.eventID)" *ngIf="element.status == 'Open'">Dismiss</button>
+                </div>
+                <div class="m-1">
+                  <button type="button" class="btn btn-primary" (click)="goToEvent(element.eventID)" *ngIf="element.status == 'Open'">Go To</button>
+                </div>
+              </div>
             </td>
           </ng-container>
 
