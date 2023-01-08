@@ -1,8 +1,15 @@
 package pl.lodz.p.it.opinioncollector.qa;
 
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import pl.lodz.p.it.opinioncollector.eventHandling.EventManager;
+import pl.lodz.p.it.opinioncollector.userModule.user.User;
+import pl.lodz.p.it.opinioncollector.userModule.user.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +20,12 @@ import java.util.UUID;
 public class QAController {
 
     private final QAManager qaManager;
+    private final EventManager eventManager;
 
     @Autowired
-    public QAController(QAManager qaManager) {
+    public QAController(QAManager qaManager, EventManager eventManager) {
         this.qaManager = qaManager;
+        this.eventManager = eventManager;
     }
 
     @GetMapping("/questions")
@@ -84,6 +93,32 @@ public class QAController {
             return ResponseEntity.ok().build();
         else
             return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping(value = "/questions/{questionId}/report",
+            consumes = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity reportQuestion(@PathVariable UUID questionId, @RequestBody @NotBlank String reason) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (qaManager.getQuestion(questionId).isEmpty())
+            return ResponseEntity.notFound().build();
+
+        eventManager.createQuestionReportEvent(user, reason, questionId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/answers/{answerId}/report",
+            consumes = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity reportAnswer(@PathVariable UUID answerId, @RequestBody @NotBlank String reason) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (qaManager.getAnswer(answerId).isEmpty())
+            return ResponseEntity.notFound().build();
+
+        eventManager.createAnswerReportEvent(user, reason, answerId);
+        return ResponseEntity.ok().build();
     }
 
 }

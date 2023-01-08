@@ -26,6 +26,10 @@ export class ProductsService {
     return this.httpClient.get<ProductFull>(this.baseUrl + '/' + uuid, {observe: 'response'});
   }
 
+  public getProductsFull(): Observable<ProductFull[]> {
+    return this.httpClient.get<ProductFull[]>(this.baseUrl)
+  }
+
   public getProductsByConstantId(uuid: string): Observable<ProductFull[]> {
     return this.httpClient.get<ProductFull[]>(this.baseUrl + '/' + "constant" + '/' + uuid);
   }
