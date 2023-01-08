@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef } from '@angular/core'
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
+import { ActivatedRoute, Router } from '@angular/router'
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { Question } from 'src/app/model/Question'
 import { AuthService } from 'src/app/services/auth.service'
 import { QAService } from 'src/app/services/qa.service'
@@ -11,7 +12,7 @@ import { QuestionReportModalComponent } from './report/question-report-modal.com
 	templateUrl: './questions.component.html',
 	styleUrls: ['./questions.component.css']
 })
-export class QuestionsComponent implements OnInit, OnChanges {
+export class QuestionsComponent implements OnInit, OnChanges, AfterViewInit {
 	questionForm: FormGroup
 
 	counter: number
@@ -21,12 +22,15 @@ export class QuestionsComponent implements OnInit, OnChanges {
 	submitted: Boolean = false
 	questions: Question[] = []
 	@Input() productId: string
+	highlightedId: string
 
 	constructor(
 		private qaService: QAService,
 		private formBuilder: FormBuilder,
 		private authService: AuthService,
-		private modalService: NgbModal
+		private modalService: NgbModal,
+		protected route: ActivatedRoute,
+		protected router: Router
 	) {}
 
 	ngOnInit(): void {
@@ -41,6 +45,21 @@ export class QuestionsComponent implements OnInit, OnChanges {
 				this.role = this.authService.getRole()!
 			}
 		})
+		this.route.queryParamMap.subscribe((params) => {
+			this.highlightedId = params.get('highlightQuestion') || ''
+		})
+	}
+
+	ngAfterViewInit(): void {
+		setTimeout(() => {
+			if (this.highlightedId != '') {
+				console.log(this.highlightedId)
+				const itemToScrollTo = document.getElementById(this.highlightedId)
+				if (itemToScrollTo) itemToScrollTo.scrollIntoView(true)
+			} else {
+				return
+			}
+		}, 1000)
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
@@ -59,7 +78,15 @@ export class QuestionsComponent implements OnInit, OnChanges {
 			question.productId = this.productId
 			this.qaService.addQuestion(question)
 		}
-		location.reload()
+		this.router
+			.navigate([], {
+				relativeTo: this.route,
+				queryParams: { highlightQuestion: null, highlightOpinion: null, highlightAnswer: null },
+				queryParamsHandling: 'merge'
+			})
+			.then(() => {
+				location.reload()
+			})
 		return true
 	}
 

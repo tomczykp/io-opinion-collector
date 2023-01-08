@@ -42,7 +42,11 @@
 	<h5 *ngIf="questions.length < 1">No questions found</h5>
 	<ul *ngIf="questions.length > 0">
 		<li *ngFor="let q of questions">
-			<div class="question-container m-3">
+			<div
+				class="question-container m-3 p-3"
+				id="{{ q.questionId }}"
+				[ngClass]="{ 'bg-warning': q.questionId === highlightedId }"
+			>
 				<span
 					><b>{{ q.author.visibleName }}</b></span
 				>
