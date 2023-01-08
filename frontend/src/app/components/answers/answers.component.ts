@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { ActivatedRoute } from '@angular/router'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { Answer } from 'src/app/model/Answer'
 import { AuthService } from 'src/app/services/auth.service'
@@ -20,12 +21,14 @@ export class AnswersComponent implements OnInit, OnChanges {
 	answerForm: FormGroup
 	submitted: Boolean = false
 	reply: boolean = false
+	highlightedId: string
 
 	constructor(
 		private qaService: QAService,
 		private formBuilder: FormBuilder,
 		private authService: AuthService,
-		private modalService: NgbModal
+		private modalService: NgbModal,
+		protected route: ActivatedRoute
 	) {}
 
 	ngOnInit(): void {
@@ -40,12 +43,28 @@ export class AnswersComponent implements OnInit, OnChanges {
 		this.answerForm = this.formBuilder.group({
 			answer: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]]
 		})
+
+		this.route.queryParamMap.subscribe((params) => {
+			this.highlightedId = params.get('highlightAnswer') || ''
+		})
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
 		this.qaService.getAnswersOfQuestion(this.questionId).subscribe((value) => {
 			this.answers = value
 		})
+	}
+
+	ngAfterViewInit(): void {
+		setTimeout(() => {
+			if (this.highlightedId != '') {
+				console.log(this.highlightedId)
+				const itemToScrollTo = document.getElementById(this.highlightedId)
+				if (itemToScrollTo) itemToScrollTo.scrollIntoView(true)
+			} else {
+				return
+			}
+		}, 1000)
 	}
 
 	deleteAnswer(id: string): void {

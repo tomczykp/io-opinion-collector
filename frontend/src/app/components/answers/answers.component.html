@@ -2,7 +2,11 @@
 	<h5 *ngIf="answers.length < 1">No answers to that question</h5>
 	<ul *ngIf="answers.length > 0">
 		<li *ngFor="let a of answers">
-			<div class="answer-container">
+			<div
+				class="answer-container p-3"
+				id="{{ a.answerId }}"
+				[ngClass]="{ 'bg-warning': a.answerId === highlightedId }"
+			>
 				<span
 					><b>{{ a.author.visibleName }}</b></span
 				>
