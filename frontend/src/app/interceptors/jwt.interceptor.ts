@@ -52,7 +52,6 @@ export class JwtInterceptor implements HttpInterceptor {
 
   handleRefreshToken(request: HttpRequest<any>, next: HttpHandler) {
     return this.authService.refresh().pipe(catchError(err => {
-      console.log("Could not refresh token, need to relogin")
       this.logout();
       return throwError(err);
     })).pipe(switchMap((res) => {

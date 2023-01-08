@@ -37,7 +37,6 @@ export class CategoriesComponent implements OnInit, AfterViewInit {
   }
 
   getCategories() {
-    console.log(this.nameFilter)
     this.categoriesService.getCategories().subscribe((categories) => {
       this.categories = categories.filter((category) => {
         return category.name.includes(this.nameFilter);

@@ -46,7 +46,6 @@ export class ProductsService {
 
   public deleteProduct(id: string): void {
     this.httpClient.delete(this.baseUrl + '/' + id).subscribe(data => {
-      console.log(data);
     });
   }
 

@@ -21,25 +21,21 @@ export class QAService {
 
 	public addQuestion(question: Question): void {
 		this.http.post<any>(environment.apiUrl + '/questions', question).subscribe((data) => {
-			console.log(data)
 		})
 	}
 
 	public addAnswer(answer: Answer): void {
 		this.http.post<any>(environment.apiUrl + '/answers', answer).subscribe((data) => {
-			console.log(data)
 		})
 	}
 
 	public deleteQuestion(id: string): void {
 		this.http.delete(environment.apiUrl + '/questions/' + id).subscribe((data) => {
-			console.log(data)
 		})
 	}
 
 	public deleteAnswer(id: string): void {
 		this.http.delete(environment.apiUrl + '/answers/' + id).subscribe((data) => {
-			console.log(data)
 		})
 	}
 
@@ -51,7 +47,6 @@ export class QAService {
 		this.http
 			.post<any>(environment.apiUrl + '/questions/' + id + '/report', reason)
 			.subscribe((data) => {
-				console.log(data)
 			})
 	}
 
@@ -59,7 +54,6 @@ export class QAService {
 		this.http
 			.post<any>(environment.apiUrl + '/answers/' + id + '/report', reason)
 			.subscribe((data) => {
-				console.log(data)
 			})
 	}
 }

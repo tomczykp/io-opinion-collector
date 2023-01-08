@@ -42,7 +42,6 @@ export class DeleteProductFormComponent implements OnInit {
       const productDF: object = {
         "description": this.deleteProductForm.getRawValue().description,
       }
-      console.log(productDF);
       this.productService.makeDeleteForm(this.uuid, productDF)
         .subscribe((result) => {
             if (result.status === 204) {
