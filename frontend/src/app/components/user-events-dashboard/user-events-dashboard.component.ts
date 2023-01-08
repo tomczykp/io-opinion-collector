@@ -9,6 +9,7 @@ import {interval, Subscription} from "rxjs";
 import {Router} from "@angular/router";
 import {ProductsService} from "../../services/products.service";
 import {OpinionService} from "../../services/opinion.service";
+import {QAService} from "../../services/qa.service";
 
 @Component({
   selector: 'app-user-events-dashboard',
@@ -32,6 +33,7 @@ export class UserEventsDashboardComponent implements OnInit, OnDestroy {
     private eventsService: EventsService,
     private authService: AuthService,
     private opinionService: OpinionService,
+    private qaService: QAService,
     private router: Router
   ) {
   }
@@ -74,15 +76,11 @@ export class UserEventsDashboardComponent implements OnInit, OnDestroy {
 
   answerEvent(eventID: string): void {
     this.eventsService.getEvent(eventID).subscribe((event) => {
-      if (event.type == 'productReport') {
-        this.router.navigate([`products/:${event.productID}`]);
-      } else if (event.type == 'questionNotify'
-        || event.type == 'questionReport'
-        || event.type == 'answerReport') {
-        //TODO:
-        console.log("route to question");
-      } else if (event.type == 'opinionReport') {
-        console.log("route to opinion");
+      if (event.type == 'answerNotify') {
+        this.qaService.getQuestion(event.questionID).subscribe((question) => {
+          let targetProductID = question.productId;
+          this.router.navigate([`products/:${targetProductID}`]);
+        })
       }
     })
   }

@@ -2,18 +2,15 @@ package pl.lodz.p.it.opinioncollector.eventHandling;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.opinioncollector.eventHandling.dto.BasicEventDTO;
 import pl.lodz.p.it.opinioncollector.eventHandling.dto.EventDTO;
-import pl.lodz.p.it.opinioncollector.eventHandling.events.AnswerReportEvent;
-import pl.lodz.p.it.opinioncollector.eventHandling.events.Event;
-import pl.lodz.p.it.opinioncollector.eventHandling.events.OpinionReportEvent;
-import pl.lodz.p.it.opinioncollector.eventHandling.events.ProductReportEvent;
+import pl.lodz.p.it.opinioncollector.eventHandling.events.*;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
+import pl.lodz.p.it.opinioncollector.userModule.user.UserType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +49,7 @@ public class EventsController {
 
         Event result = foundEvent.get();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!user.getId().equals(result.getUser().getId())) {
+        if (user.getRole() == UserType.USER && !user.getId().equals(result.getUser().getId())) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
@@ -66,6 +63,9 @@ public class EventsController {
 
         List<BasicEventDTO> eventDTOS = new ArrayList<>();
         for (Event foundEvent : foundEvents) {
+            if (foundEvent instanceof AdminEvent)
+                continue;
+
             eventDTOS.add(new BasicEventDTO(foundEvent));
         }
 
@@ -75,7 +75,15 @@ public class EventsController {
     @GetMapping("/user/eventsCount")
     public ResponseEntity<Integer> GetUserEventsCount() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        int eventsCount = eventManager.getUserEventsCount(user);
+        List<Event> foundEvents = eventManager.getUserEvents(user);
+
+        int eventsCount = 0;
+        for (Event foundEvent : foundEvents) {
+            if (foundEvent instanceof AdminEvent)
+                continue;
+
+            eventsCount++;
+        }
 
         return ResponseEntity.ok(eventsCount);
     }

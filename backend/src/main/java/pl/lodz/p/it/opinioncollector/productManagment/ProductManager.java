@@ -59,7 +59,7 @@ public class ProductManager implements IProductManager {
         product.setConstantProductId(product.getProductId());
 
         productRepository.save(product);
-        eventManager.createProductReportEvent(user, "New product suggestion with name: \""
+        eventManager.createProductSuggestionEvent(user, "New product suggestion with name: \""
                         + product.getName() + "\" and description: \"" + product.getDescription() + "\"",
                 product.getProductId());
         return product;
@@ -166,9 +166,10 @@ public class ProductManager implements IProductManager {
         if (productOptional.isPresent()) {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+            Product product = getProduct(uuid);
 
             eventManager.createProductReportEvent(user,"User requested deletion of" +
-                    " a product with description: \"" + productDF.getDescription() + "\"", uuid);
+                    " a product: " + product.getName() + " with description: \"" + productDF.getDescription() + "\"", uuid);
             return true;
         }
         return false;

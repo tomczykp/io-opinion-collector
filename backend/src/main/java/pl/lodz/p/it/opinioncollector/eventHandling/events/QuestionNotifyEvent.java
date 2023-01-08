@@ -9,7 +9,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @ToString
-public class QuestionNotifyEvent extends Event {
+public class QuestionNotifyEvent extends Event implements AdminEvent {
     private UUID questionID;
 
     public QuestionNotifyEvent(UUID eventID, User user, String description, UUID questionID) {

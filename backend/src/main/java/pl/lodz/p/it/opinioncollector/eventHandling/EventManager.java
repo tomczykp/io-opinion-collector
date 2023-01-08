@@ -22,8 +22,7 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
 
     @Override
     public Optional<Event> getEvent(UUID ID) {
-        var foundEvent = eventsRepository.findById(ID);
-        return foundEvent;
+        return eventsRepository.findById(ID);
     }
 
     @Override
@@ -36,8 +35,8 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     }
 
     @Override
-    public OpinionReportEvent createOpinionReportEvent(User user, String description, UUID opinionID) {
-        OpinionReportEvent newEvent = new OpinionReportEvent(UUID.randomUUID(), user, description, opinionID);
+    public OpinionReportEvent createOpinionReportEvent(User user, String description, UUID opinionID, UUID productID) {
+        OpinionReportEvent newEvent = new OpinionReportEvent(UUID.randomUUID(), user, description, opinionID, productID);
         eventsRepository.save(newEvent);
         return newEvent;
     }
@@ -45,6 +44,13 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     @Override
     public ProductReportEvent createProductReportEvent(User user, String description, UUID productID) {
         ProductReportEvent newEvent = new ProductReportEvent(UUID.randomUUID(), user, description, productID);
+        eventsRepository.save(newEvent);
+        return newEvent;
+    }
+
+    @Override
+    public ProductSuggestionEvent createProductSuggestionEvent(User user, String description, UUID productID) {
+        var newEvent = new ProductSuggestionEvent(UUID.randomUUID(), user, description, productID);
         eventsRepository.save(newEvent);
         return newEvent;
     }
@@ -66,6 +72,12 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     @Override
     public AnswerReportEvent createAnswerReportEvent(User user, String description, UUID questionID) {
         AnswerReportEvent newEvent = new AnswerReportEvent(UUID.randomUUID(), user, description, questionID);
+        eventsRepository.save(newEvent);
+        return newEvent;
+    }
+
+    public AnwserNotifyEvent createAnswerNotifyEvent(User user, String description, UUID questionID) {
+        var newEvent = new AnwserNotifyEvent(UUID.randomUUID(), user, description, questionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }

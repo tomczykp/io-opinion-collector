@@ -110,7 +110,7 @@ public class ProductController {
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Product> deleteProduct(@PathVariable("uuid") UUID uuid) throws ProductNotFoundException {
         if (productManager.deleteProduct(uuid)) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         }
         throw new ProductNotFoundException();
     }

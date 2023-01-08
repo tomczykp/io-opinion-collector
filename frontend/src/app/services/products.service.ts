@@ -50,4 +50,8 @@ export class ProductsService {
     return this.httpClient.put<ProductDF>(this.baseUrl + '/' + id + '/' + 'delete', formDF,
       {'headers': {'content-type': 'application/json'}, observe: 'response'})
   }
+
+  public confirmProduct(id: string): Observable<HttpResponse<any>>{
+    return this.httpClient.put(`${this.baseUrl}/${id}/confirm`, null, {observe: 'response'});
+  }
 }
