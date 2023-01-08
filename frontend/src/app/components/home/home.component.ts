@@ -17,14 +17,7 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms'
 })
 export class HomeComponent implements OnInit {
 	adminColumns: string[] = ['name', 'description', 'deleted', 'categoryId', 'action']
-	userColumns: string[] = [
-		'name',
-		'description',
-		'deleted',
-		'categoryId',
-		'makeUpdateForm',
-		'makeDeleteForm'
-	]
+	userColumns: string[] = ['name', 'description', 'categoryId', 'makeUpdateForm', 'makeDeleteForm']
 	columns: string[] = ['name', 'description', 'categoryId']
 	data: MatTableDataSource<ProductFull>
 	authenticated = false
@@ -175,7 +168,7 @@ export class HomeComponent implements OnInit {
 
 	getProducts(): void {
 		this.productsService.getProductsFull().subscribe((value) => {
-			this.authenticated
+			this.role == 'ADMIN'
 				? (this.allProducts = value)
 				: (this.allProducts = value.filter((p) => !p.deleted && p.confirmed))
 			this.displayedProducts = this.allProducts
