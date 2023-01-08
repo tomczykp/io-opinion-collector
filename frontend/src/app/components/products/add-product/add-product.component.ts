@@ -92,7 +92,7 @@ export class AddProductComponent implements OnInit {
     let mutableCategory: Category|null = selectedCategory;
     while(mutableCategory !== null) {
       mutableCategory.fields.forEach(field => {
-        properties[field.type] = field.name;
+        properties[field.name] = field.type;
       })
       mutableCategory = mutableCategory.parentCategory;
     }
