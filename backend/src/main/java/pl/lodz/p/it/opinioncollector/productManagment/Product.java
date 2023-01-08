@@ -58,7 +58,6 @@ public class Product implements Serializable {
     }
 
     public Product(ProductDTO productDTO) {
-        this.productId = UUID.randomUUID();
         this.constantProductId = this.productId;
         this.name = productDTO.getName();
         this.description = productDTO.getDescription();
