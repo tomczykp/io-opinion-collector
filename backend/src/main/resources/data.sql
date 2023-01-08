@@ -34,18 +34,22 @@ VALUES ('f04041a1-6314-4afd-91bb-29d016b23b95', 'Yes', CURRENT_TIMESTAMP, '8d2f2
 
 
 
+
+INSERT INTO public.field (fieldid, name, type) VALUES ('e65b1f71-f3d8-4e16-ba55-df16a316f051', 'Numer', 'Int');
+
 -- INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'Category_2', null);
 -- INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('1da399ec-7ab6-4621-afab-6eec4f824d29', 'e65b1f71-f3d8-4e16-ba55-df16a316f051');
 INSERT INTO public.field (fieldid, name, type) VALUES ('e65b1f71-f3d8-4e16-ba55-df16a316f051', 'Property1', 'String');
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('b293013b-40da-4dde-a997-bce3068636ec', 'Category 1', null);
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('b293013b-40da-4dde-a997-bce3068636ec', 'e65b1f71-f3d8-4e16-ba55-df16a316f051');
 
-INSERT INTO public.field (fieldid, name, type) VALUES ('8c47ae46-8aa9-11ed-a1eb-0242ac120002', 'Property2', 'String');
-INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('82d58040-8aa9-11ed-a1eb-0242ac120002', 'Category 1.1', 'b293013b-40da-4dde-a997-bce3068636ec');
+INSERT INTO public.field (fieldid, name, type) VALUES ('8c47ae46-8aa9-11ed-a1eb-0242ac120002', 'keyParent', 'valueParent');
+INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('82d58040-8aa9-11ed-a1eb-0242ac120002', 'Category_3', 'b293013b-40da-4dde-a997-bce3068636ec');
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('82d58040-8aa9-11ed-a1eb-0242ac120002', '8c47ae46-8aa9-11ed-a1eb-0242ac120002');
 
-INSERT INTO public.field (fieldid, name, type) VALUES ('f93af257-b5f2-4643-a844-5b2a7d75873f', 'Property3', 'String');
-INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('f93af257-b1c2-4643-a844-5b2a7d75873f', 'Category 1.1.1', '82d58040-8aa9-11ed-a1eb-0242ac120002');
+INSERT INTO public.field (fieldid, name, type) VALUES ('f93af257-b5f2-4643-a844-5b2a7d75873f', 'keyParent2', 'valueParent2');
+INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('f93af257-b1c2-4643-a844-5b2a7d75873f', 'Category_4', '82d58040-8aa9-11ed-a1eb-0242ac120002');
+
 INSERT INTO public.category_fields (category_categoryid, fields_fieldid) VALUES ('f93af257-b1c2-4643-a844-5b2a7d75873f', 'f93af257-b5f2-4643-a844-5b2a7d75873f');
 
 INSERT INTO public.category (categoryid, name, parent_category_category_id) VALUES ('f1bfd355-4bbe-48a4-9acd-c5e886f49277', 'Category 2', null);
