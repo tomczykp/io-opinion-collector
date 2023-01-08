@@ -18,8 +18,8 @@ export class AnswersComponent implements OnInit, OnChanges  {
   answerForm: FormGroup;
   submitted: Boolean = false;
   reply: boolean = false;
-  
-  
+
+
   constructor(private qaService: QAService,
             private formBuilder: FormBuilder,
             private authService: AuthService) { }
@@ -40,7 +40,6 @@ export class AnswersComponent implements OnInit, OnChanges  {
   ngOnChanges(changes: SimpleChanges): void {
     this.qaService.getAnswersOfQuestion(this.questionId).subscribe(value => {
       this.answers = value;
-      console.log(this.answers)
     });
   }
 
@@ -66,6 +65,6 @@ export class AnswersComponent implements OnInit, OnChanges  {
   onReply() {
     this.reply = !this.reply;
   }
- 
+
 
 }

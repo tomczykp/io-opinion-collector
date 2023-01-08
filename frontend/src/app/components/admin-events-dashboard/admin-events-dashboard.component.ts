@@ -82,7 +82,6 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
 
   answerEvent(eventID: string): void {
     this.eventsService.getEvent(eventID).subscribe((event) => {
-      console.log(event)
 
       if (event.type == 'answerReport'
         || event.type == 'questionReport'

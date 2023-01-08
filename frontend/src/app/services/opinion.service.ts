@@ -35,8 +35,6 @@ export class OpinionService
     {
         const url = `${environment.apiUrl}/products/${productId}/opinions/${opinionId}/report`;
 
-        console.log(url);
-
         this.httpClient.post<null>(url, reason).subscribe();
     }
 

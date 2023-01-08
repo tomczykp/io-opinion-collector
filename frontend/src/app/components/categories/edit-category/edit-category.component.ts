@@ -135,7 +135,6 @@ export class EditCategoryComponent implements OnInit {
           "name": this.getOldFieldsNames.getRawValue()[i],
           "type": this.getOldFieldsTypes.getRawValue()[i]
         };
-        console.log(this.getOldFieldsIds.getRawValue()[i]);
         this.categoriesService.updateField(this.getOldFieldsIds.getRawValue()[i], FieldDTO)
           .subscribe((result) => {
             if (result.status === 200) {}})}

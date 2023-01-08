@@ -82,14 +82,12 @@ export class AddCategoryComponent implements OnInit {
         };
         fields.push(FieldDTO);
       }
-      console.log(fields);
 
       const CategoryDTO: object = {
         "name": this.addCategoryForm.getRawValue().name,
         "parentCategoryID": this.addCategoryForm.getRawValue().parent,
         "fields": fields
       }
-    console.log(CategoryDTO);
     this.categoriesService.createCategory(CategoryDTO)
       .subscribe((result) => {
           if (result.status === 200) {
