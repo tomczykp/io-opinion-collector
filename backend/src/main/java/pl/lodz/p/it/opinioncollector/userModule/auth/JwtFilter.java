@@ -70,15 +70,15 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         if (user.isDeleted()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
 
         if (user.isLocked()) {
-            throw new ResponseStatusException(HttpStatus.LOCKED);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
 
         if (!user.isEnabled()) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
