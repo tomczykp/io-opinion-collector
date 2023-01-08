@@ -26,7 +26,6 @@ public class ProductDTO {
     @NotEmpty
     private String description;
 
-    @NotEmpty
     HashMap<String, String> properties;
 
 

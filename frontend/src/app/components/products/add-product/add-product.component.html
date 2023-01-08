@@ -8,7 +8,7 @@
 
       <div class="form-outline mb-4">
         <span class="form-label">Name</span>
-        <input required class="form-control form-control-lg" type="text" id="name" formControlName="name" pattern='^(\s+\S+\s*)*(?!\s).*$'/>
+        <input required class="form-control form-control-lg" type="text" id="name" formControlName="name" pattern='^( )*[^ ].*( )*$'/>
         <div *ngIf="name && name?.touched && name?.dirty">
           <span class="text-danger" *ngIf="name.errors?.['required']">
             Name is required
@@ -22,7 +22,7 @@
       <div class="form-outline mb-4">
         <span class="form-label">Description</span>
         <input required type="text" id="description" formControlName="description"
-               class="form-control form-control-lg" pattern='^(\s+\S+\s*)*(?!\s).*$'/>
+               class="form-control form-control-lg" pattern='^( )*[^ ].*( )*$'/>
         <div *ngIf="description && description?.touched && description?.dirty">
           <span class="text-danger" *ngIf="description.errors?.['required']">
             Description is required
@@ -36,9 +36,9 @@
       <div class="form-row mb-4">
         <div class="form-group">
           <label class="form-label" for="categoryID">Categories</label>
-          <select #selectList formControlName="category" class="form-control"
-                  id="categoryID" (ngModelChange)="onCategoryChanged(selectList.value)">
-            <option disabled>Select Category</option>
+          <select #selectList formControlName="category" class="form-control form-select"
+                  id="categoryID" (ngModelChange)="onCategoryChanged(selectList.value)" >
+            <option value="" selected disabled>Select Category</option>
             <option *ngFor="let cat of categories" [ngValue]="cat.categoryID">{{cat.name}}</option>
           </select>
         </div>
@@ -49,7 +49,7 @@
           <div class="form-outline">
             <span class="form-label">{{propertyKeys[i]}}</span>
             <input class="form-control form-control-lg"
-                   placeholder="{{propertyKeys[i]}}" formControlName="{{i}}" pattern='^(\s+\S+\s*)*(?!\s).*$'>
+                   placeholder="{{propertyKeys[i]}}" formControlName="{{i}}" pattern='^( )*[^ ].*( )*$'>
             <div *ngIf="prop && prop?.touched && prop?.dirty">
               <span class="text-danger" *ngIf="prop.errors?.['pattern']">
                 Please enter valid data

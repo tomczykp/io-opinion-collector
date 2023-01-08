@@ -10,16 +10,15 @@ import java.util.UUID;
 @Entity
 @Getter
 @ToString
-public class AnswerReportEvent extends Event implements AdminEvent {
-    private UUID questionID;
+public class ProductSuggestionEvent extends Event implements AdminEvent {
+    private UUID productID;
 
-    public AnswerReportEvent(UUID eventID, User user, String description, UUID questionID) {
+    public ProductSuggestionEvent(UUID eventID, User user, String description, UUID productID) {
         super(eventID, user, description);
-        this.questionID = questionID;
+        this.productID = productID;
     }
 
-    public AnswerReportEvent() {
+    public ProductSuggestionEvent() {
         super();
     }
-
 }

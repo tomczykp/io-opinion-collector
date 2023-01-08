@@ -17,8 +17,11 @@ import {LoginRegisterGuard} from "./guards/login-register.guard";
 import {AddProductComponent} from "./components/products/add-product/add-product.component";
 import {UpdateProductComponent} from "./components/products/update-product/update-product.component";
 import {DeleteProductFormComponent} from "./components/products/delete-product-form/delete-product-form.component";
+import {AddCategoryComponent} from "./components/categories/add-category/add-category.component";
+import {EditCategoryComponent} from "./components/categories/edit-category/edit-category.component";
 import {UserEventsDashboardComponent} from "./components/user-events-dashboard/user-events-dashboard.component";
 import { InfoComponent } from './components/info/info.component';
+
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -30,6 +33,11 @@ const routes: Routes = [
   {path: 'products/:uuid/update', component: UpdateProductComponent},
   {path: 'products/:uuid/delete', component: DeleteProductFormComponent},
   {path: 'suggestion', component: AddProductComponent},
+
+  //Categories
+  {path: 'categories/add', component: AddCategoryComponent},
+  {path: 'categories/edit/:uuid', component: EditCategoryComponent},
+
   {path: 'user-events', component: UserEventsDashboardComponent},
   {path: 'info', component: InfoComponent},
   {

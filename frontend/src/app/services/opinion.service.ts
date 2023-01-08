@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CreateUpdateOpinionDto, Opinion } from '../model/Opinion';
 
@@ -52,5 +52,18 @@ export class OpinionService
         const url = `${environment.apiUrl}/products/${productId}/opinions`;
 
         return this.httpClient.post<Opinion>(url, dto);
+    }
+
+    deleteOpinion(productId: string, opinionId: string): Observable<boolean>
+    {
+        const url = `${environment.apiUrl}/products/${productId}/opinions/${opinionId}`;
+
+        return this.httpClient
+            .delete<null>(url, {
+                observe: 'response'
+            })
+            .pipe(
+                map((res: HttpResponse<null>) => res.status === 204)
+            );
     }
 }

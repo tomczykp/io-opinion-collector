@@ -1,0 +1,66 @@
+<div class="container py-sm-4 h-auto w-auto">
+  <h1>
+    ADD CATEGORY
+  </h1>
+  <div class="col-md-10 p-lg-4 mx-lg-auto my-lg-4 bg-white border-4 border">
+    <form [formGroup]="addCategoryForm" (ngSubmit)="createCategory()">
+
+      <div class="mat-form-field mb-3 w-100">
+        <label class="form-label" for="name">Name</label>
+        <input required type="text" id="name" formControlName="name" class="form-control form-control-lg" />
+        <div *ngIf="name && name?.touched && name?.dirty">
+          <small class="text-danger" *ngIf="name.errors?.['required']">
+            Name is required
+          </small>
+        </div>
+      </div>
+
+      <div class="mat-form-field mb-2">
+        <label class="form-label me-2 w-100" for="parent">Parent category</label>
+        <select class="form-select w-100" id="parent" formControlName="parent" >
+          <option selected="selected" value="{{null}}">None</option>
+          <option *ngFor="let category of categories$ | async" value="{{category.categoryID}}" >
+            {{category.name}}
+          </option>
+        </select>
+      </div>
+      <div class="container d-flex">
+        <div class="col-6" formArrayName="fieldsNames">
+          <div class="my-2" *ngFor="let name of getFieldsNames.controls; let i = index">
+            <label class="form-label me-1" for="name-{{ i }}">Name: </label>
+            <input class="form-control w-auto d-inline-block" type="text" id="{{ i }}" [formControlName]="i" />
+            <p class="ms-2 d-inline text-danger" *ngIf="getFieldName(i) && getFieldName(i)?.touched && getFieldName(i)?.dirty && getFieldName(i).errors?.['required']">
+              Name is required
+            </p>
+          </div>
+        </div>
+        <div class="col-6" formArrayName="fieldsTypes">
+          <div class="my-2" *ngFor="let type of getFieldsTypes.controls; let i = index">
+            <label class="form-label me-1" for="type-{{ i }}">Type: </label>
+            <select class="form-select w-auto d-inline-block" id="{{ i }}" [formControlName]="i" >
+              <option value="Int">Int</option>
+              <option value="Double">Double</option>
+              <option value="String" [selected]="true">String</option>
+            </select>
+            <p class="ms-2 d-inline text-danger" *ngIf="getFieldType(i) && getFieldType(i)?.touched && getFieldType(i)?.dirty && getFieldType(i).errors?.['required'] && getFieldType(i).errors?.['required']">
+              Type is required
+            </p>
+            <button type="button" class="d-inline-block btn btn-danger ms-2 modal-dialog-centered" (click)="removeFields(i)">
+              <i class="bi bi-trash me-2"></i>Remove field
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mb-1">
+        <button type="button" class="btn btn-primary" (click)="addFields()">
+          <i class="bi bi-plus-circle me-2"></i>
+          Add field
+        </button>
+      </div>
+      <input *ngIf="addCategoryForm.valid" type="submit" class="btn btn-primary btn-lg btn-block w-100" value="Add category">
+      <input *ngIf="!addCategoryForm.valid" type="submit" class="disabled btn btn-light btn-lg btn-block w-100" value="Add category">
+
+    </form>
+
+  </div>
+</div>

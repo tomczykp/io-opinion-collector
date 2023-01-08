@@ -31,12 +31,15 @@ import { CategoriesComponent } from './components/categories/categories.componen
 import { AddProductComponent } from './components/products/add-product/add-product.component'
 import { UpdateProductComponent } from './components/products/update-product/update-product.component'
 import { DeleteProductFormComponent } from './components/products/delete-product-form/delete-product-form.component'
-import { MatFormFieldModule } from '@angular/material/form-field'
-import { MatInputModule } from '@angular/material/input'
+import { AddCategoryComponent } from './components/categories/add-category/add-category.component'
+import { EditCategoryComponent } from './components/categories/edit-category/edit-category.component'
 import { EventsIconComponent } from './components/events-icon/events-icon.component'
 import { UserEventsDashboardComponent } from './components/user-events-dashboard/user-events-dashboard.component'
 import { OpinionReportModalComponent } from './components/opinions/opinion-report-modal/opinion-report-modal.component'
 import { OpinionModalComponent } from './components/opinions/opinion-modal/opinion-modal.component'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatInputModule } from '@angular/material/input'
+import { DeleteOpinionModalComponent } from './components/opinions/delete-opinion-modal/delete-opinion-modal.component'
 import { InfoComponent } from './components/info/info.component'
 import { MatSelectModule } from '@angular/material/select'
 
@@ -67,6 +70,9 @@ import { MatSelectModule } from '@angular/material/select'
 		OpinionReportModalComponent,
 		OpinionModalComponent,
 		InfoComponent,
+		AddCategoryComponent,
+		EditCategoryComponent,
+		DeleteOpinionModalComponent
 	],
 	imports: [
 		BrowserModule,
@@ -88,9 +94,9 @@ import { MatSelectModule } from '@angular/material/select'
 		MatIconModule,
 		MatFormFieldModule,
 		MatInputModule,
-		MatSelectModule,
+		MatSelectModule
 	],
 	providers: [{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
-	bootstrap: [AppComponent],
+	bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -3,10 +3,14 @@
   <div class="col-sm-6 col-7 bg-white col-sm-6 border-4 border p-xxl-5 p-4">
     <form [formGroup]="updateProductForm" (ngSubmit)="updateProduct()">
 
+      <div *ngIf="product.deleted == true">
+        <h3 class="text-danger ">Deleted product cannot be edited</h3>
+      </div>
+
       <div class="form-outline mb-4">
         <span class="form-label">Name</span>
         <input required class="form-control form-control-lg" type="text" id="name"
-               formControlName="name" pattern='^(\s+\S+\s*)*(?!\s).*$'>
+               formControlName="name" pattern='^( )*[^ ].*( )*$'>
         <div *ngIf="name && name?.touched && name?.dirty">
           <span class="text-danger" *ngIf="name.errors?.['required']">
             Name is required
@@ -21,7 +25,7 @@
       <div class="form-outline mb-4">
         <span class="form-label">Description</span>
         <input required type="text" id="description" formControlName="description"
-               class="form-control form-control-lg" pattern='^(\s+\S+\s*)*(?!\s).*$'/>
+               class="form-control form-control-lg" pattern='^( )*[^ ].*( )*$'/>
         <div *ngIf="description && description?.touched && description?.dirty">
           <span class="text-danger" *ngIf="description.errors?.['required']">
             Description is required
@@ -38,7 +42,7 @@
           <div class="form-outline">
             <span class="form-label">{{propertyKeys[i]}}</span>
             <input class="form-control form-control-lg"
-                   placeholder="{{propertyKeys[i]}}" formControlName="{{i}}" pattern='^(\s+\S+\s*)*(?!\s).*$'>
+                   placeholder="{{propertyKeys[i]}}" formControlName="{{i}}" pattern='^( )*[^ ].*( )*$'>
             <div *ngIf="prop && prop?.touched && prop?.dirty">
               <span class="text-danger" *ngIf="prop.errors?.['pattern']">
                 Please enter valid data
@@ -48,9 +52,9 @@
         </ng-container>
       </ng-container>
 
-      <input *ngIf="updateProductForm.valid" type="submit" class="mt-3 btn btn-primary btn-lg btn-block w-100"
+      <input *ngIf="updateProductForm.valid && product.deleted != true" type="submit" class="mt-3 btn btn-primary btn-lg btn-block w-100"
              value="Update product">
-      <input *ngIf="!updateProductForm.valid" type="submit" class="mt-3 disabled btn btn-light btn-lg btn-block w-100"
+      <input *ngIf="!updateProductForm.valid || product.deleted == true" type="submit" class="mt-3 disabled btn btn-light btn-lg btn-block w-100"
              value="Update product">
 
     </form>

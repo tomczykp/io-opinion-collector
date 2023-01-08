@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Category} from "../model/category";
+import {Category, Field} from "../model/category";
 import {environment} from "../../environments/environment";
 
 @Injectable({
@@ -9,11 +9,48 @@ import {environment} from "../../environments/environment";
 })
 export class CategoriesService {
 
-  constructor(private readonly httpClient: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
-  getCategories(): Observable<Category[]>
-  {
+  getCategories(): Observable<Category[]> {
       const url = `${environment.apiUrl}/category`;
-      return this.httpClient.get<Category[]>(url);
+      return this.http.get<Category[]>(url);
   }
+
+  getCategoriesByName(name: string) {
+    return this.http.get<Category[]>(environment.apiUrl + "/category?categoryID=" + name);
+  }
+
+  getCategory(uuid: string): Observable<HttpResponse<Category>> {
+    return this.http.get<Category>(environment.apiUrl + "/category/" + uuid, {observe: 'response'});
+  }
+
+  createCategory(CategoryDTO: object): Observable<HttpResponse<Category>>  {
+    return this.http.post<Category>(environment.apiUrl + "/category", CategoryDTO,
+      {observe: 'response'})
+  }
+
+  updateCategory(uuid: string, CategoryDTO: object): Observable<HttpResponse<Category>> {
+    return this.http.put<Category>(environment.apiUrl + "/category/" + uuid, CategoryDTO,
+      { observe: 'response'})
+  }
+
+  deleteCategory(categoryID: string) {
+    return this.http.delete(environment.apiUrl + "/category/" + categoryID, {observe: 'response'})
+  }
+
+  addField(uuid: string, FieldDTO: object): Observable<HttpResponse<Field>> {
+    return this.http.put<Field>(environment.apiUrl + "/category/" + uuid + "/fields", FieldDTO,
+      { observe: 'response'})
+  }
+
+  removeField(uuid: string){
+    return this.http.delete(environment.apiUrl + "/category/fields/" + uuid,
+      {observe: 'response'})
+  }
+
+  updateField(uuid: string, FieldDTO: object): Observable<HttpResponse<Field>> {
+    return this.http.put<Field>(environment.apiUrl + "/category/fields/" + uuid, FieldDTO,
+      { observe: 'response'})
+  }
+
 }

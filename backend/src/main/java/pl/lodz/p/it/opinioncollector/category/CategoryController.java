@@ -71,9 +71,9 @@ public class CategoryController {
     }
 
     @PutMapping("/{uuid}/fields")
-    public ResponseEntity<Category> addField(@PathVariable("uuid") UUID uuid, @RequestBody @Valid FieldDTO fieldDTO) throws CategoryNotFoundException, UnsupportedTypeException {
-        Category category = categoryManager.addField(uuid, fieldDTO);
-        return ResponseEntity.ok(category);
+    public ResponseEntity<Field> addField(@PathVariable("uuid") UUID uuid, @RequestBody @Valid FieldDTO fieldDTO) throws CategoryNotFoundException, UnsupportedTypeException {
+        Field field = categoryManager.addField(uuid, fieldDTO);
+        return ResponseEntity.ok(field);
     }
 
     @DeleteMapping("/fields/{uuid}")

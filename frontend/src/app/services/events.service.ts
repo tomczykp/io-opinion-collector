@@ -33,6 +33,7 @@ export class EventsService {
     this.httpClient.post(`${environment.apiUrl}/events/${id}/close`, null).subscribe(value => {
     })
   }
+
 }
 
 export namespace OC {

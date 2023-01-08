@@ -134,14 +134,14 @@ public class CategoryManager {
         }
     }
 
-    public Category addField(UUID categoryId, FieldDTO fieldDTO) throws CategoryNotFoundException, UnsupportedTypeException {
+    public synchronized Field addField(UUID categoryId, FieldDTO fieldDTO) throws CategoryNotFoundException, UnsupportedTypeException {
         Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
             Field field = new Field(fieldDTO);
             category.getFields().add(field);
             categoryRepository.save(category);
-            return category;
+            return field;
         } else {
             throw new CategoryNotFoundException();
         }
