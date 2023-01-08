@@ -23,6 +23,7 @@ public class EventDTO {
     EventStatus status;
 
     UUID questionID;
+    UUID answerID;
     UUID opinionID;
     UUID productID;
 
@@ -40,16 +41,16 @@ public class EventDTO {
 
 
         if (event instanceof AnswerReportEvent castedEvent) {
-            this.questionID = castedEvent.getQuestionID();
+            this.answerID = castedEvent.getAnswerID();
             this.type = "answerReport";
         }
         else if (event instanceof QuestionNotifyEvent castedEvent) {
             this.questionID = castedEvent.getQuestionID();
-            this.type = "questionReport";
+            this.type = "questionNotify";
         }
         else if (event instanceof QuestionReportEvent castedEvent) {
             this.questionID = castedEvent.getQuestionID();
-            this.type = "questionNotify";
+            this.type = "questionReport";
         }
         else if (event instanceof OpinionReportEvent castedEvent) {
             this.opinionID = castedEvent.getOpinionID();
@@ -61,7 +62,7 @@ public class EventDTO {
             this.type = "productReport";
         }
         else if (event instanceof AnswerNotifyEvent castedEvent) {
-            this.questionID = castedEvent.getAnswerID();
+            this.answerID = castedEvent.getAnswerID();
             this.type = "answerNotify";
         }
         else if (event instanceof ProductSuggestionEvent castedEvent) {

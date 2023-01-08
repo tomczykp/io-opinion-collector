@@ -7,6 +7,7 @@ import {interval, Subscription} from "rxjs";
 import {QAService} from "../../services/qa.service";
 import {Router} from "@angular/router";
 import {ProductsService} from "../../services/products.service";
+import {OpinionService} from "../../services/opinion.service";
 
 @Component({
   selector: 'app-events',
@@ -31,6 +32,7 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
     private eventsService: EventsService,
     private qaService: QAService,
     private productService: ProductsService,
+    private opinionService: OpinionService,
     private router: Router,
   ) {
   }
@@ -108,6 +110,17 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
           if (response.status == 204) {
             this.dismissEvent(event.eventID);
           }
+        });
+      } else if (event.type == 'answerReport') {
+        this.qaService.deleteAnswer(event.answerID);
+        this.dismissEvent(event.eventID);
+      } else if (event.type == 'questionReport') {
+        this.qaService.deleteQuestion(event.questionID);
+        this.dismissEvent(event.eventID);
+      } else if (event.type == 'opinionReport') {
+        this.opinionService.deleteOpinion(event.productID, event.opinionID).subscribe(response => {
+          if (response)
+            this.dismissEvent(event.eventID);
         });
       }
     });

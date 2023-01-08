@@ -36,10 +36,10 @@ public class BasicEventDTO {
             this.type = "answerReport";
         }
         else if (event instanceof QuestionNotifyEvent castedEvent) {
-            this.type = "questionReport";
+            this.type = "questionNotify";
         }
         else if (event instanceof QuestionReportEvent castedEvent) {
-            this.type = "questionNotify";
+            this.type = "questionReport";
         }
         else if (event instanceof OpinionReportEvent castedEvent) {
             this.type = "opinionReport";

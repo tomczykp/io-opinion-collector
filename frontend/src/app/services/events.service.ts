@@ -50,6 +50,7 @@ export namespace OC {
     description: string;
     status: string;
     questionID: string;
+    answerID: string;
     opinionID?: any;
     productID?: any;
     type: string;
