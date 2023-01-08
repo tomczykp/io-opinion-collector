@@ -55,7 +55,7 @@ export class QuestionsComponent implements OnInit, OnChanges, AfterViewInit {
 			if (this.highlightedId != '') {
 				console.log(this.highlightedId)
 				const itemToScrollTo = document.getElementById(this.highlightedId)
-				if (itemToScrollTo) itemToScrollTo.scrollIntoView(true)
+				if (itemToScrollTo) itemToScrollTo.scrollIntoView({behavior: "smooth", block: "center", inline: "center"})
 			} else {
 				return
 			}

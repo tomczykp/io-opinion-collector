@@ -1,173 +1,174 @@
 <ng-container *ngIf="opinions$ | async as opinions; else loadingOpinions">
-    <div class="mt-5 header">
-        <h4>Opinions ({{ opinions.length }})</h4>
+  <div class="mt-5 header">
+    <h4>Opinions ({{ opinions.length }})</h4>
+  </div>
+  <div class="d-flex flex-wrap flex-lg-nowrap gap-3 mb-1">
+    <div class="input-group">
+      <span class="input-group-text">Min rating</span>
+      <input
+        [(ngModel)]="selectedMinRating"
+        class="form-control"
+        type="number"
+        min="0"
+        [max]="selectedMaxRating"
+        (change)="onMinRatingChange()">
     </div>
-    <div class="d-flex flex-wrap flex-lg-nowrap gap-3 mb-1">
-        <div class="input-group">
-            <span class="input-group-text">Min rating</span>
-            <input
-                [(ngModel)]="selectedMinRating"
-                class="form-control"
-                type="number"
-                min="0"
-                [max]="selectedMaxRating"
-                (change)="onMinRatingChange()">
-        </div>
-        <div class="input-group">
-            <span class="input-group-text">Max rating</span>
-            <input
-                [(ngModel)]="selectedMaxRating"
-                class="form-control"
-                type="number"
-                [min]="selectedMinRating"
-                max="10"
-                (change)="onMaxRatingChange()">
-        </div>
-        <div class="input-group">
-            <span class="input-group-text">Sorting order:</span>
-            <select
-                class="form-select"
-                [(ngModel)]="selectedOrder">
-                <option [ngValue]="ORDER.NONE"></option>
-                <option [ngValue]="ORDER.BEST_TO_WORST">best to worst</option>
-                <option [ngValue]="ORDER.WORST_TO_BEST">worst to best</option>
-                <option [ngValue]="ORDER.NEWEST_TO_OLDEST">newest to oldest</option>
-                <option [ngValue]="ORDER.OLDEST_TO_NEWEST">oldest to newest</option>
-            </select>
-        </div>
+    <div class="input-group">
+      <span class="input-group-text">Max rating</span>
+      <input
+        [(ngModel)]="selectedMaxRating"
+        class="form-control"
+        type="number"
+        [min]="selectedMinRating"
+        max="10"
+        (change)="onMaxRatingChange()">
+    </div>
+    <div class="input-group">
+      <span class="input-group-text">Sorting order:</span>
+      <select
+        class="form-select"
+        [(ngModel)]="selectedOrder">
+        <option [ngValue]="ORDER.NONE"></option>
+        <option [ngValue]="ORDER.BEST_TO_WORST">best to worst</option>
+        <option [ngValue]="ORDER.WORST_TO_BEST">worst to best</option>
+        <option [ngValue]="ORDER.NEWEST_TO_OLDEST">newest to oldest</option>
+        <option [ngValue]="ORDER.OLDEST_TO_NEWEST">oldest to newest</option>
+      </select>
+    </div>
+    <button
+      class="btn btn-primary"
+      (click)="applyFiltersAndSortingOrder()">
+      Apply
+    </button>
+  </div>
+  <ng-container *ngIf="isUser(); else notUser">
+    <div
+      [ngbTooltip]="hasCreatedOpinion ? 'You can create only one opinion for given product.' : null"
+      placement="right"
+      class="mb-2 d-inline-block">
+      <button
+        [disabled]="hasCreatedOpinion"
+        class="btn btn-success"
+        (click)="openCreateOpinionModal()">
+        Add your opinion
+      </button>
+    </div>
+  </ng-container>
+  <ng-template #notUser>
+    <ng-container *ngIf="isAdmin(); else unauthenticated">
+      <div
+        ngbTooltip="Administrators are not allowed to add opinions."
+        placement="right"
+        class="mb-2 d-inline-block">
         <button
-            class="btn btn-primary"
-            (click)="applyFiltersAndSortingOrder()">
-            Apply
+          disabled
+          class="btn btn-success">
+          Add your opinion
         </button>
-    </div>
-    <ng-container *ngIf="isUser(); else notUser">
-        <div
-            [ngbTooltip]="hasCreatedOpinion ? 'You can create only one opinion for given product.' : null"
-            placement="right"
-            class="mb-2 d-inline-block">
-            <button
-                [disabled]="hasCreatedOpinion"
-                class="btn btn-success"
-                (click)="openCreateOpinionModal()">
-                Add your opinion
-            </button>
-        </div>
+      </div>
     </ng-container>
-    <ng-template #notUser>
-        <ng-container *ngIf="isAdmin(); else unauthenticated">
-            <div
-                ngbTooltip="Administrators are not allowed to add opinions."
-                placement="right"
-                class="mb-2 d-inline-block">
-                <button
-                    disabled
-                    class="btn btn-success">
-                    Add your opinion
-                </button>
-            </div>
-        </ng-container>
-        <ng-template #unauthenticated>
-            <div
-                ngbTooltip="You need to sign in to create opinions."
-                placement="right"
-                class="mb-2 d-inline-block">
-                <button
-                    disabled
-                    class="btn btn-success">
-                    Add your opinion
-                </button>
-            </div>
-        </ng-template>
+    <ng-template #unauthenticated>
+      <div
+        ngbTooltip="You need to sign in to create opinions."
+        placement="right"
+        class="mb-2 d-inline-block">
+        <button
+          disabled
+          class="btn btn-success">
+          Add your opinion
+        </button>
+      </div>
     </ng-template>
-    <div class="container">
-        <ng-container *ngIf="opinions.length; else noOpinions">
-            <div
-                *ngFor="let opinion of opinions.filter(filterFn)"
-                class="mb-2 p-2 py-0"
-                [ngClass]="{ 'bg-warning': opinion.opinionId === highlightedId }">
-                <div>
-                    <span class="fs-6 fw-bold mb-1">{{ opinion.authorName }}</span>
-                    <i class="bi bi-dot"></i>
-                    <span>
+  </ng-template>
+  <div class="container">
+    <ng-container *ngIf="opinions.length; else noOpinions">
+      <div
+        *ngFor="let opinion of opinions.filter(filterFn)"
+        class="mb-2 p-2 py-0"
+        id="opinion-{{opinion.opinionId}}"
+        [ngClass]="{ 'bg-warning': opinion.opinionId === highlightedId }">
+        <div>
+          <span class="fs-6 fw-bold mb-1">{{ opinion.authorName }}</span>
+          <i class="bi bi-dot"></i>
+          <span>
                         {{ opinion.createdAt | date : 'medium' }}
                     </span>
-                    <i class="bi bi-dot"></i>
-                    <ngb-rating
-                        class="fs-5"
-                        [rate]="opinion.rate"
-                        [readonly]="true">
-                    </ngb-rating>
-                    <p class="mb-1 fs-5">{{ opinion.description }}</p>
-                </div>
-                <ng-container *ngIf="opinion.pros.length || opinion.cons.length">
-                    <div class="row">
-                        <div class="col">
-                            <p class="mb-0 fs-6">Pros:</p>
-                            <ul class="pros-and-cons-list">
-                                <li *ngFor="let p of opinion.pros">{{ p.value }}</li>
-                            </ul>
-                        </div>
-                        <div class="col">
-                            <p class="mb-0 fs-6">Cons:</p>
-                            <ul class="pros-and-cons-list">
-                                <li *ngFor="let c of opinion.cons">{{ c.value }}</li>
-                            </ul>
-                        </div>
-                    </div>
-                </ng-container>
-                <div class="mb-0 d-inline-flex align-items-center gap-3">
+          <i class="bi bi-dot"></i>
+          <ngb-rating
+            class="fs-5"
+            [rate]="opinion.rate"
+            [readonly]="true">
+          </ngb-rating>
+          <p class="mb-1 fs-5">{{ opinion.description }}</p>
+        </div>
+        <ng-container *ngIf="opinion.pros.length || opinion.cons.length">
+          <div class="row">
+            <div class="col">
+              <p class="mb-0 fs-6">Pros:</p>
+              <ul class="pros-and-cons-list">
+                <li *ngFor="let p of opinion.pros">{{ p.value }}</li>
+              </ul>
+            </div>
+            <div class="col">
+              <p class="mb-0 fs-6">Cons:</p>
+              <ul class="pros-and-cons-list">
+                <li *ngFor="let c of opinion.cons">{{ c.value }}</li>
+              </ul>
+            </div>
+          </div>
+        </ng-container>
+        <div class="mb-0 d-inline-flex align-items-center gap-3">
                     <span>
                         <span (click)="onReactionClick(opinion, true)">
                             <i
-                                class="bi"
-                                [ngClass]="{
+                              class="bi"
+                              [ngClass]="{
                                     'bi-hand-thumbs-up-fill': opinion.liked,
                                     'bi-hand-thumbs-up': !opinion.liked }"></i>
                         </span>
                         <span class="likesCounter">{{ opinion.likesCounter }}</span>
                         <span (click)="onReactionClick(opinion, false)">
                             <i
-                                class="bi"
-                                [ngClass]="{
+                              class="bi"
+                              [ngClass]="{
                                     'bi-hand-thumbs-down-fill': opinion.disliked,
                                     'bi-hand-thumbs-down': !opinion.disliked }"></i>
                         </span>
                     </span>
-                    <button
-                        *ngIf="isAuthor(opinion)"
-                        (click)="openEditOpinionModal(opinion)"
-                        class="btn btn-warning">
-                        <i class="bi bi-pencil-square"></i>
-                        Edit
-                    </button>
-                    <button
-                        *ngIf="isUser()"
-                        (click)="openReportModal(opinion)"
-                        class="btn btn-danger">
-                        <i class="bi bi-flag"></i>
-                        Report
-                    </button>
-                    <button
-                        *ngIf="isAdmin() || isAuthor(opinion)"
-                        class="btn btn-dark"
-                        (click)="openDeleteConfirmationModal(opinion)">
-                        <i class="bi bi-trash-fill"></i>
-                        Delete
-                    </button>
-                </div>
-                <hr class="mb-0">
-            </div>
-            <div *ngIf="!opinions.some(filterFn)">
-                <h5>No opinions matching selected criteria.</h5>
-            </div>
-        </ng-container>
-        <ng-template #noOpinions>
-            <h5>No opinions yet.</h5>
-        </ng-template>
-    </div>
+          <button
+            *ngIf="isAuthor(opinion)"
+            (click)="openEditOpinionModal(opinion)"
+            class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i>
+            Edit
+          </button>
+          <button
+            *ngIf="isUser()"
+            (click)="openReportModal(opinion)"
+            class="btn btn-danger">
+            <i class="bi bi-flag"></i>
+            Report
+          </button>
+          <button
+            *ngIf="isAdmin() || isAuthor(opinion)"
+            class="btn btn-dark"
+            (click)="openDeleteConfirmationModal(opinion)">
+            <i class="bi bi-trash-fill"></i>
+            Delete
+          </button>
+        </div>
+        <hr class="mb-0">
+      </div>
+      <div *ngIf="!opinions.some(filterFn)">
+        <h5>No opinions matching selected criteria.</h5>
+      </div>
+    </ng-container>
+    <ng-template #noOpinions>
+      <h5>No opinions yet.</h5>
+    </ng-template>
+  </div>
 </ng-container>
 
 <ng-template #loadingOpinions>
-    <h5>Loading opinions...</h5>
+  <h5>Loading opinions...</h5>
 </ng-template>

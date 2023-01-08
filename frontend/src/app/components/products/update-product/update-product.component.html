@@ -1,6 +1,6 @@
 <div class="container py-sm-4 h-auto w-auto">
-  <h2>UPDATE PRODUCT</h2>
-  <div class="col-sm-6 col-7 bg-white col-sm-6 border-4 border p-xxl-5 p-4">
+  <div class="rounded-4 card-body col-md-8 p-lg-4 mx-lg-auto my-lg-4 bg-white border-4 border p-4">
+    <h1 class="card-title text-center">Update product suggestion</h1>
     <form [formGroup]="updateProductForm" (ngSubmit)="updateProduct()">
 
       <div *ngIf="product.deleted == true">
@@ -24,8 +24,8 @@
 
       <div class="form-outline mb-4">
         <span class="form-label">Description</span>
-        <input required type="text" id="description" formControlName="description"
-               class="form-control form-control-lg" pattern='^( )*[^ ].*( )*$'/>
+        <textarea required type="text" id="description" formControlName="description"
+                  class="form-control form-control-lg" pattern='^( )*[^ ].*( )*$'></textarea>
         <div *ngIf="description && description?.touched && description?.dirty">
           <span class="text-danger" *ngIf="description.errors?.['required']">
             Description is required
