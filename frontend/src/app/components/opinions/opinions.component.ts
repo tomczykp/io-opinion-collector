@@ -101,6 +101,11 @@ export class OpinionsComponent implements OnChanges
         return this.authService.getRole() === 'USER';
     }
 
+    isAdmin(): boolean
+    {
+        return this.authService.getRole() === 'ADMIN';
+    }
+
     openReportModal(opinion: Opinion)
     {
         const modalRef = this.modalService.open(OpinionReportModalComponent, { centered: true });

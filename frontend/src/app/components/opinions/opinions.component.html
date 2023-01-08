@@ -41,7 +41,7 @@
             Apply
         </button>
     </div>
-    <ng-container *ngIf="isUser(); else unathenticated">
+    <ng-container *ngIf="isUser(); else notUser">
         <div
             [ngbTooltip]="hasCreatedOpinion ? 'You can create only one opinion for given product.' : null"
             placement="right"
@@ -54,17 +54,31 @@
             </button>
         </div>
     </ng-container>
-    <ng-template #unathenticated>
-        <div
-            ngbTooltip="You need to sign in to create opinions."
-            placement="right"
-            class="mb-2 d-inline-block">
-            <button
-                disabled
-                class="btn btn-success">
-                Add your opinion
-            </button>
-        </div>
+    <ng-template #notUser>
+        <ng-container *ngIf="isAdmin(); else unauthenticated">
+            <div
+                ngbTooltip="Administrators are not allowed to add opinions."
+                placement="right"
+                class="mb-2 d-inline-block">
+                <button
+                    disabled
+                    class="btn btn-success">
+                    Add your opinion
+                </button>
+            </div>
+        </ng-container>
+        <ng-template #unauthenticated>
+            <div
+                ngbTooltip="You need to sign in to create opinions."
+                placement="right"
+                class="mb-2 d-inline-block">
+                <button
+                    disabled
+                    class="btn btn-success">
+                    Add your opinion
+                </button>
+            </div>
+        </ng-template>
     </ng-template>
     <div class="container">
         <ng-container *ngIf="opinions.length; else noOpinions">
@@ -132,7 +146,7 @@
                         Report
                     </button>
                     <button
-                        *ngIf="isAuthor(opinion)"
+                        *ngIf="isAdmin() || isAuthor(opinion)"
                         class="btn btn-dark"
                         (click)="openDeleteConfirmationModal(opinion)">
                         <i class="bi bi-trash-fill"></i>
