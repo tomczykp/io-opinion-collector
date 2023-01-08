@@ -85,8 +85,9 @@ export class UserEventsDashboardComponent implements OnInit, OnDestroy {
       if (event.type == 'answerNotify') {
         this.qaService.getQuestion(event.questionID).subscribe((question) => {
           let targetProductID = question.productId;
-          this.router.navigate([`products/:${targetProductID}`]);
-        })
+          const url = this.router.serializeUrl(this.router.createUrlTree([`products/${targetProductID}`], {queryParams: {'highlightAnswer': event.questionID}}));
+          window.open(url, '_blank');
+        });
       }
     })
   }

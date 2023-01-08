@@ -11,6 +11,6 @@ import java.util.UUID;
 public interface IQuestionEventManager extends IEventManager {
     QuestionNotifyEvent createQuestionNotifyEvent(User user, String description, UUID questionID);
     QuestionReportEvent createQuestionReportEvent(User user, String description, UUID questionID);
-    AnswerReportEvent createAnswerReportEvent(User user, String description, UUID questionID);
-    AnswerNotifyEvent createAnswerNotifyEvent(User user, String description, UUID questionID);
+    AnswerReportEvent createAnswerReportEvent(User user, String description, UUID answerID, UUID questionID);
+    AnswerNotifyEvent createAnswerNotifyEvent(User user, String description, UUID answerID, UUID questionID);
 }

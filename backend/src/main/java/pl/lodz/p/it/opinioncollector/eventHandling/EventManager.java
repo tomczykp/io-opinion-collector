@@ -3,6 +3,7 @@ package pl.lodz.p.it.opinioncollector.eventHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.*;
+import pl.lodz.p.it.opinioncollector.qa.Question;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 import java.util.ArrayList;
@@ -70,14 +71,14 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     }
 
     @Override
-    public AnswerReportEvent createAnswerReportEvent(User user, String description, UUID answerID) {
-        AnswerReportEvent newEvent = new AnswerReportEvent(UUID.randomUUID(), user, description, answerID);
+    public AnswerReportEvent createAnswerReportEvent(User user, String description, UUID answerID, UUID questionID) {
+        AnswerReportEvent newEvent = new AnswerReportEvent(UUID.randomUUID(), user, description, answerID, questionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }
 
-    public AnswerNotifyEvent createAnswerNotifyEvent(User user, String description, UUID questionID) {
-        var newEvent = new AnswerNotifyEvent(UUID.randomUUID(), user, description, questionID);
+    public AnswerNotifyEvent createAnswerNotifyEvent(User user, String description,UUID answerID, UUID questionID) {
+        var newEvent = new AnswerNotifyEvent(UUID.randomUUID(), user, description, answerID, questionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }

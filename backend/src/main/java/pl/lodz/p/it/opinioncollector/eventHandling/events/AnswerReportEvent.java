@@ -12,10 +12,12 @@ import java.util.UUID;
 @ToString
 public class AnswerReportEvent extends Event implements AdminEvent {
     private UUID answerID;
+    private UUID questionID;
 
-    public AnswerReportEvent(UUID eventID, User user, String description, UUID answerID) {
+    public AnswerReportEvent(UUID eventID, User user, String description, UUID answerID, UUID questionID) {
         super(eventID, user, description);
         this.answerID = answerID;
+        this.questionID = questionID;
     }
 
     public AnswerReportEvent() {

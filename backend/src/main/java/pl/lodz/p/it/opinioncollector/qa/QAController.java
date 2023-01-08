@@ -114,10 +114,13 @@ public class QAController {
     public ResponseEntity reportAnswer(@PathVariable UUID answerId, @RequestBody @NotBlank String reason) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (qaManager.getAnswer(answerId).isEmpty())
+        Optional<Answer> answer = qaManager.getAnswer(answerId);
+
+        if (answer.isEmpty())
             return ResponseEntity.notFound().build();
 
-        eventManager.createAnswerReportEvent(user, "Answer reported with reason: " + reason, answerId);
+
+        eventManager.createAnswerReportEvent(user, "Answer reported with reason: " + reason, answer.get().getAnswerId() , answer.get().getQuestionId());
         return ResponseEntity.ok().build();
     }
 
