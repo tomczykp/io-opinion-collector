@@ -74,7 +74,13 @@ export class UserEventsDashboardComponent implements OnInit, OnDestroy {
     })
   }
 
-  answerEvent(eventID: string): void {
+  dismissEvent(id: string): void {
+    this.eventsService.closeEvent(id).subscribe(() => {
+      this.getEvents();
+    });
+  }
+
+  goToEvent(eventID: string): void {
     this.eventsService.getEvent(eventID).subscribe((event) => {
       if (event.type == 'answerNotify') {
         this.qaService.getQuestion(event.questionID).subscribe((question) => {

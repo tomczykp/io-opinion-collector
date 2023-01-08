@@ -70,14 +70,14 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     }
 
     @Override
-    public AnswerReportEvent createAnswerReportEvent(User user, String description, UUID questionID) {
-        AnswerReportEvent newEvent = new AnswerReportEvent(UUID.randomUUID(), user, description, questionID);
+    public AnswerReportEvent createAnswerReportEvent(User user, String description, UUID answerID) {
+        AnswerReportEvent newEvent = new AnswerReportEvent(UUID.randomUUID(), user, description, answerID);
         eventsRepository.save(newEvent);
         return newEvent;
     }
 
-    public AnwserNotifyEvent createAnswerNotifyEvent(User user, String description, UUID questionID) {
-        var newEvent = new AnwserNotifyEvent(UUID.randomUUID(), user, description, questionID);
+    public AnswerNotifyEvent createAnswerNotifyEvent(User user, String description, UUID questionID) {
+        var newEvent = new AnswerNotifyEvent(UUID.randomUUID(), user, description, questionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }

@@ -1,5 +1,5 @@
-<div *ngIf="this.authenticated">
-  <button type="button" class="btn btn-primary" routerLink="/user-events" >
+<div *ngIf="this.authenticated && this.role=='USER'">
+  <button type="button" class="btn btn-primary" routerLink="/user-events">
     Notifications<span class="badge bg-danger ms-2" *ngIf="this.eventsCount > 0">{{this.eventsCount}}</span>
   </button>
 </div>

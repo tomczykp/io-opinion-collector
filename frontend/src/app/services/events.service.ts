@@ -29,9 +29,8 @@ export class EventsService {
     return this.httpClient.get<OC.Event>(`${environment.apiUrl}/events/${eventID}`);
   }
 
-  public closeEvent(id: string): void {
-    this.httpClient.post(`${environment.apiUrl}/events/${id}/close`, null).subscribe(value => {
-    })
+  public closeEvent(id: string): Observable<any> {
+    return this.httpClient.post(`${environment.apiUrl}/events/${id}/close`, null);
   }
 
 }
@@ -42,6 +41,7 @@ export namespace OC {
     userName: string;
     description: string;
     status: string;
+    type: string;
   }
 
   export interface Event {
@@ -50,6 +50,7 @@ export namespace OC {
     description: string;
     status: string;
     questionID: string;
+    answerID: string;
     opinionID?: any;
     productID?: any;
     type: string;

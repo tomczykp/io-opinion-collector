@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {EventsService, OC} from "../../services/events.service";
@@ -7,6 +7,7 @@ import {interval, Subscription} from "rxjs";
 import {QAService} from "../../services/qa.service";
 import {Router} from "@angular/router";
 import {ProductsService} from "../../services/products.service";
+import {OpinionService} from "../../services/opinion.service";
 
 @Component({
   selector: 'app-events',
@@ -31,6 +32,7 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
     private eventsService: EventsService,
     private qaService: QAService,
     private productService: ProductsService,
+    private opinionService: OpinionService,
     private router: Router,
   ) {
   }
@@ -70,47 +72,68 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
     })
   }
 
-  closeEvent(id: string): void {
-    this.eventsService.closeEvent(id);
-    this.getEvents();
-  }
 
   clearFilter(): void {
     this.userFilter = "";
     this.getEvents();
   }
 
-  answerEvent(eventID: string): void {
-    this.eventsService.getEvent(eventID).subscribe((event) => {
+  dismissEvent(id: string): void {
+    this.eventsService.closeEvent(id).subscribe(() => {
+      this.getEvents();
+    });
+  }
 
-      if (event.type == 'answerReport'
-        || event.type == 'questionReport'
-        || event.type == 'questionNotify') {
+  goToEvent(eventID: string): void {
+    this.eventsService.getEvent(eventID).subscribe((event) => {
+      if (event.type == 'answerReport') {
         this.qaService.getQuestion(event.questionID).subscribe((question) => {
           let targetProductID = question.productId;
-          const url = this.router.serializeUrl(this.router.createUrlTree([`products/:${targetProductID}`]));
+          const url = this.router.serializeUrl(this.router.createUrlTree([`products/${targetProductID}`], {queryParams: {'highlightAnswer': event.answerID}}));
           window.open(url, '_blank');
         });
-      }
-      else if (event.type == 'opinionReport'){
+      } else if (event.type == 'questionReport' || event.type == 'questionNotify') {
+        this.qaService.getQuestion(event.questionID).subscribe((question) => {
+          let targetProductID = question.productId;
+          const url = this.router.serializeUrl(this.router.createUrlTree([`products/${targetProductID}`], {queryParams: {'highlightQuestion': event.questionID}}));
+          window.open(url, '_blank');
+        });
+      } else if (event.type == 'opinionReport') {
         let targetProductID = event.productID;
-        const url = this.router.serializeUrl(this.router.createUrlTree([`products/:${targetProductID}`]));
+        const url = this.router.serializeUrl(this.router.createUrlTree([`products/${targetProductID}`], {queryParams: {'highlightOpinion': event.opinionID}}));
+        window.open(url, '_blank');
+      } else if (event.type == 'productReport' || event.type == 'productSuggestion') {
+        let targetProductID = event.productID;
+        const url = this.router.serializeUrl(this.router.createUrlTree([`products/${targetProductID}`]));
         window.open(url, '_blank');
       }
-      else if (event.type == 'productReport') {
+  })
+}
+
+  applyEvent(eventID: string) {
+    this.eventsService.getEvent(eventID).subscribe((event) => {
+      if (event.type == 'productReport') {
         this.productService.deleteProduct(event.productID);
-        this.closeEvent(event.eventID);
-      }
-      else if (event.type == 'productSuggestion') {
+        this.dismissEvent(event.eventID);
+      } else if (event.type == 'productSuggestion') {
         this.productService.confirmProduct(event.productID).subscribe((response) => {
-          if (response.status == 204)
-          {
-            this.closeEvent(event.eventID);
+          if (response.status == 204) {
+            this.dismissEvent(event.eventID);
           }
         });
+      } else if (event.type == 'answerReport') {
+        this.qaService.deleteAnswer(event.answerID);
+        this.dismissEvent(event.eventID);
+      } else if (event.type == 'questionReport') {
+        this.qaService.deleteQuestion(event.questionID);
+        this.dismissEvent(event.eventID);
+      } else if (event.type == 'opinionReport') {
+        this.opinionService.deleteOpinion(event.productID, event.opinionID).subscribe(response => {
+          if (response)
+            this.dismissEvent(event.eventID);
+        });
       }
-
-    })
+    });
   }
 
 }

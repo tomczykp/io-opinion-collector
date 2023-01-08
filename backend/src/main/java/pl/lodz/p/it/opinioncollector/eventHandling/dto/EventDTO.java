@@ -3,7 +3,6 @@ package pl.lodz.p.it.opinioncollector.eventHandling.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.http.ResponseEntity;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.*;
 
 import java.util.UUID;
@@ -24,6 +23,7 @@ public class EventDTO {
     EventStatus status;
 
     UUID questionID;
+    UUID answerID;
     UUID opinionID;
     UUID productID;
 
@@ -41,16 +41,16 @@ public class EventDTO {
 
 
         if (event instanceof AnswerReportEvent castedEvent) {
-            this.questionID = castedEvent.getQuestionID();
+            this.answerID = castedEvent.getAnswerID();
             this.type = "answerReport";
         }
         else if (event instanceof QuestionNotifyEvent castedEvent) {
             this.questionID = castedEvent.getQuestionID();
-            this.type = "questionReport";
+            this.type = "questionNotify";
         }
         else if (event instanceof QuestionReportEvent castedEvent) {
             this.questionID = castedEvent.getQuestionID();
-            this.type = "questionNotify";
+            this.type = "questionReport";
         }
         else if (event instanceof OpinionReportEvent castedEvent) {
             this.opinionID = castedEvent.getOpinionID();
@@ -61,8 +61,8 @@ public class EventDTO {
             this.productID = castedEvent.getProductID();
             this.type = "productReport";
         }
-        else if (event instanceof AnwserNotifyEvent castedEvent) {
-            this.questionID = castedEvent.getQuestionID();
+        else if (event instanceof AnswerNotifyEvent castedEvent) {
+            this.answerID = castedEvent.getAnswerID();
             this.type = "answerNotify";
         }
         else if (event instanceof ProductSuggestionEvent castedEvent) {
