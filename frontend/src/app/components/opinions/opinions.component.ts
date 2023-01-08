@@ -57,7 +57,6 @@ export class OpinionsComponent implements OnInit, OnChanges, AfterViewInit
       .queryParamMap
       .subscribe(params =>
       {
-        console.log(params);
         this.highlightedId = params.get('highlightOpinion') || '';
       });
   }
@@ -70,8 +69,6 @@ export class OpinionsComponent implements OnInit, OnChanges, AfterViewInit
       {
         this.opinions$.next(data);
         this.hasCreatedOpinion = data.some(o => o.authorName === this.authService.getUsername());
-        console.log(data);
-
       });
   }
 
