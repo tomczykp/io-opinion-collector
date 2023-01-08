@@ -102,7 +102,7 @@ export class AddProductComponent implements OnInit {
       let value = properties[key];
       this.propertyKeys.push(key);
       this.addProductForm.controls.properties.push(this.fb.control(
-        value, [Validators.required, Validators.pattern(this.patternValidate)]));
+        '', [Validators.required, Validators.pattern(this.patternValidate)]));
     });
   }
 }
