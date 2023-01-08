@@ -24,9 +24,10 @@ export class ProductsComponent implements OnInit {
   }
 
   ngOnInit() {
-    let href = this.router.url;
-    let match = href.match(this.regex);
-    this.getProduct(match![0]);
+    this.activeRoute.paramMap.subscribe((params) => {
+      let uuid = params.get('uuid')!.toString();
+      this.getProduct(uuid);
+    });
     this.role = localStorage.getItem("role")!;
   }
 

@@ -82,7 +82,10 @@
     </ng-template>
     <div class="container">
         <ng-container *ngIf="opinions.length; else noOpinions">
-            <div *ngFor="let opinion of opinions.filter(filterFn)">
+            <div
+                *ngFor="let opinion of opinions.filter(filterFn)"
+                class="mb-2 p-2 py-0"
+                [ngClass]="{ 'bg-warning': opinion.opinionId === highlightedId }">
                 <div>
                     <span class="fs-6 fw-bold mb-1">{{ opinion.authorName }}</span>
                     <i class="bi bi-dot"></i>
@@ -153,7 +156,7 @@
                         Delete
                     </button>
                 </div>
-                <hr class="mb-2">
+                <hr class="mb-0">
             </div>
             <div *ngIf="!opinions.some(filterFn)">
                 <h5>No opinions matching selected criteria.</h5>
