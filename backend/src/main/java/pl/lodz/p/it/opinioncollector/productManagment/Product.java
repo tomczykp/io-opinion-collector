@@ -76,7 +76,7 @@ public class Product implements Serializable {
         this.deleted = product.deleted;
         this.confirmed = product.confirmed;
         this.createdAt = product.createdAt;
-        this.properties = product.properties;
+        this.setProperties(product.properties);
     }
 
     public void addProperty(String key, String value) {
