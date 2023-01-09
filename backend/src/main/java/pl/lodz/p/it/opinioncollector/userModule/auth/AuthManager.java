@@ -1,6 +1,5 @@
 package pl.lodz.p.it.opinioncollector.userModule.auth;
 
-
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
@@ -39,7 +38,6 @@ import pl.lodz.p.it.opinioncollector.userModule.user.User;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserProvider;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserRepository;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserType;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.Instant;
