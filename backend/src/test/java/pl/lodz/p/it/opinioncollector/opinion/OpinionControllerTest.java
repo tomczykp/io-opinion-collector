@@ -22,11 +22,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@Sql("/test-data.sql")
 class OpinionControllerTest {
 
     private static final MessageFormat BASE_OPINIONS_URL = new MessageFormat("/products/{0}/opinions");
