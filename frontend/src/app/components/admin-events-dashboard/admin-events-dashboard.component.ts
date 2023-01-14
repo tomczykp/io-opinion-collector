@@ -15,7 +15,7 @@ import {OpinionService} from "../../services/opinion.service";
   styleUrls: ['./admin-events-dashboard.component.css']
 })
 export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['userName', 'description', 'status', 'action'];
+  displayedColumns: string[] = ['userName', 'productName', 'description', 'status', 'dismiss', 'action', 'goto'];
   dataSource: MatTableDataSource<OC.BasicEvent>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -27,6 +27,7 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
 
   isOpenedOnly: boolean = true;
   userFilter: string = "";
+  productFilter: string = "";
 
   constructor(
     private eventsService: EventsService,
@@ -66,6 +67,14 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
         })
       }
 
+      if (this.productFilter != "") {
+        let filter = this.productFilter.toLowerCase();
+
+        this.events = this.events.filter((event) => {
+          return event.productName.toLowerCase().includes(filter);
+        })
+      }
+
       this.dataSource = new MatTableDataSource(this.events);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -75,6 +84,7 @@ export class AdminEventsDashboardComponent implements OnInit, OnDestroy {
 
   clearFilter(): void {
     this.userFilter = "";
+    this.productFilter = "";
     this.getEvents();
   }
 

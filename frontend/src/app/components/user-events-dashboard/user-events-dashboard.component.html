@@ -26,30 +26,36 @@
             <td mat-cell *matCellDef="let element">{{element.status}}</td>
           </ng-container>
 
+          <ng-container matColumnDef="product">
+            <th *matHeaderCellDef mat-sort-header>Product</th>
+            <td mat-cell *matCellDef="let element">{{element.productName}}</td>
+          </ng-container>
+
           <ng-container matColumnDef="description">
             <th *matHeaderCellDef mat-sort-header>Description</th>
             <td mat-cell *matCellDef="let element">{{element.description}}</td>
           </ng-container>
 
-          <ng-container matColumnDef="action">
-            <th *matHeaderCellDef mat-sort-header>Action</th>
+          <ng-container matColumnDef="dismiss">
+            <th *matHeaderCellDef mat-sort-header>Dismiss</th>
             <td mat-cell *matCellDef="let element">
-              <div *ngIf="element.status != 'Open'" class="nav">
-                <div class="m-1">
-                  <button type="button" class="btn btn-primary" disabled>Dismiss</button>
-                </div>
-                <div class="m-1">
-                  <button type="button" class="btn btn-primary" disabled>Answer</button>
-                </div>
-              </div>
               <div *ngIf="element.status == 'Open'" class="nav">
                 <div class="m-1">
-                  <button type="button" class="btn btn-primary" (click)="dismissEvent(element.eventID)" *ngIf="element.status == 'Open'">Dismiss</button>
-                </div>
-                <div class="m-1">
-                  <button type="button" class="btn btn-primary" (click)="goToEvent(element.eventID)" *ngIf="element.status == 'Open'">Go To</button>
+                  <i class="bi bi-slash-circle hover-icon" (click)="dismissEvent(element.eventID)"
+                     style="font-size: 30px; font-weight: bold; color: dodgerblue; text-align: center"></i>
                 </div>
               </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="goto">
+            <th *matHeaderCellDef mat-sort-header>Go To</th>
+            <td mat-cell *matCellDef="let element">
+                <div class="m-1">
+                  <i class="bi bi-box-arrow-in-right hover-icon"
+                     style="font-size: 30px; font-weight: bold; color: dodgerblue; text-align: center"
+                     (click)="goToEvent(element.eventID)"></i>
+                </div>
             </td>
           </ng-container>
 
