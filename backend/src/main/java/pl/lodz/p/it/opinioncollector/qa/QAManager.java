@@ -5,6 +5,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.eventHandling.EventManager;
+import pl.lodz.p.it.opinioncollector.productManagment.Product;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 import java.time.LocalDateTime;
@@ -32,7 +33,7 @@ public class QAManager {
         User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         question.setAuthor(user);
         Question q = questionRepository.save(question);
-        eventManager.createQuestionNotifyEvent(user, "New question: " + q.getContent(), q.getQuestionId());
+        eventManager.createQuestionNotifyEvent(user, q.getProductId(), "New question: " + q.getContent(), q.getQuestionId());
         return q;
     }
 
@@ -64,7 +65,8 @@ public class QAManager {
 
         Question question = getQuestion(answer.getQuestionId()).get();
         String description = String.format("New answer to your question: %s", answer.getContent());
-        eventManager.createAnswerNotifyEvent(question.getAuthor(), description, answer.getAnswerId(), answer.getQuestionId());
+        UUID productID =  getQuestion(answer.getQuestionId()).get().getProductId();
+        eventManager.createAnswerNotifyEvent(question.getAuthor(), productID, description, answer.getAnswerId(), answer.getQuestionId());
 
         return answerRepository.save(answer);
     }

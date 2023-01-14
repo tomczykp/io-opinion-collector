@@ -35,9 +35,9 @@ public class EventDTO {
         this.userID = event.getUserID();
         this.description = event.getDescription();
         this.status = event.getStatus();
+        this.productID = event.getProductID();
         this.questionID = null;
         this.opinionID = null;
-        this.productID = null;
 
 
         if (event instanceof AnswerReportEvent castedEvent) {
@@ -55,11 +55,9 @@ public class EventDTO {
         }
         else if (event instanceof OpinionReportEvent castedEvent) {
             this.opinionID = castedEvent.getOpinionID();
-            this.productID = castedEvent.getProductID();
             this.type = "opinionReport";
         }
         else if (event instanceof ProductReportEvent castedEvent) {
-            this.productID = castedEvent.getProductID();
             this.type = "productReport";
         }
         else if (event instanceof AnswerNotifyEvent castedEvent) {
@@ -68,7 +66,6 @@ public class EventDTO {
             this.type = "answerNotify";
         }
         else if (event instanceof ProductSuggestionEvent castedEvent) {
-            this.productID = castedEvent.getProductID();
             this.type = "productSuggestion";
         }
     }

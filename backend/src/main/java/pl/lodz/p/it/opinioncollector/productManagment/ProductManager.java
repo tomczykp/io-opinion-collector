@@ -1,9 +1,5 @@
 package pl.lodz.p.it.opinioncollector.productManagment;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,6 +8,11 @@ import pl.lodz.p.it.opinioncollector.eventHandling.IProductEventManager;
 import pl.lodz.p.it.opinioncollector.exceptions.category.CategoryNotFoundException;
 import pl.lodz.p.it.opinioncollector.exceptions.products.ProductCannotBeEditedException;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductManager implements IProductManager {
@@ -59,9 +60,8 @@ public class ProductManager implements IProductManager {
         productRepository.save(product);
         product.setConstantProductId(product.getProductId());
         productRepository.save(product);
-        eventManager.createProductSuggestionEvent(user, "New product suggestion with name: \""
-                                                        + product.getName() + "\" and description: \"" + product.getDescription() + "\"",
-                                                  product.getProductId());
+        eventManager.createProductSuggestionEvent(user, product.getProductId(), "New product suggestion with name: \""
+                + product.getName() + "\" and description: \"" + product.getDescription() + "\"");
         return product;
     }
 
@@ -93,9 +93,8 @@ public class ProductManager implements IProductManager {
             productRepository.save(oldProduct);
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             productRepository.save(newProduct);
-            eventManager.createProductSuggestionEvent(user,
-                                                      "User requested update of product: " + productDTO,
-                                                      newProduct.getProductId());
+            eventManager.createProductSuggestionEvent(user, newProduct.getProductId(),
+                    "User requested update of product: " + productDTO.getName());
             return newProduct;
         }
         return null;
@@ -173,9 +172,8 @@ public class ProductManager implements IProductManager {
 
             Product product = getProduct(uuid);
 
-            eventManager.createProductReportEvent(user, "User requested deletion of" +
-                                                        " a product: " + product.getName() + " with description: \"" + productDF.getDescription() + "\"",
-                                                  uuid);
+            eventManager.createProductReportEvent(user, uuid, "User requested deletion of" +
+                    " a product: " + product.getName() + " with description: \"" + productDF.getDescription() + "\"");
             return true;
         }
         return false;

@@ -39,6 +39,7 @@ export namespace OC {
   export interface BasicEvent {
     eventID: string;
     userName: string;
+    productName: string;
     description: string;
     status: string;
     type: string;

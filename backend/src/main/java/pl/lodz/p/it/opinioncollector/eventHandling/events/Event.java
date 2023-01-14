@@ -1,7 +1,9 @@
 package pl.lodz.p.it.opinioncollector.eventHandling.events;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
+import pl.lodz.p.it.opinioncollector.productManagment.Product;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 import java.util.UUID;
@@ -19,13 +21,18 @@ public abstract class Event {
             referencedColumnName = "id"
     )
     private User user;
+
+    @Size(max = 2137)
     private String description;
+
+    private UUID productID;
 
     private EventStatus status;
 
-    public Event(UUID eventID, User user, String description) {
+    public Event(UUID eventID, User user, UUID productID, String description) {
         this.eventID = eventID;
         this.user = user;
+        this.productID = productID;
         this.description = description;
         this.status = EventStatus.Open;
     }

@@ -17,6 +17,9 @@ public class BasicEventDTO {
     String userName;
 
     @NotNull
+    String productName;
+
+    @NotNull
     String description;
 
     @NotNull
@@ -25,12 +28,12 @@ public class BasicEventDTO {
     @NotNull
     String type;
 
-    public BasicEventDTO(Event event) {
+    public BasicEventDTO(Event event, String productName) {
         this.eventID = event.getEventID();
+        this.productName = productName;
         this.userName = event.getUser().getVisibleName();
         this.description = event.getDescription();
         this.status = event.getStatus();
-
 
         if (event instanceof AnswerReportEvent castedEvent) {
             this.type = "answerReport";
