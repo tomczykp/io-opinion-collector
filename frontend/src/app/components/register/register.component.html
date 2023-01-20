@@ -36,7 +36,7 @@
           <!-- Password input -->
           <span class="form-label mb-4">Password</span>
           <div class="form-outline input-group">
-              <input class="form-control form-control-lg" formControlName="password" id="password" required
+              <input class="form-control form-control-lg" formControlName="password" id="password" required placeholder="Enter password"
                      [type]="passwordInputTextType ? 'text' : 'password'"
                      [ngClass]="{
                      'is-valid': password?.valid,
@@ -51,6 +51,22 @@
           <span *ngIf="password && password.touched && password?.getRawValue().length === 0" class="validation-message">Password is required</span>
           <h6 *ngIf="(password && password.touched) && (password?.getRawValue().length < 8) || (password?.getRawValue().length > 20)" class="validation-message small form-text w-100" style="color: red">The password must be 8-20 characters, and must <em>not</em> contain spaces.</h6>
           <h6 *ngIf="!((password && password.touched) && (password?.getRawValue().length < 8) || (password?.getRawValue().length > 20))" class="form-text small text-muted w-100">The password must be 8-20 characters, and must <em>not</em> contain spaces.</h6>
+          <div class="form-outline input-group mt-2">
+            <input class="form-control form-control-lg" formControlName="repeatedPassword" id="repeatedPassword" required placeholder="Reenter password"
+                   [type]="repeatPasswordInputTextType ? 'text' : 'password'"
+                   [ngClass]="{
+                   'is-valid': repeatedPassword && repeatedPassword.touched && repeatedPassword.valid,
+                   'is-invalid': (repeatedPassword && repeatedPassword.touched && repeatedPassword.getRawValue().length === 0) || (repeatedPassword?.hasError('notSame')) || ((repeatedPassword && repeatedPassword.touched) && repeatedPassword.getRawValue().length < 8) || (repeatedPassword?.getRawValue().length > 20)}"/>
+            <i class="hover-icon input-group-text bi" [ngClass]="{
+                    'bi-eye-slash': !repeatPasswordInputTextType,
+                     'bi-eye': repeatPasswordInputTextType
+                    }"
+               (click)="repeatPasswordInputTextType = !repeatPasswordInputTextType">
+            </i>
+          </div>
+          <span *ngIf="password && password.touched && password?.getRawValue().length === 0" class="validation-message">Reenter password!</span>
+          <span *ngIf="repeatedPassword?.hasError('notSame')" class="validation-message">Repeated password doesn't match your new password</span>
+          <h6 *ngIf="!((repeatedPassword && repeatedPassword.touched) && (repeatedPassword?.getRawValue().length < 8) || (repeatedPassword?.getRawValue().length > 20))" class="form-text small text-muted w-100">Repeated password must match password.</h6>
 
 
           <!-- Submit button -->

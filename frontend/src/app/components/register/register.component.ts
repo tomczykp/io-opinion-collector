@@ -12,11 +12,15 @@ export class RegisterComponent implements OnInit {
   registerForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     username: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
+    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]),
+    repeatedPassword: new FormControl('', [Validators.required]),
   })
 
   failedRegister = false;
   passwordInputTextType: boolean;
+  repeatPasswordInputTextType = false;
+  passwordStatus = 0;
+
 
   constructor(
     private authService: AuthService,
@@ -36,6 +40,10 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.get('username');
   }
 
+  get repeatedPassword() {
+    return this.registerForm.get('repeatedPassword');
+  }
+
   ngOnInit(): void {
   }
 
@@ -48,6 +56,13 @@ export class RegisterComponent implements OnInit {
       let email = this.registerForm.getRawValue().email;
       let username = this.registerForm.getRawValue().username;
       let password = this.registerForm.getRawValue().password;
+      let repeatedP = this.registerForm.getRawValue().repeatedPassword;
+
+      if (password !== repeatedP) {
+        this.passwordStatus = 3;
+        this.repeatedPassword?.setErrors({notSame: true});
+        return;
+      }
 
       this.authService.register(email!.toString(), username!.toString(), password!.toString())
         .subscribe((result) => {
