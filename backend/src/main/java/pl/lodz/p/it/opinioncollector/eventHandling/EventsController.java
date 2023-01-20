@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.it.opinioncollector.eventHandling.dto.BasicEventDTO;
 import pl.lodz.p.it.opinioncollector.eventHandling.dto.EventDTO;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.*;
+import pl.lodz.p.it.opinioncollector.productManagment.Product;
+import pl.lodz.p.it.opinioncollector.productManagment.ProductManager;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserManager;
 import pl.lodz.p.it.opinioncollector.userModule.user.UserType;
@@ -22,11 +24,13 @@ import java.util.UUID;
 public class EventsController {
     EventManager eventManager;
     UserManager userManager;
+    ProductManager productManager;
 
     @Autowired
-    public EventsController(EventManager eventManager, UserManager userManager) {
+    public EventsController(EventManager eventManager, UserManager userManager, ProductManager productManager) {
         this.eventManager = eventManager;
         this.userManager = userManager;
+        this.productManager = productManager;
     }
 
     @GetMapping("/events")
@@ -34,7 +38,9 @@ public class EventsController {
         List<BasicEventDTO> result = new ArrayList<>();
 
         for (var event : eventManager.getEvents()) {
-            result.add(new BasicEventDTO(event));
+            Product product = productManager.getProduct(event.getProductID());
+
+            result.add(new BasicEventDTO(event, product.getName()));
         }
 
         return result;
@@ -66,7 +72,8 @@ public class EventsController {
             if (foundEvent instanceof AdminEvent)
                 continue;
 
-            eventDTOS.add(new BasicEventDTO(foundEvent));
+            Product product = productManager.getProduct(foundEvent.getProductID());
+            eventDTOS.add(new BasicEventDTO(foundEvent, product.getName()));
         }
 
         return ResponseEntity.ok(eventDTOS);

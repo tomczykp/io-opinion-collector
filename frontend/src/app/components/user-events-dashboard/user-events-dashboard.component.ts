@@ -16,7 +16,7 @@ import {QAService} from "../../services/qa.service";
   templateUrl: './user-events-dashboard.component.html'
 })
 export class UserEventsDashboardComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['status', 'description', 'action'];
+  displayedColumns: string[] = ['status', 'product', 'description', 'dismiss', 'goto'];
   dataSource: MatTableDataSource<OC.BasicEvent>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

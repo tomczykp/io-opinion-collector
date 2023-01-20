@@ -101,9 +101,12 @@ public class QAController {
     public ResponseEntity reportQuestion(@PathVariable UUID questionId, @RequestBody @NotBlank String reason) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (qaManager.getQuestion(questionId).isEmpty())
+        var question = qaManager.getQuestion(questionId);
+
+        if (question.isEmpty())
             return ResponseEntity.notFound().build();
-        eventManager.createQuestionReportEvent(user, "Question reported with reason: " + reason, questionId);
+
+        eventManager.createQuestionReportEvent(user, question.get().getProductId(), "Question reported with reason: " + reason, questionId);
 
         return ResponseEntity.ok().build();
     }
@@ -119,8 +122,9 @@ public class QAController {
         if (answer.isEmpty())
             return ResponseEntity.notFound().build();
 
+        UUID productID = qaManager.getQuestion(answer.get().getQuestionId()).get().getProductId();
 
-        eventManager.createAnswerReportEvent(user, "Answer reported with reason: " + reason, answer.get().getAnswerId() , answer.get().getQuestionId());
+        eventManager.createAnswerReportEvent(user, productID,"Answer reported with reason: " + reason, answer.get().getAnswerId() , answer.get().getQuestionId());
         return ResponseEntity.ok().build();
     }
 

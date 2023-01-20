@@ -3,7 +3,8 @@ package pl.lodz.p.it.opinioncollector.eventHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.it.opinioncollector.eventHandling.events.*;
-import pl.lodz.p.it.opinioncollector.qa.Question;
+import pl.lodz.p.it.opinioncollector.productManagment.Product;
+import pl.lodz.p.it.opinioncollector.productManagment.ProductManager;
 import pl.lodz.p.it.opinioncollector.userModule.user.User;
 
 import java.util.ArrayList;
@@ -36,49 +37,50 @@ public class EventManager implements IOpinionEventManager, IProductEventManager,
     }
 
     @Override
-    public OpinionReportEvent createOpinionReportEvent(User user, String description, UUID opinionID, UUID productID) {
-        OpinionReportEvent newEvent = new OpinionReportEvent(UUID.randomUUID(), user, description, opinionID, productID);
+    public OpinionReportEvent createOpinionReportEvent(User user, UUID productID, String description, UUID opinionID) {
+        OpinionReportEvent newEvent = new OpinionReportEvent(UUID.randomUUID(), user, productID, description, opinionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }
 
     @Override
-    public ProductReportEvent createProductReportEvent(User user, String description, UUID productID) {
-        ProductReportEvent newEvent = new ProductReportEvent(UUID.randomUUID(), user, description, productID);
+    public ProductReportEvent createProductReportEvent(User user, UUID productID, String description) {
+        ProductReportEvent newEvent = new ProductReportEvent(UUID.randomUUID(), user, productID, description);
         eventsRepository.save(newEvent);
         return newEvent;
     }
 
     @Override
-    public ProductSuggestionEvent createProductSuggestionEvent(User user, String description, UUID productID) {
-        var newEvent = new ProductSuggestionEvent(UUID.randomUUID(), user, description, productID);
+    public ProductSuggestionEvent createProductSuggestionEvent(User user, UUID productID, String description) {
+        var newEvent = new ProductSuggestionEvent(UUID.randomUUID(), user, productID, description);
         eventsRepository.save(newEvent);
         return newEvent;
     }
 
     @Override
-    public QuestionNotifyEvent createQuestionNotifyEvent(User user, String description, UUID questionID) {
-        QuestionNotifyEvent newEvent = new QuestionNotifyEvent(UUID.randomUUID(), user, description, questionID);
+    public QuestionNotifyEvent createQuestionNotifyEvent(User user, UUID productID, String description, UUID questionID) {
+        QuestionNotifyEvent newEvent = new QuestionNotifyEvent(UUID.randomUUID(), user, productID, description, questionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }
 
     @Override
-    public QuestionReportEvent createQuestionReportEvent(User user, String description, UUID questionID) {
-        QuestionReportEvent newEvent = new QuestionReportEvent(UUID.randomUUID(), user, description, questionID);
+    public QuestionReportEvent createQuestionReportEvent(User user, UUID productID, String description, UUID questionID) {
+        QuestionReportEvent newEvent = new QuestionReportEvent(UUID.randomUUID(), user, productID, description, questionID);
         eventsRepository.save(newEvent);
         return null;
     }
 
     @Override
-    public AnswerReportEvent createAnswerReportEvent(User user, String description, UUID answerID, UUID questionID) {
-        AnswerReportEvent newEvent = new AnswerReportEvent(UUID.randomUUID(), user, description, answerID, questionID);
+    public AnswerReportEvent createAnswerReportEvent(User user, UUID productID, String description, UUID answerID, UUID questionID) {
+        AnswerReportEvent newEvent = new AnswerReportEvent(UUID.randomUUID(), user, productID, description, answerID, questionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }
 
-    public AnswerNotifyEvent createAnswerNotifyEvent(User user, String description,UUID answerID, UUID questionID) {
-        var newEvent = new AnswerNotifyEvent(UUID.randomUUID(), user, description, answerID, questionID);
+    @Override
+    public AnswerNotifyEvent createAnswerNotifyEvent(User user, UUID productID, String description, UUID answerID, UUID questionID) {
+        var newEvent = new AnswerNotifyEvent(UUID.randomUUID(), user, productID, description, answerID, questionID);
         eventsRepository.save(newEvent);
         return newEvent;
     }

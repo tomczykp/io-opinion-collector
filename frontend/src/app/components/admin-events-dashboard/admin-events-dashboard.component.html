@@ -8,14 +8,18 @@
   </div>
   <div class="card">
     <div style="display: flex; padding: 20px;">
-      <div class="d-flex">
-        <input [(ngModel)]="userFilter" (ngModelChange)="getEvents()" class="form-control w-50"
+      <div class="flex-fill">
+        <input [(ngModel)]="userFilter" (ngModelChange)="getEvents()" class="form-control w-50 m-1"
                placeholder="Find by user"
                type="text">
-        <button (click)="clearFilter()" class="btn btn-primary ms-2">Clear input</button>
+
+        <input [(ngModel)]="productFilter" (ngModelChange)="getEvents()" class="form-control w-50 m-1"
+               placeholder="Find by product"
+               type="text">
       </div>
+      <button (click)="clearFilter()" class="btn btn-primary ms-2">Clear input</button>
       <div style="margin-top: auto; margin-bottom: auto;" class="form-check form-switch" (click)="getEvents()">
-        <input [(ngModel)]="isOpenedOnly" class="form-check-input" id="IsShowClosedCheckBox" type="checkbox">
+        <input [(ngModel)]="isOpenedOnly" class="form-check-input m-1" id="IsShowClosedCheckBox" type="checkbox">
         <label class="form-check-label" for="IsShowClosedCheckBox">Show Open Only</label>
       </div>
     </div>
@@ -23,33 +27,53 @@
       <table [dataSource]="dataSource" mat-table matSort
              class="table mb-0 bg-light table-hover table-striped align-middle">
         <ng-container matColumnDef="userName">
-          <th *matHeaderCellDef mat-sort-header>User</th>
+          <th *matHeaderCellDef mat-sort-header class="align-middle">User</th>
           <td mat-cell *matCellDef="let element">{{element.userName}}</td>
         </ng-container>
 
+        <ng-container matColumnDef="productName">
+          <th *matHeaderCellDef mat-sort-header class="align-middle">Product</th>
+          <td mat-cell *matCellDef="let element">{{element.productName}}</td>
+        </ng-container>
+
         <ng-container matColumnDef="description">
-          <th *matHeaderCellDef mat-sort-header>Description</th>
+          <th *matHeaderCellDef mat-sort-header class="align-middle">Description</th>
           <td mat-cell *matCellDef="let element">{{element.description}}</td>
         </ng-container>
 
         <ng-container matColumnDef="status">
-          <th *matHeaderCellDef mat-sort-header>Status</th>
+          <th *matHeaderCellDef mat-sort-header class="align-middle">Status</th>
           <td mat-cell *matCellDef="let element">{{element.status}}</td>
         </ng-container>
 
-        <ng-container matColumnDef="action">
-          <th *matHeaderCellDef mat-sort-header>Action</th>
+        <ng-container matColumnDef="dismiss">
+          <th *matHeaderCellDef mat-sort-header class="align-middle">Dismiss</th>
           <td mat-cell *matCellDef="let element">
-            <div *ngIf="element.status == 'Open'" class="nav">
-              <button type="button" class="btn btn-primary m-1" (click)="dismissEvent(element.eventID)">Dismiss</button>
-              <div *ngIf="element.type.includes('Report')">
-                <button type="button" class="btn btn-danger m-1" (click)="applyEvent(element.eventID)">Delete</button>
-              </div>
-              <div *ngIf="element.type == 'productSuggestion'">
-                <button type="button" class="btn btn-success m-1" (click)="applyEvent(element.eventID)">Accept</button>
-              </div>
-              <button type="button" class="btn btn-primary m-1" (click)="goToEvent(element.eventID)">Go to</button>
+            <i class="bi bi-slash-circle hover-icon" (click)="dismissEvent(element.eventID)"
+               style="font-size: 30px; font-weight: bold; color: dodgerblue; text-align: center"></i>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th *matHeaderCellDef mat-sort-header class="align-middle">Action</th>
+          <td mat-cell *matCellDef="let element">
+            <div *ngIf="element.type.includes('Report')">
+                <i class="bi bi-trash hover-icon" (click)="applyEvent(element.eventID)"
+                   style="font-size: 30px; font-weight: bold; color: palevioletred; text-align: center"></i>
             </div>
+            <div *ngIf="element.type == 'productSuggestion'">
+                <i class="bi bi-check hover-icon" (click)="applyEvent(element.eventID)"
+                   style="font-size: 30px; font-weight: bold; color: mediumspringgreen; text-align: center"></i>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="goto">
+          <th *matHeaderCellDef mat-sort-header class="align-middle">Go to</th>
+          <td mat-cell *matCellDef="let element">
+            <i class="bi bi-box-arrow-in-right hover-icon"
+               style="font-size: 30px; font-weight: bold; color: dodgerblue; text-align: center"
+               (click)="goToEvent(element.eventID)"></i>
           </td>
         </ng-container>
 
